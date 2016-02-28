@@ -9,6 +9,7 @@ class CreateStudents < ActiveRecord::Migration
       t.boolean :gender
       t.string :adress
       t.boolean :is_active
+      t.belongs_to :tutor, index: true, unique: true, foreign_key: true
       
       t.timestamps null: false
     end
