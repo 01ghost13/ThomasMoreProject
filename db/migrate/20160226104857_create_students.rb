@@ -12,6 +12,7 @@ class CreateStudents < ActiveRecord::Migration
       t.belongs_to :tutor, index: true, unique: true, foreign_key: true
       t.belongs_to :stat_id, index: true, unique: true, foreign_key: true
       t.belongs_to :mode, index: true, foreign_key: true
+      t.belongs_to :last_result, index: true, unique: true, foreign_key: true
       t.timestamps null: false
     end
   end
