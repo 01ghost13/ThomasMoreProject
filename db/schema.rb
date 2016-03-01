@@ -11,14 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160228221532) do
+ActiveRecord::Schema.define(version: 20160301092924) do
 
   create_table "administrators", force: :cascade do |t|
     t.boolean  "is_super"
     t.string   "organisation"
+    t.integer  "info_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
+
+  add_index "administrators", ["info_id"], name: "index_administrators_on_info_id"
 
   create_table "infos", force: :cascade do |t|
     t.string   "name"
@@ -54,6 +57,14 @@ ActiveRecord::Schema.define(version: 20160228221532) do
     t.datetime "updated_at",       null: false
   end
 
+  create_table "last_results_points", force: :cascade do |t|
+    t.integer "last_results_id"
+    t.integer "point_id"
+  end
+
+  add_index "last_results_points", ["last_results_id"], name: "index_last_results_points_on_last_results_id"
+  add_index "last_results_points", ["point_id"], name: "index_last_results_points_on_point_id"
+
   create_table "modes", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
@@ -75,12 +86,27 @@ ActiveRecord::Schema.define(version: 20160228221532) do
   add_index "pictures_questions", ["pictures_id"], name: "index_pictures_questions_on_pictures_id"
   add_index "pictures_questions", ["questions_id"], name: "index_pictures_questions_on_questions_id"
 
+  create_table "point_last_results", force: :cascade do |t|
+    t.integer  "earned_points"
+    t.integer  "interest_id"
+    t.integer  "last_result_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "point_last_results", ["interest_id"], name: "index_point_last_results_on_interest_id"
+  add_index "point_last_results", ["last_result_id"], name: "index_point_last_results_on_last_result_id"
+
   create_table "points", force: :cascade do |t|
     t.integer  "earned_points"
     t.integer  "interest_id"
+    t.integer  "stats_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
   end
+
+  add_index "points", ["interest_id"], name: "index_points_on_interest_id"
+  add_index "points", ["stats_id"], name: "index_points_on_stats_id"
 
   create_table "questions", force: :cascade do |t|
     t.integer  "number"
@@ -97,6 +123,14 @@ ActiveRecord::Schema.define(version: 20160228221532) do
     t.datetime "updated_at",            null: false
   end
 
+  create_table "stats_points", id: false, force: :cascade do |t|
+    t.integer "stat_id"
+    t.integer "point_id"
+  end
+
+  add_index "stats_points", ["point_id"], name: "index_stats_points_on_point_id"
+  add_index "stats_points", ["stat_id"], name: "index_stats_points_on_stat_id"
+
   create_table "students", force: :cascade do |t|
     t.string   "name"
     t.string   "last_name"
@@ -106,9 +140,20 @@ ActiveRecord::Schema.define(version: 20160228221532) do
     t.boolean  "gender"
     t.string   "adress"
     t.boolean  "is_active"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "tutor_id"
+    t.integer  "stat_id_id"
+    t.integer  "mode_id"
+    t.integer  "last_result_id"
+    t.integer  "test_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
+
+  add_index "students", ["last_result_id"], name: "index_students_on_last_result_id"
+  add_index "students", ["mode_id"], name: "index_students_on_mode_id"
+  add_index "students", ["stat_id_id"], name: "index_students_on_stat_id_id"
+  add_index "students", ["test_id"], name: "index_students_on_test_id"
+  add_index "students", ["tutor_id"], name: "index_students_on_tutor_id"
 
   create_table "tests", force: :cascade do |t|
     t.string   "name"
@@ -118,8 +163,13 @@ ActiveRecord::Schema.define(version: 20160228221532) do
   end
 
   create_table "tutors", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "info_id"
+    t.integer  "administrator_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
+
+  add_index "tutors", ["administrator_id"], name: "index_tutors_on_administrator_id"
+  add_index "tutors", ["info_id"], name: "index_tutors_on_info_id"
 
 end

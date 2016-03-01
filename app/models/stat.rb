@@ -1,4 +1,4 @@
 class Stat < ActiveRecord::Base
-  belongs_to :student
+  has_one :student
   has_many :points
 end

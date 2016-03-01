@@ -9,10 +9,5 @@ class CreateStats < ActiveRecord::Migration
       
       t.timestamps null: false
     end
-    
-    create_table :stats_points, id: false do |t|
-      t.belongs_to :stat, index: true
-      t.belongs_to :point, index: true
-    end
   end
 end
