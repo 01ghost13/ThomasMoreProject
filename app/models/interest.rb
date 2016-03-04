@@ -1,5 +1,5 @@
 class Interest < ActiveRecord::Base
   has_many :points
-  has_many :point_last_results
-  has_and_belongs_to_many :pictures
+  has_many :pictures, :through => :picture_interests
+  validates :interest, presence: true, length: {in: 2..20}
 end

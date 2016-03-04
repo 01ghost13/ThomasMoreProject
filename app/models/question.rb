@@ -1,4 +1,4 @@
 class Question < ActiveRecord::Base
-  has_and_belongs_to_many :pictures
-  has_and_belongs_to_many :tests
+  validates :is_tutorial, presence: true
+  validates :number, presence: true, numericality: { only_integer: true, greater_than: 0 }
 end

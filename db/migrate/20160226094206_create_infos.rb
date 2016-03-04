@@ -6,7 +6,7 @@ class CreateInfos < ActiveRecord::Migration
       t.string :mail
       t.string :password
       t.string :phone
-      t.boolean :confirmation
+      t.boolean :is_mail_confirmed
       
       t.timestamps null: false
     end

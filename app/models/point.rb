@@ -1,4 +1,3 @@
 class Point < ActiveRecord::Base
-  #belongs_to :interest
-  #belongs_to :stat
+  validates :earned_points, presence: true, numericality: { only_integer: true, greater_than: -1}
 end
