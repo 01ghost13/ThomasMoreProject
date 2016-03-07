@@ -4,7 +4,7 @@ class CreateInfos < ActiveRecord::Migration
       t.string :name
       t.string :last_name
       t.string :mail
-      t.string :password
+      t.string :password_digest
       t.string :phone
       t.boolean :is_mail_confirmed
       

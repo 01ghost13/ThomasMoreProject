@@ -7,7 +7,7 @@ class CreateStudents < ActiveRecord::Migration
       t.integer :gender
       t.string :adress
       t.boolean :is_active
-      t.string :password
+      t.string :password_digest
       t.boolean :is_current_in_school
       t.belongs_to :schooling, index: true, foreign_key: true
       t.belongs_to :tutor, index: true, foreign_key: true

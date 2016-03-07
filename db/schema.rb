@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 20160303221831) do
     t.string   "name"
     t.string   "last_name"
     t.string   "mail"
-    t.string   "password"
+    t.string   "password_digest"
     t.string   "phone"
     t.boolean  "is_mail_confirmed"
     t.datetime "created_at",        null: false
@@ -123,7 +123,7 @@ ActiveRecord::Schema.define(version: 20160303221831) do
     t.integer  "gender"
     t.string   "adress"
     t.boolean  "is_active"
-    t.string   "password"
+    t.string   "password_digest"
     t.boolean  "is_current_in_school"
     t.integer  "schooling_id"
     t.integer  "tutor_id"
