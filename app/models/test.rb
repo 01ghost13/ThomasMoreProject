@@ -4,5 +4,5 @@ class Test < ActiveRecord::Base
   validates :name,:description,:version, presence: true
   validates :name, length: {in: 5..20}
   validates :description, length: {in: 5..50}
-  validates :version, numericality: true
+  validates :version, numericality: true, length: {in: 1..10}
 end
