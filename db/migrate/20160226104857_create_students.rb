@@ -1,7 +1,7 @@
 class CreateStudents < ActiveRecord::Migration
   def change
     create_table :students do |t|
-      t.string :code_name
+      t.string :code_name, unique: true
       t.date :birth_date
       t.date :date_off #date of student deactivating
       t.integer :gender
