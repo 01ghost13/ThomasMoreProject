@@ -3,7 +3,7 @@ class CreateInfos < ActiveRecord::Migration
     create_table :infos do |t|
       t.string :name
       t.string :last_name
-      t.string :mail
+      t.string :mail, unique: true
       t.string :password_digest
       t.string :phone
       t.boolean :is_mail_confirmed
