@@ -9,3 +9,17 @@ one: {}
 #
 two: {}
 #  column: value
+infoAdm:
+  name: 'Administrator'
+  last_name: 'SomeLastname'
+  password_digest: '020695'
+  phone: '8902385245'
+  mail: 'someee@mail.com'
+  is_mail_confirmed: true
+infoUserOne:
+    name: 'SomeOneName'
+    last_name: 'SomeLastname'
+    password_digest: '020695'
+    phone: '8902385245'
+    mail: 'his@mail.com'
+    is_mail_confirmed: true
