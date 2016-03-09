@@ -9,3 +9,6 @@ one: {}
 #
 two: {}
 #  column: value
+test_tutor:
+  info_id: 1
+  administrator_id: 1
