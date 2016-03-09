@@ -9,3 +9,7 @@ one: {}
 #
 two: {}
 #  column: value
+first_test:
+  name: 'First test'
+  description: 'blablabla'
+  version: '1.0.2'
