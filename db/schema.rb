@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 20160303221831) do
     t.datetime "end"
     t.boolean  "was_rewrited"
     t.integer  "result_of_test_id"
-    t.boolean  "was_checked"
+    t.integer  "was_checked"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
   end

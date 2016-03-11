@@ -5,5 +5,6 @@ class Info < ActiveRecord::Base
   validates :last_name, presence: true, length: { within: 3..30 }
   validates :password_digest, presence: true
   validates :mail, presence: true, uniqueness: true, format: { with: /\S+?@.+?\.\S+/i}
+  validates :is_mail_confirmed, exclusion: { in: [nil] }
   has_secure_password
 end

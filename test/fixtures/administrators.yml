@@ -8,6 +8,10 @@ admin:
   info_id: 1
   is_super: true
   organisation: 'Organisation'
+local_admin:
+  info_id: 2
+  is_super: false
+  organisation: 'False Org'
 
 # column: value
 #

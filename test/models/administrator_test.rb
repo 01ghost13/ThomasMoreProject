@@ -22,4 +22,11 @@ class AdministratorTest < ActiveSupport::TestCase
     assert adm.invalid?
     assert adm.errors[:info_id].any?, "should be uniq"
   end
+  test "Adding ladmin" do
+    adm = Administrator.new(info_id: infos(:infoAdm).id, organisation: 'TestOrg', is_super: false)
+    assert adm.valid?, "#{adm.errors[:info_id]}, #{adm.errors[:is_super]} : #{adm.is_super}, #{adm.errors[:organisation]}"
+    assert adm.errors[:info_id].empty?
+    assert adm.errors[:is_super].empty?
+    assert adm.errors[:organisation].empty?
+  end
 end

@@ -12,7 +12,7 @@ class InfoTest < ActiveSupport::TestCase
     assert inf.errors[:last_name].any?
     assert inf.errors[:password_digest].any?
     #assert inf.errors[:phone].any?
-    assert !inf.errors[:is_mail_confirmed].any?
+    assert inf.errors[:is_mail_confirmed].any?
     assert inf.errors[:mail].any?
   end
   test "Uniq mail" do

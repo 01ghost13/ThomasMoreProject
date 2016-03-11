@@ -7,5 +7,6 @@ class Student < ActiveRecord::Base
   #2 – Men
   #3 – Women
 
-  validates :is_active,:is_current_in_school,:password_digest,:tutor_id,:schooling_id,:mode_id, presence: true
+  validates :password_digest,:tutor_id,:schooling_id,:mode_id, presence: true
+  validates :is_active, :is_current_in_school, exclusion: { in: [nil] }
 end
