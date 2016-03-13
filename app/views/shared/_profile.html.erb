@@ -1,25 +1,11 @@
-<% unless @user.nil? %>
-<table>
-		<tr>
-			<td>Name:</td>		
-			<td><%= "#{@user.name}" %></td>
-		</tr>
-		<tr>
-			<td>Last Name:</td>		
-			<td><%= "#{@user.last_name}" %></td>
-		</tr>
-		<tr>
-			<td>Phone:</td>		
-			<td><%= "#{@user.phone}" %></td>
-		</tr>
-		<tr>
-			<td>Mail:</td>		
-			<td><%= "#{@user.mail}" %></td>
-		</tr>
-		<% unless @user.is_mail_confirmed %>
-		<tr>
-			<td rowspan="2">Please, confirm your mail.<td>
-		</tr>
+<% unless @user_info.nil? %>
+	<table align="center" border="3">
+		<% @user_info.each do |element|%>
+			<tr>
+				<td><%= element[0] %></td>		
+				<td><%= element[1] %></td>
+			</tr>
 		<% end %>
-</table>
+	</table>
 <% end %>
+

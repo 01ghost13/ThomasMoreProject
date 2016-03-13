@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   resources :administrators
+  #get 'administrators/:id/edit_password'
   #get 'administrators/index'
 
   #get 'administrators/edit'

@@ -1,0 +1,63 @@
+<table align = "center">
+<%= form_for @local_admin do |l_admin_form| %>
+ 	<%= render 'shared/error_message' %>
+	<%= fields_for @local_admin.info do |info_form| %>
+	<!--Name -->
+	<tr>
+		<td>
+		<%= info_form.label :name %>
+		<%= info_form.text_field :name %>
+		</td>
+	</tr>
+	<!--LastName -->
+	
+	<tr>
+		<td>
+		<%= info_form.label :last_name %>
+		<%= info_form.text_field :last_name %>
+		</td>
+	</tr>
+	<!--Phone-->
+	<tr>
+		<td>
+		<%= info_form.label :phone %>
+		<%= info_form.text_field :phone %>
+		</td>
+	</tr>
+	<!--Password-->
+	<tr>
+		<td>
+		<%= info_form.label :password, "Your new password" %>
+		<%= info_form.password_field :password %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<%= info_form.label :password_confirmation, "Confirmation new password" %>
+		<%= info_form.password_field :password_confirmation %>
+		</td>
+	</tr>
+	<!--Mail(Login)-->
+	<tr>
+		<td>
+		<%= info_form.label :mail, "Email" %>
+		<%= info_form.text_field :mail %>
+		</td>
+	</tr>
+	<% end %>
+	<!--Organisation -->
+	<tr>
+		<td>
+		<%= l_admin_form.label :organisation %>
+		<%= l_admin_form.text_field :organisation %>		
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<%= l_admin_form.submit "Update" %>
+		</td>
+	</tr>
+<% end %>
+</table>
+<%= debug(@brkpnt) if Rails.env.development? %>
+<%= debug(@user) if Rails.env.development? %>

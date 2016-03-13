@@ -1,1 +1,28 @@
 <%= render "shared/profile" %>
+<% if @confirmed_mail %>
+	<!--Links to managing-->
+	<table align="center">
+		<tr>
+			<td>
+				<%= link_to "Create tutor", "" %>
+			</td>
+			<td>
+				<%= link_to "Create student", "" %>
+			</td>
+			<td>
+				<%= link_to "Search", "" %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3"><center><%= link_to "Settings", edit_administrator_path(params[:id]) %></center></td>
+		</tr>
+		<% if @is_super_adm %>
+		<tr>
+			<td colspan="3"><center><%= link_to "Create Local administrator", new_administrator_path %></center></td>
+		</tr>
+		<% end %>
+	</table>
+<% elsif !@confirmed_mail.nil?  %>
+<div align="center">Please, confirm your mail!</div>
+<% end %>
+
