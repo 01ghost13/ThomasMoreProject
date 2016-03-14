@@ -27,13 +27,13 @@
 	<!--Password-->
 	<tr>
 		<td>
-		<%= info_form.label :password, "Your new password" %>
+		<%= info_form.label :password%>
 		<%= info_form.password_field :password %>
 		</td>
 	</tr>
 	<tr>
 		<td>
-		<%= info_form.label :password_confirmation, "Confirmation new password" %>
+		<%= info_form.label :password_confirmation, "Confirmation" %>
 		<%= info_form.password_field :password_confirmation %>
 		</td>
 	</tr>
@@ -54,10 +54,8 @@
 	</tr>
 	<tr>
 		<td>
-		<%= l_admin_form.submit "Update" %>
+		<%= l_admin_form.submit "Confirm" %>
 		</td>
 	</tr>
 <% end %>
 </table>
-<%= debug(@brkpnt) if Rails.env.development? %>
-<%= debug(@user) if Rails.env.development? %>

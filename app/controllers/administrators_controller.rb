@@ -37,16 +37,12 @@ class AdministratorsController < ApplicationController
   def update
     @local_admin = Administrator.find(params[:id])
     @user = Info.find(@local_admin.info_id)
-    @brkpnt = info_params
-    if @local_admin.update_attributes(administrator_params) && @user.update_attributes(info_params)
+    if !@user.nil? && @local_admin.nil? && @user.update(info_params) && @local_admin.update(administrator_params)
       redirect_to(@local_admin)
       flash[:success] = "Update Complete"
     else
       render :edit
     end
-  end
-  def update_password
-    
   end
   #Profile page
   def show
@@ -55,19 +51,30 @@ class AdministratorsController < ApplicationController
 
   #Create Page
   def new
+    @local_admin = Administrator.new
+    @user = Info.new
+    @local_admin.info = @user
   end
   #Create querry
   def create
-    
+    @user = Info.new(info_params)
+    @local_admin = Administrator.new(administrator_params)
+    @local_admin.info = @user
+    @local_admin.is_super = false
+    @user.is_mail_confirmed = false
+    if @user.save && @local_admin.save
+      flash[:success] = "Account created!"
+      redirect_to(@local_admin)
+    else
+      render 'new'
+    end
   end
+  private
   #Attributes
   def administrator_params
     params.require(:administrator).permit(:organisation)
   end
   def info_params
-    params.require(:info).permit(:name,:last_name,:mail,:phone)
-  end
-  def password_params
-    params.require(:info).permit(:password,:password_confirmation)
+    params.require(:info).permit(:name,:last_name,:mail,:phone,:password,:password_confirmation)
   end
 end
