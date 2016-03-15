@@ -37,7 +37,7 @@ class AdministratorsController < ApplicationController
   def update
     @local_admin = Administrator.find(params[:id])
     @user = Info.find(@local_admin.info_id)
-    if !@user.nil? && @local_admin.nil? && @user.update(info_params) && @local_admin.update(administrator_params)
+    if !@user.nil? && !@local_admin.nil? && @user.update(info_params) && @local_admin.update(administrator_params)
       redirect_to(@local_admin)
       flash[:success] = "Update Complete"
     else

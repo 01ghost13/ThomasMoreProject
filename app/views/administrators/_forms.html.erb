@@ -1,11 +1,12 @@
+<div align="center"><%= render 'shared/error_message' %></div>
 <table align = "center">
 <%= form_for @local_admin do |l_admin_form| %>
- 	<%= render 'shared/error_message' %>
+ 	
 	<%= fields_for @local_admin.info do |info_form| %>
 	<!--Name -->
 	<tr>
 		<td>
-		<%= info_form.label :name %>
+		<%= info_form.label :name %><br/>
 		<%= info_form.text_field :name %>
 		</td>
 	</tr>
@@ -13,34 +14,34 @@
 	
 	<tr>
 		<td>
-		<%= info_form.label :last_name %>
+		<%= info_form.label :last_name %><br/>
 		<%= info_form.text_field :last_name %>
 		</td>
 	</tr>
 	<!--Phone-->
 	<tr>
 		<td>
-		<%= info_form.label :phone %>
+		<%= info_form.label :phone %><br/>
 		<%= info_form.text_field :phone %>
 		</td>
 	</tr>
 	<!--Password-->
 	<tr>
 		<td>
-		<%= info_form.label :password%>
+		<%= info_form.label :password%><br/>
 		<%= info_form.password_field :password %>
 		</td>
 	</tr>
 	<tr>
 		<td>
-		<%= info_form.label :password_confirmation, "Confirmation" %>
+		<%= info_form.label :password_confirmation, "Confirmation" %><br/>
 		<%= info_form.password_field :password_confirmation %>
 		</td>
 	</tr>
 	<!--Mail(Login)-->
 	<tr>
 		<td>
-		<%= info_form.label :mail, "Email" %>
+		<%= info_form.label :mail, "Email" %><br/>
 		<%= info_form.text_field :mail %>
 		</td>
 	</tr>
@@ -48,7 +49,7 @@
 	<!--Organisation -->
 	<tr>
 		<td>
-		<%= l_admin_form.label :organisation %>
+		<%= l_admin_form.label :organisation %><br/>
 		<%= l_admin_form.text_field :organisation %>		
 		</td>
 	</tr>

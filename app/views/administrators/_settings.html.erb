@@ -1,0 +1,21 @@
+<ul class="nav navbar-nav navbar-right">
+	<li>
+		<%= link_to "Create tutor", "" %>
+	</li>
+	<li>
+		<%= link_to "Create student", "" %>
+	</li>
+	<li>
+		<%= link_to "Search", "" %>
+	</li>
+	<li>
+		<!-- Change when session done-->
+		<%= link_to("Settings", edit_administrator_path(params[:id])) unless action_name == 'index' %>
+	</li>
+	<!-- Change when session done-->
+	<% if @is_super_adm %>
+	<li>
+		<%= link_to("Create Local administrator", new_administrator_path) %>
+	</li>
+	<% end %>
+</ul>
