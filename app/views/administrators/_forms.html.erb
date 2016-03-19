@@ -7,7 +7,7 @@
 	<tr>
 		<td>
 		<%= info_form.label :name %><br/>
-		<%= info_form.text_field :name %>
+		<%= info_form.text_field :name, class: 'form-control' %>
 		</td>
 	</tr>
 	<!--LastName -->
@@ -15,34 +15,34 @@
 	<tr>
 		<td>
 		<%= info_form.label :last_name %><br/>
-		<%= info_form.text_field :last_name %>
+		<%= info_form.text_field :last_name, class: 'form-control' %>
 		</td>
 	</tr>
 	<!--Phone-->
 	<tr>
 		<td>
 		<%= info_form.label :phone %><br/>
-		<%= info_form.text_field :phone %>
+		<%= info_form.text_field :phone, class: 'form-control' %>
 		</td>
 	</tr>
 	<!--Password-->
 	<tr>
 		<td>
 		<%= info_form.label :password%><br/>
-		<%= info_form.password_field :password %>
+		<%= info_form.password_field :password, class: 'form-control' %>
 		</td>
 	</tr>
 	<tr>
 		<td>
 		<%= info_form.label :password_confirmation, "Confirmation" %><br/>
-		<%= info_form.password_field :password_confirmation %>
+		<%= info_form.password_field :password_confirmation, class: 'form-control' %>
 		</td>
 	</tr>
 	<!--Mail(Login)-->
 	<tr>
 		<td>
 		<%= info_form.label :mail, "Email" %><br/>
-		<%= info_form.text_field :mail %>
+		<%= info_form.email_field :mail, class: 'form-control' %>
 		</td>
 	</tr>
 	<% end %>
@@ -50,12 +50,12 @@
 	<tr>
 		<td>
 		<%= l_admin_form.label :organisation %><br/>
-		<%= l_admin_form.text_field :organisation %>		
+		<%= l_admin_form.text_field :organisation, class: 'form-control' %>		
 		</td>
 	</tr>
 	<tr>
 		<td>
-		<%= l_admin_form.submit "Confirm" %>
+		<%= l_admin_form.submit "Confirm", class: "btn btn-primary" %>
 		</td>
 	</tr>
 <% end %>

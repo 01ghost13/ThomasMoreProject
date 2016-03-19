@@ -1,0 +1,21 @@
+<% provide(:title, "Log in") %>
+<h1>Log in</h1>
+
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+		<%= form_for(:session, url: login_path) do |f| %>
+			
+			<%= f.label :codename, "Codename or Email" %>
+			<%= f.text_field :codename, class: 'form-control' %>
+			
+			<%= f.label :password %>
+			<%= f.password_field :password, class: 'form-control' %>
+			
+			<%= f.check_box(:is_student, :checked => true) %>
+			<%= f.label(:is_student, "I am student") %><br />
+			
+			<%= f.submit "Log in", class: "btn btn-primary" %><br />
+		<% end %>
+		Want to join? <%= link_to 'Sign up, now!', new_administrator_path %>
+	</div>
+</div>

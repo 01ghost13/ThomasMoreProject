@@ -24,10 +24,14 @@ class AdministratorsController < ApplicationController
   #Editing page
   def edit
     @local_admin = Administrator.find(params[:id])
+    
     unless @local_admin.nil?
-      @user = Info.find(@local_admin.info_id)
-      if @user.nil?
-        #throw 404
+      #checking rights
+      if is_super? || current_user.id == @local_admin.id
+        @user = Info.find(@local_admin.info_id)
+        if @user.nil?
+          #throw 404
+        end
       end
     else
       #throw 404

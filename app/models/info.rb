@@ -1,6 +1,6 @@
 class Info < ActiveRecord::Base
-  has_one :administrator#, inverse_of: :info
-  has_one :tutor
+  has_one :administrator, inverse_of: :info
+  has_one :tutor, inverse_of: :info
   has_secure_password
   validates :name, presence: true, length: { within: 3..20 }
   validates :last_name, presence: true, length: { within: 3..30 }
