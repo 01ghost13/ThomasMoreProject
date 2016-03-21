@@ -1,17 +1,5 @@
 class AdministratorsController < ApplicationController
   
-  def find_admInfo(adm_id)
-    adm = Administrator.find(adm_id)
-    unless adm.nil?
-      user = Info.find(adm.info_id)
-      @user_info = [['Name: ', user.name],['Last name: ', user.last_name],['Phone: ', user.phone],['Mail: ', user.mail],['Organisation: ',adm.organisation]]
-      @confirmed_mail = user.is_mail_confirmed || true
-      @is_super_adm = adm.is_super
-      return @user_info
-    else
-       #Throw error of 404
-    end
-  end
   #Only for SA
   def index
     administrators = Administrator.all
@@ -50,7 +38,8 @@ class AdministratorsController < ApplicationController
   end
   #Profile page
   def show
-    find_admInfo(params[:id])
+    user = Administrator.find(params[:id])
+    find_info(user) << ["Organisation: ",user.organisation]
   end
 
   #Create Page

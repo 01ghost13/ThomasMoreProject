@@ -24,5 +24,8 @@ class TutorsController < ApplicationController
   end
 
   def show
+    user = Tutor.find(params[:id])
+    adm = Administrator.find(user.administrator_id)
+    find_info(user) << ["Administrator: ", "#{adm.info.name}\n#{adm.info.last_name}"]
   end
 end

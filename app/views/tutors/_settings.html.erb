@@ -1,0 +1,23 @@
+<li>
+	<%= link_to "Create student", "" %>
+</li>
+<li>
+	<%= link_to "Search", "" %>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"> Profile <b class="caret"></b>
+</a>
+	<ul class="dropdown-menu">
+		<li>
+			<!-- Change when session done-->
+			<%= link_to("Settings", edit_tutor_path(session[:type_id])) %>
+		</li>
+		<li>
+			<%= link_to("My Profile", current_user) %>
+		</li>
+		<li class="divider"></li>
+		<li>
+			<%= link_to "Log out", logout_path, method: "delete" %>
+		</li>
+	</ul>
+</li>
