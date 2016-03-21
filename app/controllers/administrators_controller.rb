@@ -54,11 +54,13 @@ class AdministratorsController < ApplicationController
     @user = Administrator.new(administrator_params)
     @user.info = @user_info
     @user.is_super = false
-    @user_info.is_mail_confirmed = false
+    @user_info.is_mail_confirmed = is_super?
     if @user_info.save && @user.save
       flash[:success] = "Account created!"
       redirect_to(@user)
     else
+      @user_info.delete
+      @user.delete
       render 'new'
     end
   end

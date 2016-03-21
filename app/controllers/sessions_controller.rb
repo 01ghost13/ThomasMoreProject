@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
     if user && user.authenticate(params[:session][:password])
       if user.is_mail_confirmed == false
         flash.now[:warning] = "Your mail hasnt confirmed yet."
-        render :root
+        render :new
         return
       end
       name_user = ''
