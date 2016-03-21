@@ -23,13 +23,13 @@ class AdministratorsController < ApplicationController
 
   #Editing page
   def edit
-    @local_admin = Administrator.find(params[:id])
+    @user = Administrator.find(params[:id])
     
-    unless @local_admin.nil?
+    unless @user.nil?
       #checking rights
-      if is_super? || current_user.id == @local_admin.id
-        @user = Info.find(@local_admin.info_id)
-        if @user.nil?
+      if is_super? || current_user.id == @user.id
+        @user_info = Info.find(@user.info_id)
+        if @user_info.nil?
           #throw 404
         end
       end
@@ -39,10 +39,10 @@ class AdministratorsController < ApplicationController
   end
   #Update querry
   def update
-    @local_admin = Administrator.find(params[:id])
-    @user = Info.find(@local_admin.info_id)
-    if !@user.nil? && !@local_admin.nil? && @user.update(info_params) && @local_admin.update(administrator_params)
-      redirect_to(@local_admin)
+    @user = Administrator.find(params[:id])
+    @user_info = Info.find(@user.info_id)
+    if !@user_info.nil? && !@user.nil? && @user_info.update(info_params) && @user.update(administrator_params)
+      redirect_to(@user)
       flash[:success] = "Update Complete"
     else
       render :edit
@@ -55,20 +55,20 @@ class AdministratorsController < ApplicationController
 
   #Create Page
   def new
-    @local_admin = Administrator.new
-    @user = Info.new
-    @local_admin.info = @user
+    @user = Administrator.new
+    @user_info = Info.new
+    @user.info = @user_info
   end
   #Create querry
   def create
-    @user = Info.new(info_params)
-    @local_admin = Administrator.new(administrator_params)
-    @local_admin.info = @user
-    @local_admin.is_super = false
-    @user.is_mail_confirmed = false
-    if @user.save && @local_admin.save
+    @user_info = Info.new(info_params)
+    @user = Administrator.new(administrator_params)
+    @user.info = @user_info
+    @user.is_super = false
+    @user_info.is_mail_confirmed = false
+    if @user_info.save && @user.save
       flash[:success] = "Account created!"
-      redirect_to(@local_admin)
+      redirect_to(@user)
     else
       render 'new'
     end

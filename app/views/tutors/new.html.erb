@@ -1,6 +1,7 @@
+<% provide(:title,"Create administrator") %>
 <div align="center"><%= render 'shared/error_message' %></div>
 <table align = "center">
-<%= form_for @user do |l_admin_form| %>
+<%= form_for @user do |tutor_form| %>
  	
 	<%= fields_for @user.info do |info_form| %>
 	<!--Name -->
@@ -46,16 +47,18 @@
 		</td>
 	</tr>
 	<% end %>
-	<!--Organisation -->
+	<!-- Local administrator -->
+	<% if @is_super_admin %>
 	<tr>
 		<td>
-		<%= l_admin_form.label :organisation %><br/>
-		<%= l_admin_form.text_field :organisation, class: 'form-control' %>		
+		<%= tutor_form.label :administrator_id, "Choose local administrator" %><br/>
+		<%= tutor_form.select :administrator_id, @admins, class: 'form-control' %>	
 		</td>
 	</tr>
+	<% end %>
 	<tr>
 		<td>
-		<%= l_admin_form.submit "Confirm", class: "btn btn-primary" %>
+		<%= tutor_form.submit "Confirm", class: "btn btn-primary" %>
 		</td>
 	</tr>
 <% end %>
