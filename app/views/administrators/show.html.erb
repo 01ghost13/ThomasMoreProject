@@ -1,9 +1,7 @@
 <%= render "shared/profile" %>
-<!--
-<% if @confirmed_mail %>
-
-<% elsif !@confirmed_mail.nil?  %>
-<div align="center">Please, confirm your mail!</div>
+<% if is_super? &&  params[:id] != session[:type_id]%>
+	<%= link_to("Edit", edit_administrator_path(params[:id]), class: "btn btn-default") %>
+	<%= link_to("Delete",@user, method: :delete, data: { confirm: "You sure?" }, class: "btn btn-warning") %>
 <% end %>
--->
+
 

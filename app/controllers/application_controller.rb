@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
       info = Info.find(user.info_id)
       @user_info = [['Name: ', info.name],['Last name: ', info.last_name],['Phone: ', info.phone],['Mail: ', info.mail]]
       @confirmed_mail = info.is_mail_confirmed || true
-      #@is_super_adm = adm.is_super
+      @is_super_adm = is_super?
       return @user_info
     else
        #Throw error of 404

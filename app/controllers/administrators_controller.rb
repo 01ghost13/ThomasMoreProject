@@ -38,8 +38,8 @@ class AdministratorsController < ApplicationController
   end
   #Profile page
   def show
-    user = Administrator.find(params[:id])
-    find_info(user) << ["Organisation: ",user.organisation]
+    @user = Administrator.find(params[:id])
+    find_info(@user) << ["Organisation: ",@user.organisation]
   end
 
   #Create Page

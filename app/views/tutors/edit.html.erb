@@ -1,2 +1,65 @@
-<h1>Tutors#edit</h1>
-<p>Find me in app/views/tutors/edit.html.erb</p>
+<% provide(:title,"Update tutor") %>
+<div align="center"><%= render 'shared/error_message' %></div>
+<table align = "center">
+<%= form_for @user do |tutor_form| %>
+ 	
+	<%= fields_for @user.info do |info_form| %>
+	<!--Name -->
+	<tr>
+		<td>
+		<%= info_form.label :name %><br/>
+		<%= info_form.text_field :name, class: 'form-control' %>
+		</td>
+	</tr>
+	<!--LastName -->
+	
+	<tr>
+		<td>
+		<%= info_form.label :last_name %><br/>
+		<%= info_form.text_field :last_name, class: 'form-control' %>
+		</td>
+	</tr>
+	<!--Phone-->
+	<tr>
+		<td>
+		<%= info_form.label :phone %><br/>
+		<%= info_form.text_field :phone, class: 'form-control' %>
+		</td>
+	</tr>
+	<!--Password-->
+	<tr>
+		<td>
+		<%= info_form.label :password %><br/>
+		<%= info_form.password_field :password, class: 'form-control' %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<%= info_form.label :password_confirmation, "Confirmation" %><br/>
+		<%= info_form.password_field :password_confirmation, class: 'form-control' %>
+		</td>
+	</tr>
+	<!--Mail(Login)-->
+	<tr>
+		<td>
+		<%= info_form.label :mail, "Email" %><br/>
+		<%= info_form.email_field :mail, class: 'form-control' %>
+		</td>
+	</tr>
+	<% end %>
+	<!-- Local administrator -->
+	<% if @is_super_admin %>
+	<tr>
+		<td>
+		<%= tutor_form.label :administrator_id, "Choose local administrator" %><br/>
+		<%= tutor_form.select :administrator_id, @admins, class: 'form-control' %>	
+		</td>
+	</tr>
+	<% end %>
+	<tr>
+		<td>
+		<%= tutor_form.submit "Confirm", class: "btn btn-primary" %>
+		</td>
+	</tr>
+<% end %>
+</table>
