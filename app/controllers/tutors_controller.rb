@@ -6,7 +6,7 @@ class TutorsController < ApplicationController
   def new
     #Only adm can create tutors
     unless session[:user_type] == 'administrator'
-      flash[:warning] = "You have not acces to this page"
+      flash[:warning] = "You have no acces to this page"
       redirect_to current_user
     end
     
@@ -121,7 +121,7 @@ class TutorsController < ApplicationController
       #It is my tutor?
       is_my_adm = (!user.nil? && session[:user_type] == 'administrator' && user.administrator_id == session[:type_id])
       unless is_i || is_super? || is_my_adm
-        flash[:warning] = "You have not access to this page."
+        flash[:warning] = "You have no access to this page."
         redirect_to current_user
       end  
     end

@@ -98,7 +98,7 @@ class AdministratorsController < ApplicationController
     def check_rights
       #Only SA or user can edit/delete their accounts
       unless is_super? || session[:user_type] == 'administrator' && session[:type_id] == params[:id]
-        flash[:warning] = "You have not access to this page."
+        flash[:warning] = "You have no access to this page."
         #Redirect back or?
         redirect_to current_user
       end
