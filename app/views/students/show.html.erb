@@ -1,0 +1,7 @@
+<%= render "shared/profile" %>
+<% if is_super? %>
+	<%= link_to("Edit", edit_student_path(params[:id]), class: "btn btn-default") %>
+	<%= link_to("Delete",@user, method: :delete, data: { confirm: "You sure?" }, class: "btn btn-warning") %>
+<% end %>
+<%= link_to("Start test", '#', class: "btn btn-primary") %>
+<%= link_to("Continue test", '#', class: "btn btn-primary") %>

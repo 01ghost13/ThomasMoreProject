@@ -1,0 +1,4 @@
+<%= label_tag :administrator_id, "Choose local administrator" %><br/>
+<%= select_tag :administrator_id, options_for_select(@admins), {id: 'administrator_selection'}  %><br/>
+<%= label_tag :tutor_id, "Choose Tutor" %><br/>
+<%= select_tag :tutor_id, options_for_select(@tutors),{id: 'tutor_selection'}%>

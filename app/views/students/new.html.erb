@@ -1,0 +1,88 @@
+<% if @user.errors.any? %>
+	<div id="error_explanation">
+    <div class="alert alert-danger">
+      The form contains <%= pluralize(@user.errors.count, "error") %>.
+    </div>
+	    <ul>
+		<% @user.errors.full_messages.each do |msg| %>
+	    	<li><%= msg %></li>
+	    <% end %>
+	    </ul>
+  	</div>
+<% end %>
+<table align = "center">
+<%= form_for @user do |student_form| %>
+ 	<!--Code Name-->
+	<tr>
+		<td>
+			<%= student_form.label :code_name, "Code name of student"%>
+			<%= student_form.text_field :code_name, class: 'form-control'%>
+		</td>
+	</tr>
+	<!--Gender-->
+	<tr>
+		<td>
+			<%= student_form.label :gender %><br />
+			<%= student_form.select(:gender, options_for_select(
+			  [
+			    ['Unknown', 1],
+			    ['Male', 2],
+			    ['Female', 3]
+			  ], 1), {class: 'form-control'}) 
+			 %>
+		</td>
+	</tr>
+	<!--Schooling-->
+	<tr>
+		<td>
+			<%= student_form.label :schooling_id, "Schooling" %><br />
+			<%= student_form.collection_select(:schooling_id, Schooling.all, :id, :name, {class: 'form-control'}) %>
+		</td>
+	</tr>
+	<!--Is current in school?-->
+	<tr>
+		<td>
+			<%= student_form.check_box(:is_current_in_school) %>
+			<%= student_form.label :is_current_in_school, "Is current in school?" %>
+		</td>
+	</tr>
+	<% if session[:user_type] == 'administrator' %>
+		<!-- Adm -->
+		<% if @is_super_adm %>
+			<!-- Choosing adm -->
+			<tr>
+				<td>
+					<%= label_tag :administrator_id, "Choose local administrator" %><br/>
+					<%= select_tag :administrator_id, options_for_select(@admins), {id: 'administrator_selection', class: 'form-control'}  %><br/>
+				</td>
+			</tr>
+			<% end %>
+		<!-- Choosing tutor-->
+		<tr>
+			<td>
+				<%= student_form.label :tutor_id, "Choose Tutor" %><br/>
+				<%= student_form.select :tutor_id, options_for_select(@tutors), {} , {id: 'tutor_selection', class: 'form-control'}%>
+			</td>
+		</tr>
+	<% end %>
+	<!--Password-->
+	<tr>
+		<td>
+		<%= student_form.label :password %><br/>
+		<%= student_form.password_field :password, class: 'form-control' %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<%= student_form.label :password_confirmation, "Confirmation" %><br/>
+		<%= student_form.password_field :password_confirmation, class: 'form-control' %>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<%= student_form.submit "Confirm", class: "btn btn-primary" %>
+		</td>
+	</tr>
+<% end %>
+</table>
+
