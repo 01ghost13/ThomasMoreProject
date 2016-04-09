@@ -3,8 +3,8 @@
 	<table align="center" border="3">
 		<% @user_info.each do |element|%>
 			<tr>
-				<td><%= element[0] %></td>		
-				<td><%= element[1] %></td>
+				<td><%= element[0].to_s.humanize %></td>		
+				<td><%= element[1].to_s.humanize %></td>
 			</tr>
 		<% end %>
 	</table>

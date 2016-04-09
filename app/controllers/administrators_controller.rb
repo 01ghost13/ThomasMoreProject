@@ -1,7 +1,9 @@
 class AdministratorsController < ApplicationController
   before_action :check_log_in, only: [:index,:edit,:update,:show,:destroy]
   before_action :check_rights, only: [:edit,:update,:destroy]
+  before_action :check_type_rights, only: [:index,:edit,:update,:show,:destroy]
   before_action :check_mail_confirmation, only: [:index,:edit,:update,:show,:destroy]
+  
   #Create Page
   def new
     @user = Administrator.new
@@ -107,9 +109,17 @@ class AdministratorsController < ApplicationController
     #Callback for checking confirmation of mail
     def check_mail_confirmation
       user = current_user
-      unless user.info.is_mail_confirmed
-        flash[:danger] = "You haven't confirmed your mail!\n Please, confirm your mail."
+      unless session[:user_type] != 'student' && user.info.is_mail_confirmed
+        flash[:danger] = "You haven't confirmed your mail! Please, confirm your mail."
         redirect_to user
+      end
+    end
+    
+    #Callback for checking type of user
+    def check_type_rights
+      unless session[:user_type] == 'administrator' || is_super?
+        flash[:danger] = "You have no access to this page!"
+        redirect_to current_user
       end
     end
 end

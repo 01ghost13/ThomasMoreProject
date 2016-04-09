@@ -1,7 +1,9 @@
 class TutorsController < ApplicationController
-  before_action :check_login, only: [:new,:create,:edit,:update,:destroy]
+  before_action :check_login, only: [:new,:create,:edit,:update,:show,:index,:destroy]
+  before_action :check_type_rights, only: [:new,:create,:show,:index]
   before_action :check_rights, only: [:edit,:update,:destroy]
   before_action :check_mail_confirmation
+  
   #New tutor page
   def new
     #Only adm can create tutors
@@ -126,6 +128,16 @@ class TutorsController < ApplicationController
       end  
     end
     
+    #Rights of viewing
+    def check_type_rights
+      user = Tutor.find(params[:id]) if params[:id]
+      #It is my tutor?
+      is_my_adm = (!user.nil? && session[:user_type] == 'administrator' && user.administrator_id == session[:type_id])
+      unless is_super? || is_my_adm
+        flash[:warning] = "You have no access to this page."
+        redirect_to current_user
+      end
+    end
     #Strict params
     def tutor_params
       params.require(:tutor).permit(:administrator_id)

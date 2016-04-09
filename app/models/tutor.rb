@@ -1,5 +1,5 @@
 class Tutor < ActiveRecord::Base
-  has_many :students
+  has_many :students, inverse_of: :tutor
   belongs_to :info, inverse_of: :tutor
   accepts_nested_attributes_for :info
   validates :info_id, :administrator_id, presence: true

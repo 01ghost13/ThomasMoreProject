@@ -4,7 +4,7 @@ module SessionsHelper
     #User's info id
     session[:user_id] = user.id
     #Is it student?
-    if user.name.nil?
+    if user.class.name == 'Student'
       #Student
       session[:user_type] = 'student'
       session[:type_id] = user.id
@@ -17,7 +17,7 @@ module SessionsHelper
         session[:user_type] = 'administrator'
         session[:type_id] = adm.id
         return adm
-      elsif tutor
+      elsif tutor        
         session[:user_type] = 'tutor'
         session[:type_id] = tutor.id
         return tutor

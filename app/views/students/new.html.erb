@@ -1,88 +1,99 @@
+<h1 class="row col-sm-offset-4">Create student</h1>
 <% if @user.errors.any? %>
-	<div id="error_explanation">
-    <div class="alert alert-danger">
-      The form contains <%= pluralize(@user.errors.count, "error") %>.
-    </div>
-	    <ul>
-		<% @user.errors.full_messages.each do |msg| %>
-	    	<li><%= msg %></li>
-	    <% end %>
-	    </ul>
+	<div class="row">
+		<div class="col-sm-offset-2 col-sm-6">
+		    <div class="alert alert-danger">
+		      The form contains <%= pluralize(@user.errors.count, "error") %>.
+			    <ul>
+				<% @user.errors.full_messages.each do |msg| %>
+			    	<li><%= msg %></li>
+			    <% end %>
+			    </ul>
+		    </div>
+	    </div>
   	</div>
 <% end %>
-<table align = "center">
+<% provide(:title,'New student') %>
+
 <%= form_for @user do |student_form| %>
  	<!--Code Name-->
-	<tr>
-		<td>
-			<%= student_form.label :code_name, "Code name of student"%>
-			<%= student_form.text_field :code_name, class: 'form-control'%>
-		</td>
-	</tr>
+	<div class="row col-sm-offset-2 form-group">
+		<%= student_form.label :code_name, "Code name of student",class: "col-sm-2 control-label"%>
+		<div class="col-sm-4">
+			<%= student_form.text_field :code_name, class: 'form-control', placeholder: "Codename" %>
+		</div>
+	</div>
+	
 	<!--Gender-->
-	<tr>
-		<td>
-			<%= student_form.label :gender %><br />
+	<div class="row col-sm-offset-2 form-group">
+		<%= student_form.label :gender,class: "col-sm-2 control-label" %>
+		<div class="col-sm-4">
 			<%= student_form.select(:gender, options_for_select(
 			  [
 			    ['Unknown', 1],
 			    ['Male', 2],
 			    ['Female', 3]
-			  ], 1), {class: 'form-control'}) 
+			  ], @user.gender),{},{class: 'form-control'}) 
 			 %>
-		</td>
-	</tr>
+		 </div>
+	</div>
 	<!--Schooling-->
-	<tr>
-		<td>
-			<%= student_form.label :schooling_id, "Schooling" %><br />
-			<%= student_form.collection_select(:schooling_id, Schooling.all, :id, :name, {class: 'form-control'}) %>
-		</td>
-	</tr>
+	<div class="row col-sm-offset-2 form-group">
+		<%= student_form.label :schooling_id, "Schooling", class: "col-sm-2 control-label" %>
+		<div class="col-sm-4">
+			<%= student_form.collection_select(:schooling_id, Schooling.all, :id, :name,{}, {class: 'form-control'}) %>
+		</div>
+	</div>
 	<!--Is current in school?-->
-	<tr>
-		<td>
-			<%= student_form.check_box(:is_current_in_school) %>
+	<div class="row col-sm-offset-2 form-group">
+		<div class="col-sm-2">
 			<%= student_form.label :is_current_in_school, "Is current in school?" %>
-		</td>
-	</tr>
+		</div>
+		<div class="col-sm-2">
+			<%= student_form.check_box(:is_current_in_school) %>
+		</div>
+	</div>
 	<% if session[:user_type] == 'administrator' %>
 		<!-- Adm -->
 		<% if @is_super_adm %>
 			<!-- Choosing adm -->
-			<tr>
-				<td>
-					<%= label_tag :administrator_id, "Choose local administrator" %><br/>
+			<div class="row col-sm-offset-2 form-group">
+				<%= label_tag :administrator_id, "Choose local administrator", class: "col-sm-2 control-label" %>
+				<div class="col-sm-4">
 					<%= select_tag :administrator_id, options_for_select(@admins), {id: 'administrator_selection', class: 'form-control'}  %><br/>
-				</td>
-			</tr>
-			<% end %>
+				</div>
+			</div>
+		<% end %>
 		<!-- Choosing tutor-->
-		<tr>
-			<td>
-				<%= student_form.label :tutor_id, "Choose Tutor" %><br/>
+		<div class="row col-sm-offset-2 form-group">
+			<%= student_form.label :tutor_id, "Choose Tutor", class: "col-sm-2 control-label" %>
+			<div class="col-sm-4">
 				<%= student_form.select :tutor_id, options_for_select(@tutors), {} , {id: 'tutor_selection', class: 'form-control'}%>
-			</td>
-		</tr>
+			</div>
+		</div>
 	<% end %>
 	<!--Password-->
-	<tr>
-		<td>
-		<%= student_form.label :password %><br/>
-		<%= student_form.password_field :password, class: 'form-control' %>
-		</td>
-	</tr>
-	<tr>
-		<td>
-		<%= student_form.label :password_confirmation, "Confirmation" %><br/>
-		<%= student_form.password_field :password_confirmation, class: 'form-control' %>
-		</td>
-	</tr>
-	<tr>
-		<td>
-		<%= student_form.submit "Confirm", class: "btn btn-primary" %>
-		</td>
-	</tr>
+
+	<div class="row col-sm-offset-2 form-group">
+		<%= student_form.label :password, class: "col-sm-2 control-label" %>
+		<div class="col-sm-4">
+			<%= student_form.password_field :password, class: 'form-control', placeholder: "Password" %>
+		</div>
+	</div>
+	
+	<div class="row col-sm-offset-2 form-group">
+		<%= student_form.label :password_confirmation, "Confirmation", class: "col-sm-2 control-label" %>
+		<div class="col-sm-4">
+			<%= student_form.password_field :password_confirmation, class: 'form-control', placeholder: "Confirm your password" %>
+		</div>
+	</div>
+	
+	<div class="row col-sm-offset-2 form-group">
+		<div class="col-sm-offset-2 col-sm-2">
+			<%= student_form.submit "Confirm", class: "btn btn-primary" %>
+		</div>
+	</div>
+
 <% end %>
 </table>
 

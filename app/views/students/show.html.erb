@@ -1,7 +1,15 @@
 <%= render "shared/profile" %>
-<% if is_super? %>
-	<%= link_to("Edit", edit_student_path(params[:id]), class: "btn btn-default") %>
-	<%= link_to("Delete",@user, method: :delete, data: { confirm: "You sure?" }, class: "btn btn-warning") %>
+<% if @is_super_adm || @is_my_student || @is_student_of_my_tutor %>
+	<div class="row">
+		<div class="btn-group col-sm-4" role="group" aria-label="...">
+			<%= link_to("Edit", edit_student_path(params[:id]), class: "btn btn-default col-sm-4") %>
+			<%= link_to("Delete",@user, method: :delete, data: { confirm: "You sure?" }, class: "btn btn-warning col-sm-4") %>
+		</div>
+	</div>
 <% end %>
-<%= link_to("Start test", '#', class: "btn btn-primary") %>
-<%= link_to("Continue test", '#', class: "btn btn-primary") %>
+<div class="row">
+	<div class="btn-group col-sm-4" role="group" aria-label="...">
+		<%= link_to("Start test", '#', class: "btn btn-primary col-sm-4") %>
+		<%= link_to("Continue test", '#', class: "btn btn-success col-sm-4") %>
+	</div>
+</div>
