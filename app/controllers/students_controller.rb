@@ -1,7 +1,7 @@
 class StudentsController < ApplicationController
-  before_action :check_login, only: [:new,:create, :index,:update,:edit,:destroy]
-  before_action :check_rights, only: [:new, :create, :index, :update, :edit, :destroy]
-  
+  before_action :check_login, only: [:new, :create, :index, :update, :edit, :destroy]
+  before_action :check_rights, only: [:new, :create, :index]
+  before_action :check_editing_rights, only: [:update, :edit, :destroy, :show]
   #New student page
   def new
     @user = Student.new
@@ -118,7 +118,20 @@ class StudentsController < ApplicationController
     #Rights checking
     def check_rights
       #Sa, admin, tutor
-      unless is_super? || session[:type] == 'administrator' || session[:type] == 'tutor'
+      unless is_super? || session[:user_type] == 'administrator' || session[:user_type] == 'tutor'
+        flash[:warning] = "You have no access to this page."
+        redirect_to current_user
+      end
+    end
+    
+    
+    def check_editing_rights
+      user = Student.find(params[:id])
+      is_super_adm = is_super?
+      is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
+      is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
+      is_i = user.id == params[:id]
+      unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
         flash[:warning] = "You have no access to this page."
         redirect_to current_user
       end

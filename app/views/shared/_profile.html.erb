@@ -1,12 +1,15 @@
 <% unless @user_info.nil? %>
 	<% provide(:title,"Profile") %>
-	<table align="center" border="3">
-		<% @user_info.each do |element|%>
-			<tr>
-				<td><%= element[0].to_s.humanize %></td>		
-				<td><%= element[1].to_s.humanize %></td>
-			</tr>
-		<% end %>
-	</table>
+	
+	<div class="col-sm-4">
+		<table class="table table-hover">
+			<% @user_info.each do |element|%>
+				<tr>
+					<td><h4><%= element[0].to_s.humanize %></h4></td>		
+					<td><h4><small><%= element[1].to_s.humanize %></small></h4></td>
+				</tr>
+			<% end %>
+		</table>
+	</div>
 <% end %>
 
