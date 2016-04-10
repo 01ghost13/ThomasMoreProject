@@ -1,21 +1,8 @@
-<h1 class="row col-sm-offset-4">Create student</h1>
-<% if @user.errors.any? %>
-	<div class="row">
-		<div class="col-sm-offset-2 col-sm-6">
-		    <div class="alert alert-danger">
-		      The form contains <%= pluralize(@user.errors.count, "error") %>.
-			    <ul>
-				<% @user.errors.full_messages.each do |msg| %>
-			    	<li><%= msg %></li>
-			    <% end %>
-			    </ul>
-		    </div>
-	    </div>
-  	</div>
-<% end %>
 <% provide(:title,'New student') %>
+<h1 class="row col-sm-offset-4">Create student</h1>
+<%= render 'shared/error_message' %>
 
-<%= form_for @user do |student_form| %>
+<%= form_for @user,class: "form-horizontal" do |student_form| %>
  	<!--Code Name-->
 	<div class="row col-sm-offset-2 form-group">
 		<%= student_form.label :code_name, "Code name of student",class: "col-sm-2 control-label"%>

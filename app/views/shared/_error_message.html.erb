@@ -1,15 +1,14 @@
-<% if @user_info.errors.any? || @user.errors.any? %>
-	<div id="error_explanation">
-    <div class="alert alert-danger">
-      The form contains <%= pluralize(@user.errors.count + @user_info.errors.count, "error") %>.
-    </div>
-	    <ul>
-		<% @user.errors.full_messages.each do |msg| %>
-	    	<li><%= msg %></li>
-	    <% end %>
-	    <% @user_info.errors.full_messages.each do |msg| %>
-	    	<li><%= msg %></li>
-	    <% end %>
-	    </ul>
+<% if @user.errors.any? %>
+    <div class="row">
+    	<div class="col-sm-offset-2 col-sm-6">
+		    <div class="alert alert-danger" role="alert">
+		      The form contains <%= pluralize(@user.errors.count, "error") %>.
+			    <ul>
+				<% @user.errors.full_messages.each do |msg| %>
+			    	<li><%= msg %></li>
+			    <% end %>
+			    </ul>
+		  	</div>
+	  	</div>
   	</div>
 <% end %>

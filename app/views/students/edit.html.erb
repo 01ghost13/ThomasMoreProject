@@ -1,20 +1,6 @@
-<h1 class="row col-sm-offset-4">Edit profile</h1>
-<% if @user.errors.any? %>
-	<div class="row">
-		<div class="col-sm-offset-2 col-sm-6">
-		    <div class="alert alert-danger" role="alert">
-		      The form contains <%= pluralize(@user.errors.count, "error") %>.
-			    <ul>
-				<% @user.errors.full_messages.each do |msg| %>
-			    	<li><%= msg %></li>
-			    <% end %>
-			    </ul>
-		    </div>
-	    </div>
-  	</div>
-<% end %>
 <% provide(:title,'Edit profile') %>
-
+<h1 class="row col-sm-offset-4">Edit profile</h1>
+<%= render 'shared/error_message' %>
 
 <%= form_for @user,class: "form-horizontal" do |student_form| %>
  	<!--Code Name-->
