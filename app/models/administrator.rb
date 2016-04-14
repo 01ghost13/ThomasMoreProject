@@ -1,4 +1,5 @@
 class Administrator < ActiveRecord::Base
+  before_validation :setup_fields, on: :create
   has_many :tutors
   belongs_to :info, inverse_of: :administrator
   validates :organisation, presence: true, length: { in: 5..20}
@@ -10,5 +11,15 @@ class Administrator < ActiveRecord::Base
     admins = Administrator.where(is_super: false).order(:organisation).map { 
       |t| ["%{org}: %{lname} %{name}"%{org: t.organisation, lname: t.info.last_name, name: t.info.name},t.id]
       }
+  end
+  
+  def setup_fields
+    self.is_super = false
+  end
+  
+  def show
+    user_info = self.info.show
+    user_info[:organisation] = self.organisation
+    return user_info
   end
 end

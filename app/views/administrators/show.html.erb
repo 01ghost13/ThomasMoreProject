@@ -1,8 +1,13 @@
-<%= render "shared/profile" %>
-<% if is_super? ||  params[:id] == session[:type_id] && session[:type] == 'tutor' %>
-	<%= link_to("Edit", edit_administrator_path(params[:id]), class: "btn btn-default") %>
-	<%= link_to("Delete",@user, method: :delete, data: { confirm: "You sure?" }, class: "btn btn-warning") %>
-	<%= link_to("Manage test",'#', class: "btn btn-default") %>
+<div class="row">
+	<%= render "shared/profile" %>
+</div>
+<% if is_super? %>
+	<div class="row">
+		<div class="btn-group col-sm-4" role="group" aria-label="...">
+			<%= link_to("Edit", edit_administrator_path(params[:id]), class: "btn btn-default") %>
+			<%= link_to("Delete",@user, method: :delete, data: { confirm: "You sure?" }, class: "btn btn-warning") %>
+		</div>
+	</div>
 <% end %>
 
 

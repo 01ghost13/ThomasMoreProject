@@ -17,16 +17,12 @@ class AdministratorsController < ApplicationController
     @user_info = Info.new(info_params)
     @user = Administrator.new(administrator_params)
     @user.info = @user_info
-    @user.is_super = false
-    @user_info.is_mail_confirmed = is_super?
     #If data ok - creating
-    if @user_info.save && @user.save
+    if @user.save && @user_info.save
       flash[:success] = "Account created!"
       redirect_to(@user)
     else
-      @user_info.delete
-      @user.delete
-      render 'new'
+      render :new
     end
   end
   
@@ -59,7 +55,7 @@ class AdministratorsController < ApplicationController
   def update
     @user = Administrator.find(params[:id])
     @user_info = Info.find(@user.info_id)
-    if !@user_info.nil? && !@user.nil? && @user_info.update(info_params) && @user.update(administrator_params)
+    if !@user_info.nil? && !@user.nil? && @user.update(administrator_params) && @user_info.update(info_params)
       redirect_to(@user)
       flash[:success] = "Update Complete"
     else
@@ -70,7 +66,7 @@ class AdministratorsController < ApplicationController
   #Profile page
   def show
     @user = Administrator.find(params[:id])
-    find_info(@user) << ["Organisation: ",@user.organisation]
+    @user_info = @user.show.to_a
   end
 
   #Deleting record

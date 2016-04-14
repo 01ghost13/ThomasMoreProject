@@ -1,2 +1,66 @@
-<% provide(:title,"Create administrator") %>
-<%= render "forms" %>
+<% provide(:title,"New administrator") %>
+<h1 class="row col-sm-offset-4">Create administrator</h1>
+<%= render 'shared/error_message' %>
+
+<%= form_for @user,class: "form-horizontal" do |l_admin_form| %>
+ 	
+	<%= fields_for @user.info,class: "form-horizontal" do |info_form| %>
+	<!--Name -->
+		<div class="row col-sm-offset-2 form-group">
+			<%= info_form.label :name, class: "col-sm-2 control-label" %>
+			<div class="col-sm-4">
+				<%= info_form.text_field :name, class: 'form-control', placeholder: "Name" %>
+			</div>
+		</div>
+	<!--LastName -->
+		<div class="row col-sm-offset-2 form-group">
+			<%= info_form.label :last_name, class: "col-sm-2 control-label" %>
+			<div class="col-sm-4">
+				<%= info_form.text_field :last_name, class: 'form-control', placeholder: "Last name" %>
+			</div>
+		</div>
+
+	<!--Phone-->
+		<div class="row col-sm-offset-2 form-group">
+			<%= info_form.label :phone, class: "col-sm-2 control-label" %>
+			<div class="col-sm-4">
+				<%= info_form.text_field :phone, class: 'form-control', placeholder: "Leave blank if you don't have phone" %>
+			</div>
+		</div>
+
+	<!--Password-->
+		<div class="row col-sm-offset-2 form-group">
+			<%= info_form.label :password, class: "col-sm-2 control-label" %>
+			<div class="col-sm-4">
+				<%= info_form.password_field :password, class: 'form-control', placeholder: "Password"  %>
+			</div>
+		</div>
+		<div class="row col-sm-offset-2 form-group">
+			<%= info_form.label :password_confirmation, "Confirmation", class: "col-sm-2 control-label" %>
+			<div class="col-sm-4">
+				<%= info_form.password_field :password_confirmation, class: 'form-control', placeholder: "Confirm your password" %>
+			</div>
+		</div>
+
+	<!--Mail(Login)-->
+		<div class="row col-sm-offset-2 form-group">
+			<%= info_form.label :mail, "Email", class: "col-sm-2 control-label" %>
+			<div class="col-sm-4">
+				<%= info_form.email_field :mail, class: 'form-control', placeholder: "Email" %>
+			</div>
+		</div>
+	<% end %>
+	<!--Organisation -->
+	<div class="row col-sm-offset-2 form-group">
+		<%= l_admin_form.label :organisation, class: "col-sm-2 control-label" %>
+		<div class="col-sm-4">
+			<%= l_admin_form.text_field :organisation, class: 'form-control', placeholder: "Organisation" %>		
+		</div>
+	</div>
+	<div class="row col-sm-offset-2 form-group">
+		<div class="col-sm-offset-2 col-sm-2">	
+			<%= l_admin_form.submit "Confirm", class: "btn btn-primary" %>
+		</div>
+	</div>
+<% end %>
+
