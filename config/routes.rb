@@ -3,10 +3,18 @@ Rails.application.routes.draw do
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
-
+  
+  get "tests/testing" => 'tests#testing'
+  get "tests/testing/update_picture" => 'tests#update_picture'
   resources :administrators
   resources :tutors
   resources :students
+  resources :tests 
+  
+  #get "tests/:id/testing" => 'tests#testing'
+  #get "tests/:id/testing/update_picture" => 'tests#update_picture'
+  #get "tests/testing" => 'tests#testing'
+  #get "tests/testing/update_picture" => 'tests#update_picture'
   
   get "students/new/update_tutors" => 'students#update_tutors'
   get "students/:id/edit/update_tutors" => 'students#update_tutors'

@@ -1,0 +1,55 @@
+<div class="row">
+	<!--Btn_back-->
+	<div class="col-sm-1">
+		<%= image_tag 'btn_back.png', id:'btn_back',class: "img-responsive" %>
+	</div>
+	<!--Instructions-->
+	<div class="col-sm-offset-1 col-sm-8">
+		<div class="panel panel-default">
+  			<div class="panel-body">
+    			<p>Some instructions for user</p>
+		  	</div>
+		</div>
+	</div>
+	<!--Btn_exit-->
+	<div class="col-sm-offset-1 col-sm-1">
+		<%= image_tag 'btn_exit.png', id:'btn_exit',class: "img-responsive" %>
+	</div>
+</div>
+<div class="row">
+	<!--Thumbs_up-->
+	<div class="col-sm-2">
+		<%= image_tag 'btn_tu.png', id:'btn_tu',class: "img-responsive"%>
+	</div>
+	<!--Picture-->
+	<div class="col-sm-offset-2 col-sm-5">
+		<%= image_tag image_url("1. Semi-industrieel werk (#{@i}).jpg"), id:'cur_image',class: "img-responsive"%>
+	</div>
+	<!--Thumbs_down-->
+	<div class="col-sm-offset-1 col-sm-2">
+		<%= image_tag 'btn_td.png', id:'btn_td',class: "img-responsive"%>
+	</div>
+</div>
+<div class="row">
+	<!--Question mark-->
+	<div class="col-sm-offset-5 col-sm-2">
+		<%= image_tag 'btn_qm.png', id:'btn_qm',class: "img-responsive"%>
+	</div>
+</div>
+<div class="row">
+	<!--Description-->
+	<div class="col-sm-offset-2 col-sm-8">
+		<div class="panel panel-default">
+  			<div class="panel-body">
+    			<p><%=@description%></p>
+		  	</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<!--Progress bar-->
+	<div class="progress">
+	  <div id ="bar_id" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow=<%=@progress_bar_value.to_s%> aria-valuemin="0" aria-valuemax="100" style="width:<%= @progress_bar_value.to_s %>%;"%>
+	  </div>
+	</div>
+</div>
