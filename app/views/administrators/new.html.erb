@@ -57,6 +57,13 @@
 			<%= l_admin_form.text_field :organisation, class: 'form-control', placeholder: "Organisation" %>		
 		</div>
 	</div>
+	<!--Organisation address -->
+	<div class="row col-sm-offset-2 form-group">
+		<%= l_admin_form.label :organisation_address, class: "col-sm-2 control-label" %>
+		<div class="col-sm-4">
+			<%= l_admin_form.text_field :organisation_address, class: 'form-control', placeholder: "Address of organisation" %>		
+		</div>
+	</div>
 	<div class="row col-sm-offset-2 form-group">
 		<div class="col-sm-offset-2 col-sm-2">	
 			<%= l_admin_form.submit "Confirm", class: "btn btn-primary" %>

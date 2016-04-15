@@ -77,7 +77,7 @@ class AdministratorsController < ApplicationController
   private
     #Attributes
     def administrator_params
-      params.require(:administrator).permit(:organisation)
+      params.require(:administrator).permit(:organisation,:organisation_address)
     end
     def info_params
       params.require(:info).permit(:name,:last_name,:mail,:phone,:password,:password_confirmation)

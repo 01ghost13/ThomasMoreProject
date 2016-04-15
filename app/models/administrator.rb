@@ -6,6 +6,7 @@ class Administrator < ActiveRecord::Base
   validates :info_id, presence: true, uniqueness: true
   validates :is_super, uniqueness: true, if: "is_super == true"
   validates :is_super, exclusion: { in: [nil] }
+  validates :organisation_address, presence: true, uniqueness: true, length: { in: 5..20}
   
   def self.admins_list
     admins = Administrator.where(is_super: false).order(:organisation).map { 
@@ -20,6 +21,7 @@ class Administrator < ActiveRecord::Base
   def show
     user_info = self.info.show
     user_info[:organisation] = self.organisation
+    user_info[:organisation_address] = self.organisation_address
     return user_info
   end
 end
