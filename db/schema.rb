@@ -11,17 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160303221831) do
+ActiveRecord::Schema.define(version: 20160415221530) do
 
   create_table "administrators", force: :cascade do |t|
     t.boolean  "is_super"
     t.string   "organisation"
     t.integer  "info_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.string   "organisation_address"
   end
 
   add_index "administrators", ["info_id"], name: "index_administrators_on_info_id"
+  add_index "administrators", ["organisation_address"], name: "index_administrators_on_organisation_address", unique: true
 
   create_table "infos", force: :cascade do |t|
     t.string   "name"

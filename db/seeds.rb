@@ -18,7 +18,7 @@ another_example_of_schooling = Schooling.create(name: 'University')
 #Creating of seed models...
 #LAdm
 LadmInfo = Info.create(name: 'LocalAdm', last_name: 'TestLastNamr', password: '020695', phone: '89023853401', mail: 'another@mail.com', is_mail_confirmed: true)
-lAdm = Administrator.create(info_id: LadmInfo.id, organisation: 'Some organisation', is_super: false, organisation_address: "Other address")
+lAdm = Administrator.create(info_id: LadmInfo.id, organisation: 'Some organisation', organisation_address: "Other address")
 #Tutors
 tutorInfo = Info.create(name: 'Dmitry', last_name: 'Skvaznikov', password: '020695', phone: '89023853401', mail: 'some@mail.com', is_mail_confirmed: true)
 first_tutor = Tutor.create(administrator_id: lAdm.id, info_id: tutorInfo.id)
@@ -50,7 +50,6 @@ q4 = Question.create(test_id: test.id, is_tutorial: false, picture_id: pic4.id, 
 interests[2..4].each do |t|
   pic1.picture_interests << PictureInterest.new(interest_id: t.id, earned_points: 1)
 end
-pic1.interests << interests[2..4]
 pic2.picture_interests << PictureInterest.new(interest_id: interests[0].id, earned_points: 2)
 interests[1..3].each do |t|
   pic3.picture_interests << PictureInterest.new(interest_id: t.id, earned_points: 3)

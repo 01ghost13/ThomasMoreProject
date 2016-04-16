@@ -1,21 +1,32 @@
 <% provide(:title, "Log in") %>
 <h1>Log in</h1>
 
-<div class="row">
-	<div class="col-md-6 col-md-offset-3">
-		<%= form_for(:session, url: login_path) do |f| %>
-			
-			<%= f.label :codename, "Codename or Email" %>
+<%= form_for(:session, url: login_path) do |f| %>
+	<div class="row col-sm-offset-2 form-group">
+		<%= f.label :codename, "Codename or Email", class: "col-sm-2 control-label" %>
+		<div class="col-sm-4">
 			<%= f.text_field :codename, class: 'form-control' %>
-			
-			<%= f.label :password %>
-			<%= f.password_field :password, class: 'form-control' %>
-			
-			<%= f.check_box(:is_student, :checked => true) %>
-			<%= f.label(:is_student, "I am student") %><br />
-			
-			<%= f.submit "Log in", class: "btn btn-primary" %><br />
-		<% end %>
-		Want to join? <%= link_to 'Sign up, now!', new_administrator_path %>
+		</div>
 	</div>
+	<div class="row col-sm-offset-2 form-group">
+		<%= f.label :password, class: "col-sm-2 control-label" %>
+		<div class="col-sm-4">
+			<%= f.password_field :password, class: 'form-control' %>
+		</div>
+	</div>
+	<div class="row col-sm-offset-2 form-group">
+		<div class="col-sm-4">
+			<%= f.check_box(:is_student, :checked => true) %><br />
+			<%= f.label(:is_student, "I am student") %>
+		</div>
+	</div>
+	<div class="row col-sm-offset-2 form-group">
+		<div class="col-sm-offset-2 col-sm-2">	
+			<%= f.submit "Log in", class: "btn btn-primary" %>
+		</div>
+	</div>
+<% end %>
+<div class="row col-sm-offset-2 col-sm-2">
+	Want to join? <%= link_to 'Sign up, now!', new_administrator_path %>
 </div>
+		
