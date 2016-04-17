@@ -25,7 +25,7 @@
 	</div>
 	<!--Picture-->
 	<div class="col-sm-offset-2 col-sm-5">
-		<%= image_tag image_url("1. Semi-industrieel werk (#{@i}).jpg"), id:'cur_image',class: "img-responsive"%>
+		<%= image_tag image_url(@image), id:'cur_image',class: "img-responsive"%>
 	</div>
 	<!--Thumbs_down-->
 	<div class="col-sm-offset-1 col-sm-2">
@@ -42,7 +42,7 @@
 	<!--Description-->
 	<div class="col-sm-offset-2 col-sm-8">
 		<div class="panel panel-default">
-  			<div class="panel-body">
+  			<div class="panel-body" id="description_id">
     			<p><%=@description%></p>
 		  	</div>
 		</div>

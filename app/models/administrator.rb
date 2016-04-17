@@ -16,6 +16,7 @@ class Administrator < ActiveRecord::Base
   
   def setup_fields
     self.is_super = false
+    return true
   end
   
   def show

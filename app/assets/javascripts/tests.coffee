@@ -7,7 +7,7 @@ $ ->
       type: 'GET'
       dataType: 'script'
       data: {
-        value: "tu",
+        value: 3,
         progress: $('#bar_id').attr('aria-valuenow')
       }
       error: (jqXHR, textStatus, errorThrown) ->
@@ -20,7 +20,7 @@ $ ->
       type: 'GET'
       dataType: 'script'
       data: {
-        value: "td",
+        value: 1,
         progress: $('#bar_id').attr('aria-valuenow')
       }
       error: (jqXHR, textStatus, errorThrown) ->
@@ -33,7 +33,7 @@ $ ->
       type: 'GET'
       dataType: 'script'
       data: {
-        value: "qm",
+        value: 2,
         progress: $('#bar_id').attr('aria-valuenow')
       }
       error: (jqXHR, textStatus, errorThrown) ->
@@ -46,7 +46,7 @@ $ ->
       type: 'GET'
       dataType: 'script'
       data: {
-        value: "back",
+        value: 0,
         progress: $('#bar_id').attr('aria-valuenow')
       }
       error: (jqXHR, textStatus, errorThrown) ->

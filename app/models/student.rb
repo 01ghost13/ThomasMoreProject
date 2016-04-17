@@ -3,7 +3,7 @@ class Student < ActiveRecord::Base
   has_secure_password
   has_many :result_of_tests
   belongs_to :tutor, inverse_of: :students
-  
+  belongs_to :schooling, inverse_of: :students
   #Validating
   validates :code_name, presence: true, uniqueness: true, length: { in: 6..20}
   validates :gender, presence: true, inclusion: { in: [1,2,3] }

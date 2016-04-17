@@ -1,23 +1,28 @@
 Rails.application.routes.draw do
+  #Concerns
+  concern :group_result do
+    resources :result_of_tests, only: [:index], path: 'results'
+  end
+  
+  #Routes
   root 'sessions#new'
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
   
-  get "tests/testing" => 'tests#testing'
-  get "tests/testing/update_picture" => 'tests#update_picture'
-  resources :administrators
-  resources :tutors
-  resources :students
-  resources :tests 
-  
-  #get "tests/:id/testing" => 'tests#testing'
-  #get "tests/:id/testing/update_picture" => 'tests#update_picture'
-  #get "tests/testing" => 'tests#testing'
-  #get "tests/testing/update_picture" => 'tests#update_picture'
-  
-  get "students/new/update_tutors" => 'students#update_tutors'
-  get "students/:id/edit/update_tutors" => 'students#update_tutors'
+  resources :administrators, concerns: :group_result 
+  resources :tutors, concerns: :group_result 
+  resources :students, concerns: :group_result do
+    member do
+      get 'tests/:test_id/testing' => 'tests#testing'
+      get "tests/:test_id/testing/update_picture" => 'tests#update_picture'
+      get "edit/update_tutors" => 'students#update_tutors'
+    end 
+    resources :result_of_tests, except: [:new,:create,:index], path: 'results', param: :result_id
+    get "update_tutors" => 'students#update_tutors', on: :new 
+  end
+  resources :tests
+
 # The priority is based upon order of creation: first created -> highest priority.
 # See how all your routes lay out with "rake routes".
 
