@@ -29,6 +29,9 @@ module SessionsHelper
   
   #Returns users_type obj
   def current_user
+    if session[:user_type].nil?
+      return nil
+    end
     if session[:user_type] == 'student'
       @current_user ||= Student.find_by(id: session[:user_id])
     else

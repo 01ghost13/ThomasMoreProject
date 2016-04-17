@@ -14,34 +14,58 @@ class TestsController < ApplicationController
   def index
   end
   def exit
-    #if has answers - saving
-    #redirecting to result
+    session.delete(:cur_question)
+    session.delete(:result_of_test_id)
+    session.delete(:start_time)
+    session.delete(:next_rewrite)
+    return nil
   end
   def update_picture
     #Finding our result of test
     res = ResultOfTest.find(session[:result_of_test_id])
     cur_question = session[:cur_question].to_i
-    #Writing result
-    res.question_results << QuestionResult.new(number: cur_question, start: session[:start_time],was_checked: params[:value])
-    #Changing variables
-    ##Finding next pic name
-    next_q = Question.where("test_id = :test and number = :number",{test: res.test_id, number: cur_question+1}).take
-    ##if was last pic saving and redirecting to result
-    if next_q.nil?
-      #current q was the last, saving and redirecting to end
-      res.update(is_ended: true)
-      session.delete(:cur_question)
-      session.delete(:result_of_test_id)
-      session.delete(:start_time)
-      render js: %(window.location.pathname='#{student_result_of_test_path(res.id)}')
-      return
+    if session[:value] == 0
+    #We are going back
+      return if cur_question == 1 #If was pressed on first question - returning
+      #Loading prev q
+      prev_q = Question.where("test_id = :test and number = :number",{test: res.test_id, number: cur_question-1}).take
+      #Loading info
+      ##switch off btn back
+      @show_btn_back = false
+      session[:next_rewrite] = true #Flag to know, next click - to update
+      step = -100 / Question.where(test_id: res.test_id).count
+      pic = prev_q.picture
+      session[:cur_question] -= 1
+    else
+      #Loading next q
+      @show_btn_back = true
+      #Writing result
+      ##Checking - is it rewriting?
+      if session[:next_rewrite]
+        session[:next_rewrite] = false
+        #Updating cur q result
+        q_to_upd = QuestionResult.where("result_of_test_id = :res and number = :number",{res: res.id, number: cur_question})
+        q_to_upd.update(start: session[:start_time],was_checked: params[:value], was_rewrited: true)
+      else
+        res.question_results << QuestionResult.new(number: cur_question, start: session[:start_time],was_checked: params[:value])
+      end
+      #Changing variables
+      ##Finding next pic name
+      next_q = Question.where("test_id = :test and number = :number",{test: res.test_id, number: cur_question+1}).take
+      ##if was last pic saving and redirecting to result
+      if next_q.nil?
+        #current q was the last, saving and redirecting to end
+        res.update(is_ended: true)
+        render js: %(window.location.pathname='#{student_result_of_test_path(res.id)}')
+        return
+      end
+      step = 100 / Question.where(test_id: res.test_id).count
+      pic = next_q.picture
+      session[:cur_question] += 1  
     end
-    #If it wasnt last question
-    @progress_bar_value = params[:progress].to_i + 10
-    pic = next_q.picture
+    @progress_bar_value = params[:progress].to_i + step.to_i
     @description = pic.description
     @image = pic.path
-    session[:cur_question] += 1
     session[:start_time] = DateTime.current
     respond_to do |format|
        format.js {}
@@ -74,8 +98,10 @@ class TestsController < ApplicationController
     question = res.last_question
     session[:result_of_test_id] = res.id
     session[:cur_question] = question.number
+    @show_btn_back = (question.number == 1) ? false : true
     session[:start_time] = DateTime.current
     @description = question.picture.description
     @image = question.picture.path
+    session[:next_rewrite] = false
   end
 end

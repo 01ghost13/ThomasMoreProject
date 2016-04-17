@@ -1,5 +1,5 @@
 class StudentsController < ApplicationController
-  before_action :check_login, only: [:new, :create, :index, :update, :edit, :destroy]
+  before_action :check_login, only: [:new, :create, :index, :update, :edit, :destroy, :show]
   before_action :check_rights, only: [:new, :create, :index]
   before_action :check_editing_rights, only: [:update, :edit, :destroy, :show]
   #New student page

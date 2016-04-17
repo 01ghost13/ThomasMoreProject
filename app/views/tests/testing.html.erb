@@ -1,9 +1,10 @@
 <% provide(:title, 'Testing') %>
 <%= stylesheet_link_tag "tests" %>
+<%= javascript_include_tag "exiting_page_script" %>
 <div class="row">
 	<!--Btn_back-->
 	<div class="col-sm-1">
-		<%= image_tag 'btn_back.png', id:'btn_back',class: "img-responsive" %>
+		<%= image_tag 'btn_back.png', id:'btn_back',class: "img-responsive", disabled: @show_btn_back %>
 	</div>
 	<!--Instructions-->
 	<div class="col-sm-offset-1 col-sm-8">
@@ -15,7 +16,7 @@
 	</div>
 	<!--Btn_exit-->
 	<div class="col-sm-offset-1 col-sm-1">
-		<%= image_tag 'btn_exit.png', id:'btn_exit',class: "img-responsive" %>
+		<%= link_to_image('btn_exit.png',student_path(params[:id]),{id:'btn_exit'}) %>
 	</div>
 </div>
 <div class="row">

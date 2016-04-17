@@ -14,4 +14,8 @@ class ResultOfTest < ActiveRecord::Base
     questions = QuestionResult.order(:number).where(result_of_test_id: self.id)
     return Question.where("test_id = :test and number = :number", {test: self.test_id, number:(questions.count == 0)? 1 :questions.count+1}).take
   end
+  def previous_question
+    questions = QuestionResult.order(:number).where(result_of_test_id: self.id)
+    return Question.where("test_id = :test and number = :number", {test: self.test_id, number:(questions.count == 0)? 1 :questions.count-1}).take
+  end
 end

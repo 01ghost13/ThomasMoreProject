@@ -1,6 +1,4 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
+# Handle clicking on thumbsup(tu), thumbsdown(td), questuion mark(qm)
 $ ->
   $(document).on 'click', '#btn_tu', (evt) ->
     $.ajax 'testing/update_picture',
@@ -28,7 +26,7 @@ $ ->
       success: (data, textStatus, jqXHR) ->
         console.log("Successfully changed")
 $ ->
-  $(document).on 'click', '#btn_td', (evt) ->
+  $(document).on 'click', '#btn_qm', (evt) ->
     $.ajax 'testing/update_picture',
       type: 'GET'
       dataType: 'script'
@@ -40,6 +38,7 @@ $ ->
         console.log("AJAX Error: #{textStatus}")
       success: (data, textStatus, jqXHR) ->
         console.log("Successfully changed")
+#Handling additional pics (Pic_back, Pic_exit)
 $ ->
   $(document).on 'click', '#btn_back', (evt) ->
     $.ajax 'testing/update_picture',
@@ -47,19 +46,6 @@ $ ->
       dataType: 'script'
       data: {
         value: 0,
-        progress: $('#bar_id').attr('aria-valuenow')
-      }
-      error: (jqXHR, textStatus, errorThrown) ->
-        console.log("AJAX Error: #{textStatus}")
-      success: (data, textStatus, jqXHR) ->
-        console.log("Successfully changed")
-$ ->
-  $(document).on 'click', '#btn_exit', (evt) ->
-    $.ajax 'testing/exit',
-      type: 'GET'
-      dataType: 'script'
-      data: {
-        value: "exit",
         progress: $('#bar_id').attr('aria-valuenow')
       }
       error: (jqXHR, textStatus, errorThrown) ->
