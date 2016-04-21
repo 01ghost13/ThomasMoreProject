@@ -23,7 +23,8 @@ class TutorsController < ApplicationController
     #Loading info
     @user = Tutor.new
     @user_info = @user.build_info(info_params)
-    #@user_info.is_mail_confirmed = true if @is_super_admin
+    @user_info.is_mail_confirmed = true
+    @user_info.is_mail_confirmed = true if @is_super_admin
     @user.administrator_id = @is_super_admin ? tutor_params[:administrator_id] : session[:type_id]
     #Can use current_user.id instead session[:type_id]
     

@@ -1,5 +1,5 @@
 class Info < ActiveRecord::Base
-  before_validation :setup_fields, on: :create
+  before_validation :setup_fields, on: :new
   
   has_one :administrator, inverse_of: :info
   has_one :tutor, inverse_of: :info
@@ -13,7 +13,7 @@ class Info < ActiveRecord::Base
   
   def setup_fields
     #!While system of confirmation isnt work
-    self.is_mail_confirmed = true
+    #self.is_mail_confirmed = true
   end
   
   #Shows info

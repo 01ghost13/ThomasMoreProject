@@ -14,6 +14,7 @@ class TestsController < ApplicationController
   def index
   end
   def exit
+    #debugger
     session.delete(:cur_question)
     session.delete(:result_of_test_id)
     session.delete(:start_time)
@@ -21,31 +22,35 @@ class TestsController < ApplicationController
     return nil
   end
   def update_picture
+    #debugger
     #Finding our result of test
     res = ResultOfTest.find(session[:result_of_test_id])
     cur_question = session[:cur_question].to_i
-    if session[:value] == 0
+    if params[:value] == "0"
     #We are going back
       return if cur_question == 1 #If was pressed on first question - returning
       #Loading prev q
       prev_q = Question.where("test_id = :test and number = :number",{test: res.test_id, number: cur_question-1}).take
+      #debugger
       #Loading info
       ##switch off btn back
-      @show_btn_back = false
+      @show_btn_back = "hidden"
       session[:next_rewrite] = true #Flag to know, next click - to update
       step = -100 / Question.where(test_id: res.test_id).count
+      #debugger
       pic = prev_q.picture
       session[:cur_question] -= 1
     else
       #Loading next q
-      @show_btn_back = true
+      @show_btn_back = "visible"
       #Writing result
       ##Checking - is it rewriting?
       if session[:next_rewrite]
+        debugger
         session[:next_rewrite] = false
         #Updating cur q result
-        q_to_upd = QuestionResult.where("result_of_test_id = :res and number = :number",{res: res.id, number: cur_question})
-        q_to_upd.update(start: session[:start_time],was_checked: params[:value], was_rewrited: true)
+        q_to_upd = QuestionResult.where("result_of_test_id = :res and number = :number",{res: res.id, number: cur_question}).take
+        q_to_upd.update({start: session[:start_time],was_checked: params[:value], was_rewrited: true})
       else
         res.question_results << QuestionResult.new(number: cur_question, start: session[:start_time],was_checked: params[:value])
       end
@@ -56,7 +61,7 @@ class TestsController < ApplicationController
       if next_q.nil?
         #current q was the last, saving and redirecting to end
         res.update(is_ended: true)
-        render js: %(window.location.pathname='#{student_result_of_test_path(res.id)}')
+        render js: %(window.location.pathname='#{student_result_of_test_path(res.student_id,res.id)}')
         return
       end
       step = 100 / Question.where(test_id: res.test_id).count
@@ -92,13 +97,17 @@ class TestsController < ApplicationController
       #All tests were ended
       #Creating new result
       res = ResultOfTest.create(test_id: test.id, was_in_school: student.is_current_in_school, schooling_id: student.schooling.id, student_id: student.id)
+    else
+      total_q = Question.where(test_id: res.test_id).count
+      done_q = res.question_results.count
+      
+      @progress_bar_value = done_q / total_q * 100.0
     end
     #Filling first question
-    #debugger
     question = res.last_question
     session[:result_of_test_id] = res.id
     session[:cur_question] = question.number
-    @show_btn_back = (question.number == 1) ? false : true
+    @show_btn_back = (question.number == 1) ? "hidden" : "visible"
     session[:start_time] = DateTime.current
     @description = question.picture.description
     @image = question.picture.path

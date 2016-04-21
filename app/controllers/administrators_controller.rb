@@ -16,6 +16,7 @@ class AdministratorsController < ApplicationController
     #Loading data
     @user_info = Info.new(info_params)
     @user = Administrator.new(administrator_params)
+    @user_info.is_mail_confirmed = true
     @user.info = @user_info
     #If data ok - creating
     if @user.save && @user_info.save
