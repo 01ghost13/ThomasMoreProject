@@ -50,7 +50,7 @@ class TestsController < ApplicationController
         session[:next_rewrite] = false
         #Updating cur q result
         q_to_upd = QuestionResult.where("result_of_test_id = :res and number = :number",{res: res.id, number: cur_question}).take
-        q_to_upd.update({start: session[:start_time],was_checked: params[:value], was_rewrited: true})
+        q_to_upd.update({start: session[:start_time],:end => DateTime.current,was_checked: params[:value], was_rewrited: true})
       else
         res.question_results << QuestionResult.new(number: cur_question, start: session[:start_time],was_checked: params[:value])
       end

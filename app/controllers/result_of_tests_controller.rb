@@ -3,15 +3,19 @@ class ResultOfTestsController < ApplicationController
   #TODO: Add group stats
   def edit
     #Loading res info
-    result = ResultOfTest.find(params[:result_id])
-    questions = result.question_results
-    questions_info = []
-    questions.each do |q|
-      questions_info << q.show
-    end
+    @result = ResultOfTest.find(params[:result_id])
+    @user = @result
   end
   def update
-    
+    #Loading res info
+    @result = ResultOfTest.find(params[:result_id])
+    @user = @result
+    if @result.update(result_params)
+      redirect_to(student_result_of_test_path(params[:student_id],params[:result_id]))
+      flash[:success] = "Update Complete"
+    else
+      render :edit
+    end
   end
 
   def show
@@ -61,4 +65,9 @@ class ResultOfTestsController < ApplicationController
   def index
     
   end
+  private
+    def result_params
+      debugger
+      params.require(:result_of_test).permit(question_results_attributes: [:was_checked,:id])
+    end
 end
