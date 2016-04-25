@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   #Concerns
   concern :group_result do
-    resources :result_of_tests, only: [:index], path: 'results'
+    resources :result_of_tests, only: [:index], path: 'results', param: :result_id
   end
   
   #Routes

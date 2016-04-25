@@ -1,5 +1,5 @@
 class TestsController < ApplicationController
-  
+  #TODO: Add check of logging and rights
   def new
   end
   def create
@@ -46,7 +46,7 @@ class TestsController < ApplicationController
       #Writing result
       ##Checking - is it rewriting?
       if session[:next_rewrite]
-        debugger
+        #debugger
         session[:next_rewrite] = false
         #Updating cur q result
         q_to_upd = QuestionResult.where("result_of_test_id = :res and number = :number",{res: res.id, number: cur_question}).take
