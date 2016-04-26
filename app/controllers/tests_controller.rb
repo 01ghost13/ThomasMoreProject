@@ -1,5 +1,7 @@
 class TestsController < ApplicationController
-  #TODO: Add check of logging and rights
+  #TODO: Creation of tests
+  before_action :check_login
+  before_action :check_rights, only: [:testing]
   def new
   end
   def create
@@ -113,4 +115,23 @@ class TestsController < ApplicationController
     @image = question.picture.path
     session[:next_rewrite] = false
   end
+  private
+    def check_login
+      unless logged_in?
+        flash[:warning] = "Only registrated people can see this page."
+        #Redirecting to home page
+        redirect_to :root 
+      end
+    end
+    def check_rights
+      user = Student.find(params[:student_id])
+      is_super_adm = is_super?
+      is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
+      is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
+      is_i = session[:user_type] == 'student' && params[:student_id] == session[:type_id]
+      unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
+        flash[:warning] = "You have no access to this page."
+        redirect_to current_user
+      end
+    end
 end

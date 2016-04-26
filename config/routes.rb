@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
   
+  resources :interests, except:[:show,:new]
   resources :administrators, concerns: :group_result 
   resources :tutors, concerns: :group_result 
   resources :students, concerns: :group_result do

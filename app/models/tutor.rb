@@ -14,4 +14,9 @@ class Tutor < ActiveRecord::Base
     user_info[:organisation] = adm.organisation
     return user_info
   end
+  def is_my_student? (student_id)
+    student = Student.find(student_id)
+    return false if student.nil?
+    return student.tutor_id == self.id
+  end
 end

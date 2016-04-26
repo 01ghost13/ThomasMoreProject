@@ -1,6 +1,8 @@
 class ResultOfTestsController < ApplicationController
-  #TODO: Add check of logging
   #TODO: Add group stats
+  before_action :check_login, except: [:check_rights,:result_params]
+  before_action :check_rights, except: [:check_rights,:result_params,:index]
+  
   def edit
     #Loading res info
     @result = ResultOfTest.find(params[:result_id])
@@ -19,6 +21,13 @@ class ResultOfTestsController < ApplicationController
   end
 
   def show
+    @i_am_student = session[:user_type] == 'student'
+    is_i = @i_am_student && params[:student_id] == session[:type_id]
+    unless is_i
+      flash[:warning] = "You have no access to this page."
+      redirect_to current_user
+    end
+    
     #Loading result
     result = ResultOfTest.find(params[:result_id])
     #Loading q results
@@ -59,7 +68,6 @@ class ResultOfTestsController < ApplicationController
     @list_interests = interests.to_a.sort{ |x,y| y[1] - x[1]}
     @list_timestamps = timestamps
     @list_interests_max = interests_max
-    #Making list of timing
   end
   
   def index
@@ -69,5 +77,22 @@ class ResultOfTestsController < ApplicationController
     def result_params
       debugger
       params.require(:result_of_test).permit(question_results_attributes: [:was_checked,:id])
+    end
+    def check_login
+      unless logged_in?
+        flash[:warning] = "Only registrated people can see this page."
+        #Redirecting to home page
+        redirect_to :root 
+      end
+    end
+    def check_rights
+      user = Student.find(params[:student_id])
+      is_super_adm = is_super?
+      is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
+      is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
+      unless is_super_adm || is_my_student || is_student_of_my_tutor
+        flash[:warning] = "You have no access to this page."
+        redirect_to current_user
+      end
     end
 end
