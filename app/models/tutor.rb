@@ -1,10 +1,13 @@
 class Tutor < ActiveRecord::Base
   has_many :students, inverse_of: :tutor
-  belongs_to :info, inverse_of: :tutor, validate: true
-  accepts_nested_attributes_for :info
-  validates :info_id, :administrator_id, presence: true
-  validates :info_id, uniqueness: true
+  belongs_to :info, inverse_of: :tutor, autosave: true
   
+  validates :administrator_id, presence: true
+  validates :info_id, uniqueness: true
+
+  validates_presence_of :info
+  validates_associated :info, allow_blank: true
+  accepts_nested_attributes_for :info
   #Shows info of tutor as a map
   def show
     user_info = self.info.show

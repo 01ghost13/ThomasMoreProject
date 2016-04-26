@@ -12,24 +12,22 @@ class TutorsController < ApplicationController
     #Creating tutor obj
     @user = Tutor.new
     @user_info = Info.new
-    @user.info = @user_info 
+    @user.info = @user_info
   end
   
   #Create querry
   def create
     #Reloading info for page
     info_for_forms
-        
+    #debugger
     #Loading info
-    @user = Tutor.new
-    @user_info = @user.build_info(info_params)
-    @user_info.is_mail_confirmed = true
-    @user_info.is_mail_confirmed = true if @is_super_admin
-    @user.administrator_id = @is_super_admin ? tutor_params[:administrator_id] : session[:type_id]
+    @user = Tutor.new(tutor_params)
+
+    @user.administrator_id = session[:type_id] unless @is_super_admin
     #Can use current_user.id instead session[:type_id]
     
     #If all is ok - creating
-    if @user.save && @user_info.save
+    if @user.save
       flash[:success] = "Account created!"
       redirect_to @user
       #Which redirect is best? To my profile or to created?
@@ -65,9 +63,8 @@ class TutorsController < ApplicationController
     
     #Finding tutor
     @user = Tutor.find(params[:id])
-    @user_info = @user.info
     #If tutor exit and data - OK, changing
-    if !@user_info.nil? && !@user.nil? && @user.update(tutor_params) && @user_info.update(info_params)
+    if @user.update(tutor_params)
       redirect_to(@user)
       flash[:success] = "Update Complete"
     else
@@ -132,12 +129,10 @@ class TutorsController < ApplicationController
     end
     #Strict params
     def tutor_params
-      params.require(:tutor).permit(:administrator_id)
+      t_param = params
+      t_param[:tutor][:info_attributes][:id] = @user.info.id unless params[:id].nil?
+      t_param.require(:tutor).permit(:administrator_id,info_attributes: [:id,:name,:last_name,:mail,:phone,:password,:password_confirmation])
     end
-    def info_params
-      params.require(:info).permit(:name,:last_name,:mail,:phone,:password,:password_confirmation)
-    end
-
     #Callback for checking confirmation of mail
     def check_mail_confirmation
       user = current_user

@@ -4,7 +4,7 @@
 
 <%= form_for @user,class: "form-horizontal" do |tutor_form| %>
  	
-	<%= fields_for @user.info do |info_form| %>
+	<%= tutor_form.fields_for :info do |info_form| %>
 	<!--Name -->
 	<div class="row col-sm-offset-2 form-group">
 		<%= info_form.label :name, class: "col-sm-2 control-label" %>
