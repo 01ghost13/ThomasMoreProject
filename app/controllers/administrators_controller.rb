@@ -1,6 +1,6 @@
 class AdministratorsController < ApplicationController
   before_action :check_log_in, only: [:index,:edit,:update,:show,:destroy]
-  before_action :check_rights, only: [:edit,:update,:destroy]
+  before_action :check_rights, only: [:edit,:update,:destroy,:show]
   before_action :check_type_rights, only: [:index,:edit,:update,:show,:destroy]
   before_action :check_mail_confirmation, only: [:index,:edit,:update,:show,:destroy]
   
@@ -14,14 +14,14 @@ class AdministratorsController < ApplicationController
   #Create querry
   def create
     #Loading data
-    @user_info = Info.new(info_params)
     @user = Administrator.new(administrator_params)
-    @user_info.is_mail_confirmed = true
-    @user.info = @user_info
+    #@user_info.is_mail_confirmed = true
     #If data ok - creating
-    if @user.save && @user_info.save
+    if @user.save
       flash[:success] = "Account created!"
-      redirect_to(@user)
+      log_in @user.info unless logged_in?
+      #debugger
+      redirect_to @user
     else
       render :new
     end
@@ -43,10 +43,6 @@ class AdministratorsController < ApplicationController
     #is exist?
     unless @user.nil?
       #checking rights
-      @user_info = Info.find(@user.info_id)
-      if @user_info.nil?
-        #throw 404
-      end
     else
       #throw 404
     end
@@ -55,8 +51,8 @@ class AdministratorsController < ApplicationController
   #Update querry
   def update
     @user = Administrator.find(params[:id])
-    @user_info = Info.find(@user.info_id)
-    if !@user_info.nil? && !@user.nil? && @user.update(administrator_params) && @user_info.update(info_params)
+    #debugger
+    if @user.update(administrator_params)
       redirect_to(@user)
       flash[:success] = "Update Complete"
     else
@@ -78,12 +74,10 @@ class AdministratorsController < ApplicationController
   private
     #Attributes
     def administrator_params
-      params.require(:administrator).permit(:organisation,:organisation_address)
+      adm_param = params
+      adm_param[:administrator][:info_attributes][:id] = @user.info.id unless params[:id].nil?
+      adm_param.require(:administrator).permit(:organisation,:organisation_address,info_attributes: [:id,:name,:last_name,:mail,:phone,:password,:password_confirmation])
     end
-    def info_params
-      params.require(:info).permit(:name,:last_name,:mail,:phone,:password,:password_confirmation)
-    end
-    
     #Callback for checking session
     def check_log_in
       unless logged_in?
@@ -96,7 +90,8 @@ class AdministratorsController < ApplicationController
     #Callback for checking rights
     def check_rights
       #Only SA or user can edit/delete their accounts
-      unless is_super? || session[:user_type] == 'administrator' && session[:type_id] == params[:id]
+      #debugger
+      unless is_super? || session[:user_type] == 'administrator' && session[:type_id] == params[:id].to_i
         flash[:warning] = "You have no access to this page."
         #Redirect back or?
         redirect_to current_user

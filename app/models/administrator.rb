@@ -1,12 +1,15 @@
 class Administrator < ActiveRecord::Base
   before_validation :setup_fields, on: :create
   has_many :tutors
-  belongs_to :info, inverse_of: :administrator
-  validates :organisation, presence: true, length: { in: 5..20}
-  validates :info_id, presence: true, uniqueness: true
+  belongs_to :info, inverse_of: :administrator, autosave: true
+  validates :organisation, presence: true, length: { in: 5..30}
+  validates :info_id, uniqueness: true
   validates :is_super, uniqueness: true, if: "is_super == true"
   validates :is_super, exclusion: { in: [nil] }
-  validates :organisation_address, presence: true, uniqueness: true, length: { in: 5..20}
+  validates :organisation_address, presence: true, uniqueness: true, length: { in: 5..100}
+  validates_presence_of :info
+  validates_associated :info, allow_blank: true
+  accepts_nested_attributes_for :info
   
   def self.admins_list
     admins = Administrator.where(is_super: false).order(:organisation).map { 
