@@ -65,8 +65,8 @@ class StudentsController < ApplicationController
   def show
     @user = Student.find(params[:id])
     @is_super_adm = is_super?
-    @is_my_student = params[:user_type] == 'tutor' && @user.tutor_id == params[:type_id]
-    @is_student_of_my_tutor = params[:user_type] == 'administrator' && @user.tutor.administrator_id == params[:type_id]
+    @is_my_student = session[:user_type] == 'tutor' && @user.tutor_id == session[:type_id]
+    @is_student_of_my_tutor = session[:user_type] == 'administrator' && @user.tutor.administrator_id == session[:type_id]
     unless @user.nil?
       #throw 404
     end
@@ -145,7 +145,7 @@ class StudentsController < ApplicationController
         local_admins = Administrator.where(is_super: false)
         @admins = local_admins.map { |adm| [adm.info.name, adm.id] }
         @tutors = Tutor.where(administrator_id: local_admins.take.id).map { |t| [t.info.name, t.id] }
-      elsif session[:type] == 'administrator'
+      elsif session[:user_type] == 'administrator'
         @tutors = Tutor.where(administrator_id: session[:type_id]).map { |t| [t.info.name, t.id] }
       end
     end
@@ -160,7 +160,7 @@ class StudentsController < ApplicationController
         @tutors = Tutor.where(administrator_id: local_admins.take.id).map { |t| [t.info.name, t.id] }
         @admins_cur = @admins.to_a.index { |t| t.last == @user.tutor.administrator_id}
         @tutors_cur = @tutors.to_a.index { |t| t.last == @user.tutor.id}
-      elsif session[:type] == 'administrator'
+      elsif session[:user_type] == 'administrator'
         @tutors = Tutor.where(administrator_id: session[:type_id]).map { |t| [t.info.name, t.id] }
         @tutors_cur = @tutors.to_a.index { |t| t.last == @user.tutor.id}
       end
