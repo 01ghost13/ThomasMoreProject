@@ -75,6 +75,16 @@ class TutorsController < ApplicationController
 
   #All tutors page
   def index
+    unless session[:user_type] == 'administrator'
+      flash[:danger] = "You have no access to this page!"
+      redirect_to current_user
+    end
+    @is_super_adm = is_super?
+    tutors = @is_super_adm ? Tutor.all : Tutor.where(administrator_id: session[:type_id])
+    @tutors = []
+    tutors.each do |tutor|
+      @tutors << tutor.show_short
+    end
   end
 
   #Tutor Profile

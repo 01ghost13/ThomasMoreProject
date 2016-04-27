@@ -22,4 +22,11 @@ class Tutor < ActiveRecord::Base
     return false if student.nil?
     return student.tutor_id == self.id
   end
+  def show_short
+    user_info = self.info.show_short
+    user_info[:id] = self.id
+    adm = Administrator.find(self.administrator_id)
+    user_info[:administrator] = adm.show_short
+    return user_info
+  end
 end

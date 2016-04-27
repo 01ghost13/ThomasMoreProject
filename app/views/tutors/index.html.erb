@@ -1,0 +1,14 @@
+<% provide(:title,"Tutors List") %>
+<h1>All tutors</h1>
+<div class="col-sm-8">
+	<table class="table table-hover">
+		<% @tutors.each do |tutor| %>
+			<tr>
+				<td><h4><%= tutor[:last_name].titleize + " " + tutor[:name].titleize %></h4></td>		
+				<td><h4><small>From: <%= tutor[:administrator][:organisation].titleize %></small></h4></td>
+				<td><h4><small>Header: <%= tutor[:administrator][:last_name].titleize + " " + tutor[:administrator][:name].titleize %></small></h4></td>
+				<td><%= link_to("Edit", edit_tutor_path(tutor[:id]), class: "btn btn-default") %></td>
+			</tr>
+		<% end %>
+	</table>
+</div>
