@@ -40,4 +40,13 @@ class Student < ActiveRecord::Base
     user_info[:Current_in_school] = self.is_current_in_school ? 'Yes' : 'No'
     return user_info
   end
+  def show_short
+    user_info = {code_name: self.code_name}
+    tutor = Tutor.find(self.tutor_id)
+    user_info[:tutor] = tutor.info.last_name.titleize+' '+tutor.info.name.titleize
+    adm = Administrator.find(tutor.administrator_id)
+    user_info[:organisation] = adm.organisation
+    user_info[:id] = self.id
+    return user_info
+  end
 end

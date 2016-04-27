@@ -1,4 +1,14 @@
-<%= label_tag :administrator_id, "Choose local administrator" %><br/>
-<%= select_tag :administrator_id, options_for_select(@admins), {id: 'administrator_selection'}  %><br/>
-<%= label_tag :tutor_id, "Choose Tutor" %><br/>
-<%= select_tag :tutor_id, options_for_select(@tutors),{id: 'tutor_selection'}%>
+<% provide(:title,"Students List") %>
+<h1>All Students</h1>
+<div class="col-sm-8">
+	<table class="table table-hover">
+		<% @students.each do |student| %>
+			<tr>
+				<td><h4><%= student[:code_name] %></h4></td>		
+				<td><h4><small>From: <%= student[:organisation] %></small></h4></td>
+				<td><h4><small>Tutor: <%= student[:tutor] %></small></h4></td>
+				<td><%= link_to("Edit", edit_student_path(student[:id]), class: "btn btn-default") %></td>
+			</tr>
+		<% end %>
+	</table>
+</div>

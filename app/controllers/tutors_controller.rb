@@ -4,6 +4,7 @@ class TutorsController < ApplicationController
   before_action :check_rights, only: [:edit,:update,:destroy]
   before_action :check_mail_confirmation
   
+  #TODO: Create DRY index
   #New tutor page
   def new
     #Loading info for page

@@ -2,6 +2,7 @@ class StudentsController < ApplicationController
   before_action :check_login, only: [:new, :create, :index, :update, :edit, :destroy, :show]
   before_action :check_rights, only: [:new, :create, :index]
   before_action :check_editing_rights, only: [:update, :edit, :destroy, :show]
+  #TODO: Make DRY Index
   #New student page
   def new
     @user = Student.new
@@ -89,7 +90,26 @@ class StudentsController < ApplicationController
   end
   
   def index
-    
+    if session[:user_type] == 'student'
+      flash[:danger] = "You have no access to this page!"
+      redirect_to current_user
+    end
+    @students = []
+    students = []
+    if is_super?
+      students = Student.order(:code_name).all
+    elsif session[:user_type] == 'tutor'
+      students = Student.order(:code_name).where(tutor_id: session[:type_id])
+    elsif session[:user_type] == 'administrator'
+      #TODO: Make get only id's
+      tutors = Tutor.where(administrator_id: session[:type_id])
+      tutors.each do |tutor|
+        students << Student.order(:code_name).where(tutor_id: tutor.id)
+      end
+    end
+    students.each do |student|
+      @students << student.show_short
+    end
   end
   
   private

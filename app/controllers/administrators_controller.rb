@@ -3,7 +3,7 @@ class AdministratorsController < ApplicationController
   before_action :check_rights, only: [:edit,:update,:destroy,:show]
   before_action :check_type_rights, only: [:edit,:update,:show,:destroy]
   before_action :check_mail_confirmation, only: [:edit,:update,:show,:destroy]
-  
+   #TODO: Create DRY index
   #Create Page
   def new
     @user = Administrator.new
