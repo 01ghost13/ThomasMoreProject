@@ -1,8 +1,8 @@
 class AdministratorsController < ApplicationController
   before_action :check_log_in, only: [:index,:edit,:update,:show,:destroy]
   before_action :check_rights, only: [:edit,:update,:destroy,:show]
-  before_action :check_type_rights, only: [:index,:edit,:update,:show,:destroy]
-  before_action :check_mail_confirmation, only: [:index,:edit,:update,:show,:destroy]
+  before_action :check_type_rights, only: [:edit,:update,:show,:destroy]
+  before_action :check_mail_confirmation, only: [:edit,:update,:show,:destroy]
   
   #Create Page
   def new
@@ -29,10 +29,14 @@ class AdministratorsController < ApplicationController
   
   #Only for SA
   def index
-    administrators = Administrator.all
-    @names_admins = []
+    unless is_super?
+      flash[:danger] = "You have no access to this page!"
+      redirect_to current_user
+    end
+    administrators = Administrator.order(:organisation).all
+    @admins = []
     administrators.each do |admin|
-      @names_admins << Info.find(admin.info_id)
+      @admins << admin.show_short unless admin.is_super
     end
   end
 

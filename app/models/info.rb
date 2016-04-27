@@ -19,9 +19,13 @@ class Info < ActiveRecord::Base
   
   #Shows info
   def show
+    user_info = show_short
+    user_info[:email] = self.mail
+    return user_info
+  end
+  def show_short
     user_info = {name: self.name}
     user_info[:last_name] = self.last_name
-    user_info[:email] = self.mail
     return user_info
   end
 end

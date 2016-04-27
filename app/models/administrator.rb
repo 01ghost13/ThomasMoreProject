@@ -31,4 +31,11 @@ class Administrator < ActiveRecord::Base
     user_info[:organisation_address] = self.organisation_address
     return user_info
   end
+  
+  def show_short
+    user_info = self.info.show_short
+    user_info[:organisation] = self.organisation
+    user_info[:id] = self.id
+    return user_info
+  end
 end
