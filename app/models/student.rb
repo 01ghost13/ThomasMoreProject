@@ -40,6 +40,7 @@ class Student < ActiveRecord::Base
     user_info[:Current_in_school] = self.is_current_in_school ? 'Yes' : 'No'
     return user_info
   end
+  #TODO: Make a reverse of tutor-administrator
   def show_short
     user_info = {code_name: self.code_name}
     tutor = Tutor.find(self.tutor_id)

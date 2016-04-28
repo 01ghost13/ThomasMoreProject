@@ -68,17 +68,18 @@ class StudentsController < ApplicationController
     @is_super_adm = is_super?
     @is_my_student = session[:user_type] == 'tutor' && @user.tutor_id == session[:type_id]
     @is_student_of_my_tutor = session[:user_type] == 'administrator' && @user.tutor.administrator_id == session[:type_id]
-    unless @user.nil?
-      #throw 404
-    end
     unless @user.is_active
       #Student is unactive
       flash[:warning] = "This student was deactivated in: " + @user.date_off
       #Redirect_back_or ?
-      redirect_to current_user
+      redirect_back_or current_user
     end
     @user_info = @user.show_info.to_a
-    #Loading test
+    #Loading all test results
+    @test_results = []
+    ResultOfTest.order(:created_at).where(student_id: @user.id).each do |res|
+      @test_results << res.show_short
+    end
   end
   
   #Function for ajax updating
@@ -104,7 +105,9 @@ class StudentsController < ApplicationController
       #TODO: Make get only id's
       tutors = Tutor.where(administrator_id: session[:type_id])
       tutors.each do |tutor|
-        students << Student.order(:code_name).where(tutor_id: tutor.id)
+        Student.order(:code_name).where(tutor_id: tutor.id).each do |student|
+          students << student
+        end
       end
     end
     students.each do |student|

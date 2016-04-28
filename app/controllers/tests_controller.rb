@@ -80,6 +80,7 @@ class TestsController < ApplicationController
   end
   
   def testing
+    
     @progress_bar_value = 0
     #Loading test
     test = Test.find(params[:test_id])
@@ -124,7 +125,7 @@ class TestsController < ApplicationController
       end
     end
     def check_rights
-      user = Student.find(params[:student_id])
+      user = Student.find(params[:id])
       is_super_adm = is_super?
       is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
       is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]

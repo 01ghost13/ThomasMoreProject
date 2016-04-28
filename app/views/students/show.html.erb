@@ -1,5 +1,18 @@
 <div class="row">
 	<%= render "shared/profile" %>
+	<div class="col-sm-offset-2 col-sm-6">
+		<h1>Results</h1>
+		<table class="table table-hover">
+		<% @test_results.each do |res| %>
+			<tr>
+				<td><h4><%= link_to(res[:name_of_test], student_result_of_test_path(res[:student_id],res[:id])) %></h4></td>		
+				<td><h4><small>Start: <%= res[:date_of_start] %></small></h4></td>
+				<td><h4><small>Is ended? <%= res[:is_ended] %></small></h4></td>
+				<td><%= link_to("Edit", edit_student_result_of_test_path(res[:student_id],res[:id]), class: "btn btn-default") %></td>
+			</tr>
+		<% end %>
+	</table>
+	</div>
 </div>
 
 <% if @is_super_adm || @is_my_student || @is_student_of_my_tutor %>

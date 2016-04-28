@@ -1,8 +1,7 @@
 class ResultOfTestsController < ApplicationController
   #TODO: Add group stats
-  before_action :check_login, except: [:check_rights,:result_params]
-  before_action :check_rights, except: [:check_rights,:result_params,:index]
-  
+  before_action :check_login
+  before_action :check_rights
   def edit
     #Loading res info
     @result = ResultOfTest.find(params[:result_id])
@@ -21,13 +20,6 @@ class ResultOfTestsController < ApplicationController
   end
 
   def show
-    @i_am_student = session[:user_type] == 'student'
-    is_i = @i_am_student && params[:student_id] == session[:type_id]
-    unless is_i
-      flash[:warning] = "You have no access to this page."
-      redirect_to current_user
-    end
-    
     #Loading result
     result = ResultOfTest.find(params[:result_id])
     #Loading q results
@@ -90,7 +82,9 @@ class ResultOfTestsController < ApplicationController
       is_super_adm = is_super?
       is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
       is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
-      unless is_super_adm || is_my_student || is_student_of_my_tutor
+      @i_am_student = session[:user_type] == 'student'
+      is_i = @i_am_student && params[:student_id] == session[:type_id]
+      unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
         flash[:warning] = "You have no access to this page."
         redirect_to current_user
       end
