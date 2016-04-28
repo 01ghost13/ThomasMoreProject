@@ -56,10 +56,12 @@ class ResultOfTestsController < ApplicationController
         end
       end
     end
+    student = Student.find(result.student_id)
     #Sorting
     @list_interests = interests.to_a.sort{ |x,y| y[1] - x[1]}
     @list_timestamps = timestamps
     @list_interests_max = interests_max
+    @student = student.code_name.titleize
   end
   
   def index
@@ -67,7 +69,6 @@ class ResultOfTestsController < ApplicationController
   end
   private
     def result_params
-      debugger
       params.require(:result_of_test).permit(question_results_attributes: [:was_checked,:id])
     end
     def check_login

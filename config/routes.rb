@@ -15,7 +15,8 @@ Rails.application.routes.draw do
   resources :tutors, concerns: :group_result 
   resources :students, concerns: :group_result do
     member do
-      get 'tests/:test_id/testing' => 'tests#testing'
+      get 'tests' => 'tests#index', as: 'tests'
+      get 'tests/:test_id/testing' => 'tests#testing', as: 'testing'
       get "tests/:test_id/testing/update_picture" => 'tests#update_picture'
       post "tests/:test_id/testing/exit" => 'tests#exit'
       get "edit/update_tutors" => 'students#update_tutors'
@@ -23,7 +24,7 @@ Rails.application.routes.draw do
     resources :result_of_tests, except: [:new,:create,:index], path: 'results', param: :result_id
     get "update_tutors" => 'students#update_tutors', on: :new 
   end
-  resources :tests
+  resources :tests, except:[:index]
 
 # The priority is based upon order of creation: first created -> highest priority.
 # See how all your routes lay out with "rake routes".

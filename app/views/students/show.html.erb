@@ -1,7 +1,7 @@
 <div class="row">
 	<%= render "shared/profile" %>
-	<div class="col-sm-offset-2 col-sm-6">
-		<h1>Results</h1>
+	<div class="col-sm-offset-1 col-sm-7">
+		<h1>Latest 5 results<%= link_to("(show all)",'#') %></h1>
 		<table class="table table-hover">
 		<% @test_results.each do |res| %>
 			<tr>
@@ -9,6 +9,7 @@
 				<td><h4><small>Start: <%= res[:date_of_start] %></small></h4></td>
 				<td><h4><small>Is ended? <%= res[:is_ended] %></small></h4></td>
 				<td><%= link_to("Edit", edit_student_result_of_test_path(res[:student_id],res[:id]), class: "btn btn-default") %></td>
+				<td><%= link_to("Delete",student_result_of_test_path(res[:student_id],res[:id]), method: :delete, data: { confirm: "You sure?" }, class: "btn btn-warning") %></td>
 			</tr>
 		<% end %>
 	</table>
@@ -25,7 +26,6 @@
 <% end %>
 <div class="row">
 	<div class="btn-group col-sm-4" role="group" aria-label="...">
-		<%= link_to("Start test", '#', class: "btn btn-primary col-sm-4") %>
-		<%= link_to("Continue test", '#', class: "btn btn-success col-sm-4") %>
+		<%= link_to("Choose test",tests_student_path, class: "btn btn-primary col-sm-4") %>
 	</div>
 </div>

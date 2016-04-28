@@ -77,7 +77,7 @@ class StudentsController < ApplicationController
     @user_info = @user.show_info.to_a
     #Loading all test results
     @test_results = []
-    ResultOfTest.order(:created_at).where(student_id: @user.id).each do |res|
+    ResultOfTest.order(:created_at).where(student_id: @user.id).take(5).each do |res|
       @test_results << res.show_short
     end
   end

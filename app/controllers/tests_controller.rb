@@ -14,6 +14,11 @@ class TestsController < ApplicationController
   end
 
   def index
+    tests = Test.all
+    @tests = []
+    tests.each do |test|
+      @tests << test.show_short
+    end
   end
   def exit
     #debugger

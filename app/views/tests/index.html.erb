@@ -1,2 +1,16 @@
-<h1>Tests#index</h1>
-<p>Find me in app/views/tests/index.html.erb</p>
+<div class="row">
+	<%= render "shared/profile" %>
+	<div class="col-sm-8">
+		<h1>All tests</h1>
+		<table class="table table-hover">
+		<% @tests.each do |test| %>
+			<tr>
+				<td><h4><%= test[:name]+" "+test[:version] %></h4></td>		
+				<td><h4><small><%= test[:description] %></small></h4></td>
+				<td><h4><small>Count of questions <%= test[:question_count] %></small></h4></td>
+				<td><h4><small><%= link_to("Start", testing_student_path(params[:id],test[:id]), class: "btn btn-success") %></small></h4></td>
+			</tr>
+		<% end %>
+	</table>
+	</div>
+</div>
