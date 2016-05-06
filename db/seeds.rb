@@ -35,10 +35,10 @@ interests = []
   interests << Interest.create(name: t)
 end
 #Pictures
-pic1 = Picture.create(description: "Something for pic1", path: "1. Semi-industrieel werk (1).jpg")
-pic2 = Picture.create(description: "Something for pic2", path: "1. Semi-industrieel werk (2).jpg")
-pic3 = Picture.create(description: "Something for pic3", path: "1. Semi-industrieel werk (3).jpg")
-pic4 = Picture.create(description: "Something for pic4", path: "1. Semi-industrieel werk (4).jpg")
+pic1 = Picture.create(description: "Something for pic1", path: "Semiindustrieelwerk1.jpg")
+pic2 = Picture.create(description: "Something for pic2", path: "Semiindustrieelwerk2.jpg")
+pic3 = Picture.create(description: "Something for pic3", path: "Semiindustrieelwerk3.jpg")
+pic4 = Picture.create(description: "Something for pic4", path: "Semiindustrieelwerk4.jpg")
 
 #Tests
 test = Test.create(name: "First test",description:"This is the first test", version: "0.01")

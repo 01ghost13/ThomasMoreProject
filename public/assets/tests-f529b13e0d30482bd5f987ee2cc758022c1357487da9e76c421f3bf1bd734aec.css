@@ -1,0 +1,26 @@
+/* line 4, /home/dmitry/Documents/Aptana Studio 3 Workspace/AitProject/app/assets/stylesheets/tests.scss */
+body {
+  padding-top: 0px !important;
+}
+
+/* line 7, /home/dmitry/Documents/Aptana Studio 3 Workspace/AitProject/app/assets/stylesheets/tests.scss */
+#header_id {
+  display: none !important;
+}
+
+/* line 10, /home/dmitry/Documents/Aptana Studio 3 Workspace/AitProject/app/assets/stylesheets/tests.scss */
+#cur_image {
+  width: 70%;
+  height: 70%;
+}
+
+/* line 14, /home/dmitry/Documents/Aptana Studio 3 Workspace/AitProject/app/assets/stylesheets/tests.scss */
+#btn_qm {
+  width: 70%;
+  height: 70%;
+}
+
+/* line 18, /home/dmitry/Documents/Aptana Studio 3 Workspace/AitProject/app/assets/stylesheets/tests.scss */
+.panel-body {
+  background-color: #99FFCC;
+}

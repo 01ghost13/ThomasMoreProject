@@ -1,5 +1,6 @@
 class TestsController < ApplicationController
   #TODO: Creation of tests
+  include ActionView::Helpers::AssetTagHelper
   before_action :check_login
   before_action :check_rights, only: [:testing]
   def new
@@ -78,6 +79,7 @@ class TestsController < ApplicationController
     @progress_bar_value = params[:progress].to_i + step.to_i
     @description = pic.description
     @image = pic.path
+    #debugger
     session[:start_time] = DateTime.current
     respond_to do |format|
        format.js {}
