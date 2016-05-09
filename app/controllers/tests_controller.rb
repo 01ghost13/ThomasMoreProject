@@ -1,6 +1,5 @@
 class TestsController < ApplicationController
   #TODO: Creation of tests
-  include ActionView::Helpers::AssetTagHelper
   before_action :check_login
   before_action :check_rights, only: [:testing]
   def new
