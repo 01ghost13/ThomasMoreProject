@@ -33,37 +33,35 @@ class TestsController < ApplicationController
     #Finding our result of test
     res = ResultOfTest.find(session[:result_of_test_id])
     cur_question = session[:cur_question].to_i
-    if params[:value] == "0"
+    if params[:value] == '0'
     #We are going back
       return if cur_question == 1 #If was pressed on first question - returning
       #Loading prev q
-      prev_q = Question.where("test_id = :test and number = :number",{test: res.test_id, number: cur_question-1}).take
-      #debugger
+      prev_q = Question.where('test_id = :test and number = :number',{test: res.test_id, number: cur_question-1}).take
       #Loading info
       ##switch off btn back
-      @show_btn_back = "hidden"
+      @show_btn_back = 'hidden'
       session[:next_rewrite] = true #Flag to know, next click - to update
       step = -100 / Question.where(test_id: res.test_id).count
-      #debugger
       pic = prev_q.picture
       session[:cur_question] -= 1
     else
       #Loading next q
-      @show_btn_back = "visible"
+      @show_btn_back = 'visible'
       #Writing result
       ##Checking - is it rewriting?
       if session[:next_rewrite]
         #debugger
         session[:next_rewrite] = false
         #Updating cur q result
-        q_to_upd = QuestionResult.where("result_of_test_id = :res and number = :number",{res: res.id, number: cur_question}).take
+        q_to_upd = QuestionResult.where('result_of_test_id = :res and number = :number',{res: res.id, number: cur_question}).take
         q_to_upd.update({start: session[:start_time],:end => DateTime.current,was_checked: params[:value], was_rewrited: true})
       else
         res.question_results << QuestionResult.new(number: cur_question, start: session[:start_time],was_checked: params[:value])
       end
       #Changing variables
       ##Finding next pic name
-      next_q = Question.where("test_id = :test and number = :number",{test: res.test_id, number: cur_question+1}).take
+      next_q = Question.where('test_id = :test and number = :number',{test: res.test_id, number: cur_question+1}).take
       ##if was last pic saving and redirecting to result
       if next_q.nil?
         #current q was the last, saving and redirecting to end
@@ -78,7 +76,6 @@ class TestsController < ApplicationController
     @progress_bar_value = params[:progress].to_i + step.to_i
     @description = pic.description
     @image = pic.path
-    #debugger
     session[:start_time] = DateTime.current
     respond_to do |format|
        format.js {}
@@ -101,7 +98,7 @@ class TestsController < ApplicationController
     end
     
     #Checking continue or creating new result
-    res = ResultOfTest.where("student_id = :student and test_id = :test and is_ended = :is_ended", { student: student.id, test: test.id, is_ended: false }).take
+    res = ResultOfTest.where('student_id = :student and test_id = :test and is_ended = :is_ended', { student: student.id, test: test.id, is_ended: false }).take
     if res.nil?
       #All tests were ended
       #Creating new result
@@ -135,9 +132,9 @@ class TestsController < ApplicationController
       is_super_adm = is_super?
       is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
       is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
-      is_i = session[:user_type] == 'student' && params[:student_id] == session[:type_id]
+      is_i = session[:user_type] == 'student' && params[:id].to_i == session[:type_id]
       unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
-        flash[:warning] = "You have no access to this page."
+        flash[:warning] = 'You have no access to this page.'
         redirect_to current_user
       end
     end

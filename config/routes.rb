@@ -17,12 +17,12 @@ Rails.application.routes.draw do
     member do
       get 'tests' => 'tests#index', as: 'tests'
       get 'tests/:test_id/testing' => 'tests#testing', as: 'testing'
-      get "tests/:test_id/testing/update_picture" => 'tests#update_picture'
-      post "tests/:test_id/testing/exit" => 'tests#exit'
-      get "edit/update_tutors" => 'students#update_tutors'
+      get 'tests/:test_id/testing/update_picture' => 'tests#update_picture'
+      post 'tests/:test_id/testing/exit' => 'tests#exit'
+      get 'edit/update_tutors' => 'students#update_tutors'
     end 
     resources :result_of_tests, except: [:new,:create,:index], path: 'results', param: :result_id
-    get "update_tutors" => 'students#update_tutors', on: :new 
+    get 'update_tutors' => 'students#update_tutors', on: :new
   end
   resources :tests, except:[:index]
 
