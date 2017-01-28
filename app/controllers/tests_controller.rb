@@ -29,7 +29,6 @@ class TestsController < ApplicationController
     return nil
   end
   def update_picture
-    #debugger
     #Finding our result of test
     res = ResultOfTest.find(session[:result_of_test_id])
     cur_question = session[:cur_question].to_i
