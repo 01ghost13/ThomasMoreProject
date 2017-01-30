@@ -103,7 +103,7 @@ class TestsController < ApplicationController
       #Creating new result
       res = ResultOfTest.create(test_id: test.id, was_in_school: student.is_current_in_school, schooling_id: student.schooling.id, student_id: student.id)
     else
-      total_q = Question.where(test_id: res.test_id).count
+      total_q = Question.where(test_id: res.test_id).count.to_f
       done_q = res.question_results.count
       
       @progress_bar_value = done_q / total_q * 100.0
