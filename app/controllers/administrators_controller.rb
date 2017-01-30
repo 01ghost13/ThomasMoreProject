@@ -6,6 +6,10 @@ class AdministratorsController < ApplicationController
    #TODO: Create DRY index
   #Create Page
   def new
+    if logged_in? && !is_super?
+      redirect_back fallback_location: current_user
+      return
+    end
     @user = Administrator.new
     @user_info = Info.new
     @user.info = @user_info
@@ -18,9 +22,8 @@ class AdministratorsController < ApplicationController
     #@user_info.is_mail_confirmed = true
     #If data ok - creating
     if @user.save
-      flash[:success] = "Account created!"
+      flash[:success] = 'Account created!'
       log_in @user.info unless logged_in?
-      #debugger
       redirect_to @user
     else
       render :new
@@ -30,8 +33,9 @@ class AdministratorsController < ApplicationController
   #Only for SA
   def index
     unless is_super?
-      flash[:danger] = "You have no access to this page!"
+      flash[:danger] = 'You have no access to this page!'
       redirect_to current_user
+      return
     end
     administrators = Administrator.order(:organisation).all
     @admins = []
