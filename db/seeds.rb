@@ -35,10 +35,30 @@ interests = []
   interests << Interest.create(name: t)
 end
 #Pictures
-pic1 = Picture.create(description: "Something for pic1", path: "Semiindustrieelwerk1.jpg")
-pic2 = Picture.create(description: "Something for pic2", path: "Semiindustrieelwerk2.jpg")
-pic3 = Picture.create(description: "Something for pic3", path: "Semiindustrieelwerk3.jpg")
-pic4 = Picture.create(description: "Something for pic4", path: "Semiindustrieelwerk4.jpg")
+file = File.open('app/assets/images/Semiindustrieelwerk1.jpg')
+
+pic1 = Picture.create(description: "Something for pic1",
+                      path: "Semiindustrieelwerk1.jpg",
+                      image: file)
+file.close
+
+file = File.open('app/assets/images/Semiindustrieelwerk2.jpg')
+pic2 = Picture.create(description: "Something for pic2",
+                      path: "Semiindustrieelwerk2.jpg",
+                      image: file)
+file.close
+
+file = File.open('app/assets/images/Semiindustrieelwerk3.jpg')
+pic3 = Picture.create(description: "Something for pic3",
+                      path: "Semiindustrieelwerk3.jpg",
+                      image: file)
+file.close
+
+file = File.open('app/assets/images/Semiindustrieelwerk4.jpg')
+pic4 = Picture.create(description: "Something for pic4",
+                      path: "Semiindustrieelwerk4.jpg",
+                      image: file)
+file.close
 
 #Tests
 test = Test.create(name: "First test",description:"This is the first test", version: "0.01")

@@ -26,7 +26,7 @@ class TestsController < ApplicationController
     session.delete(:result_of_test_id)
     session.delete(:start_time)
     session.delete(:next_rewrite)
-    return nil
+    nil
   end
   def update_picture
     #Finding our result of test
@@ -50,7 +50,6 @@ class TestsController < ApplicationController
       #Writing result
       ##Checking - is it rewriting?
       if session[:next_rewrite]
-        #debugger
         session[:next_rewrite] = false
         #Updating cur q result
         q_to_upd = QuestionResult.where('result_of_test_id = :res and number = :number',{res: res.id, number: cur_question}).take
@@ -74,7 +73,8 @@ class TestsController < ApplicationController
     end
     @progress_bar_value = params[:progress].to_i + step.to_i
     @description = pic.description
-    @image = pic.path
+    #@image = pic.path
+    @image = pic.image
     session[:start_time] = DateTime.current
     respond_to do |format|
        format.js {}
@@ -115,7 +115,7 @@ class TestsController < ApplicationController
     @show_btn_back = (question.number == 1) ? "hidden" : "visible"
     session[:start_time] = DateTime.current
     @description = question.picture.description
-    @image = question.picture.path
+    @image = question.picture.image
     session[:next_rewrite] = false
   end
   private
