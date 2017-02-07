@@ -34,19 +34,19 @@ class TestsController < ApplicationController
     cur_question = session[:cur_question].to_i
     if params[:value] == '0'
     #We are going back
-      return if cur_question == 1 #If was pressed on first question - returning
+      return if cur_question == 1 || session[:next_rewrite] == true #If was pressed on first question - returning
       #Loading prev q
       prev_q = Question.where('test_id = :test and number = :number',{test: res.test_id, number: cur_question-1}).take
       #Loading info
       ##switch off btn back
-      @show_btn_back = 'hidden'
+      @show_btn_back = 'visibility:hidden'
       session[:next_rewrite] = true #Flag to know, next click - to update
       step = -100 / Question.where(test_id: res.test_id).count
       pic = prev_q.picture
       session[:cur_question] -= 1
     else
       #Loading next q
-      @show_btn_back = 'visible'
+      @show_btn_back = ''
       #Writing result
       ##Checking - is it rewriting?
       if session[:next_rewrite]
@@ -112,7 +112,7 @@ class TestsController < ApplicationController
     question = res.last_question
     session[:result_of_test_id] = res.id
     session[:cur_question] = question.number
-    @show_btn_back = (question.number == 1) ? "hidden" : "visible"
+    @show_btn_back = (question.number == 1) ? 'visibility:hidden' : ''
     session[:start_time] = DateTime.current
     @description = question.picture.description
     @image = question.picture.image
