@@ -73,7 +73,6 @@ class TestsController < ApplicationController
     end
     @progress_bar_value = params[:progress].to_i + step.to_i
     @description = pic.description
-    #@image = pic.path
     @image = pic.image
     session[:start_time] = DateTime.current
     respond_to do |format|
@@ -82,7 +81,6 @@ class TestsController < ApplicationController
   end
   
   def testing
-    
     @progress_bar_value = 0
     #Loading test
     test = Test.find(params[:test_id])
@@ -93,7 +91,7 @@ class TestsController < ApplicationController
       #Cant find test or student
       flash[:danger] = "Can't find student" if student.nil?
       flash[:danger] = "Can't find test" if test.nil?
-      redirect_back_or current_user
+      redirect_to current_user
     end
     
     #Checking continue or creating new result
@@ -121,7 +119,7 @@ class TestsController < ApplicationController
   private
     def check_login
       unless logged_in?
-        flash[:warning] = "Only registrated people can see this page."
+        flash[:warning] = 'Only registrated people can see this page.'
         #Redirecting to home page
         redirect_to :root 
       end

@@ -20,11 +20,10 @@ class StudentsController < ApplicationController
     
     #trying to save
     if @user.save
-      flash[:success] = "Account created!"
-      redirect_to(@user)
-      #Which redirect is best? To my profile or to created?
+      flash[:success] = 'Account created!'
+      redirect_to @user
     else
-      render 'new'
+      render :new
     end
   end
   
@@ -36,13 +35,12 @@ class StudentsController < ApplicationController
   def edit
     #Searching student
     @user = Student.find(params[:id])
-    
     #Loading info
-    unless @user.nil? 
-      info_for_edit_page
-    else
-      #404
+    if @user.nil?
+      flash[:error] = 'User does not exist.'
+      redirect_to current_user
     end
+    info_for_edit_page
   end
   
   #Update querry
@@ -65,14 +63,17 @@ class StudentsController < ApplicationController
   #Profile page
   def show
     @user = Student.find(params[:id])
+    if @user.nil?
+      flash[:error] = 'User does not exist.'
+      redirect_to :root
+    end
     @is_super_adm = is_super?
     @is_my_student = session[:user_type] == 'tutor' && @user.tutor_id == session[:type_id]
     @is_student_of_my_tutor = session[:user_type] == 'administrator' && @user.tutor.administrator_id == session[:type_id]
     unless @user.is_active
-      #Student is unactive
-      flash[:warning] = "This student was deactivated in: " + @user.date_off
-      #Redirect_back_or ?
-      redirect_back_or current_user
+      #Student is inactive
+      flash[:warning] = 'This student was deactivated in: ' + @user.date_off
+      redirect_to current_user
     end
     @user_info = @user.show_info.to_a
     #Loading all test results
@@ -92,7 +93,7 @@ class StudentsController < ApplicationController
   
   def index
     if session[:user_type] == 'student'
-      flash[:danger] = "You have no access to this page!"
+      flash[:danger] = 'You have no access to this page!'
       redirect_to current_user
     end
     @students = []
@@ -132,7 +133,7 @@ class StudentsController < ApplicationController
     #Login checking
     def check_login
       unless logged_in?
-        flash[:warning] = "Only registrated people can see this page."
+        flash[:warning] = 'Only registrated people can see this page.'
         #Redirecting to home page
         redirect_to :root 
       end
@@ -142,7 +143,7 @@ class StudentsController < ApplicationController
     def check_rights
       #Sa, admin, tutor
       unless is_super? || session[:user_type] == 'administrator' || session[:user_type] == 'tutor'
-        flash[:warning] = "You have no access to this page."
+        flash[:warning] = 'You have no access to this page.'
         redirect_to current_user
       end
     end
@@ -155,7 +156,7 @@ class StudentsController < ApplicationController
       is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
       is_i = session[:user_type] == 'student' && user.id == session[:type_id]
       unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
-        flash[:warning] = "You have no access to this page."
+        flash[:warning] = 'You have no access to this page.'
         redirect_to current_user
       end
     end

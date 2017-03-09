@@ -20,7 +20,6 @@ class TutorsController < ApplicationController
   def create
     #Reloading info for page
     info_for_forms
-    #debugger
     #Loading info
     @user = Tutor.new(tutor_params)
 
@@ -29,11 +28,10 @@ class TutorsController < ApplicationController
     
     #If all is ok - creating
     if @user.save
-      flash[:success] = "Account created!"
+      flash[:success] = 'Account created!'
       redirect_to @user
-      #Which redirect is best? To my profile or to created?
     else
-      render 'new'
+      render :new
     end 
   end
 
@@ -41,19 +39,17 @@ class TutorsController < ApplicationController
   def edit
     #Finding user
     @user = Tutor.find(params[:id])
-    #Checking: is tutor page real?
-    unless @user.nil?
-      #Loading info
-      @user_info = @user.info
-      #Cheking logging
-      unless @user_info.nil?
-        #loading info for SA
-        info_for_forms
-      else
-        #throw 404
-      end
+    #Checking: redirect if can't load user or info
+    if @user.nil?
+      flash[:error] = 'User does not exist'
+      redirect_to current_user
     else
-       #throw 404
+      @user_info = @user.info
+      unless @user_info.nil?
+        info_for_forms
+      end
+      redirect_to current_user
+      flash[:error] = "Can't load user information"
     end
   end
   
@@ -61,13 +57,12 @@ class TutorsController < ApplicationController
   def update
     #Loading info for page
     info_for_forms
-    
     #Finding tutor
     @user = Tutor.find(params[:id])
     #If tutor exit and data - OK, changing
     if @user.update(tutor_params)
       redirect_to(@user)
-      flash[:success] = "Update Complete"
+      flash[:success] = 'Update Complete'
     else
       render :edit
     end
@@ -77,7 +72,7 @@ class TutorsController < ApplicationController
   #All tutors page
   def index
     unless session[:user_type] == 'administrator'
-      flash[:danger] = "You have no access to this page!"
+      flash[:danger] = 'You have no access to this page!'
       redirect_to current_user
     end
     @is_super_adm = is_super?
@@ -91,6 +86,10 @@ class TutorsController < ApplicationController
   #Tutor Profile
   def show
     @user = Tutor.find(params[:id])
+    if @user.nil?
+      flash[:error] = 'User does not exist.'
+      redirect_to :root
+    end
     @user_info = @user.show.to_a
   end
   
@@ -103,7 +102,7 @@ class TutorsController < ApplicationController
     #Login checking
     def check_login
       unless logged_in?
-        flash[:warning] = "Only registrated people can see this page."
+        flash[:warning] = 'Only registrated people can see this page.'
         #Redirecting to home page
         redirect_to :root 
       end
@@ -117,7 +116,7 @@ class TutorsController < ApplicationController
       #It is my tutor?
       is_my_adm = (!user.nil? && session[:user_type] == 'administrator' && user.administrator_id == session[:type_id])
       unless is_i || is_super? || is_my_adm
-        flash[:warning] = "You have no access to this page."
+        flash[:warning] = 'You have no access to this page.'
         redirect_to current_user
       end  
     end
@@ -134,7 +133,7 @@ class TutorsController < ApplicationController
       
       #checking rights
       unless is_super? || is_my_adm
-        flash[:warning] = "You have no access to this page."
+        flash[:warning] = 'You have no access to this page.'
         redirect_to current_user
       end
     end

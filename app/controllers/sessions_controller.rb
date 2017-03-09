@@ -14,11 +14,10 @@ class SessionsController < ApplicationController
     #Checking log and pass
     if user && user.authenticate(params[:session][:password])
       if params[:session][:is_student] == '0' &&  user.is_mail_confirmed == false
-        flash.now[:warning] = "Your mail hasnt confirmed yet."
+        flash.now[:warning] = 'Your mail hasnt confirmed yet.'
         render :new
         return
       end
-      name_user = ''
       #Saving name
       if params[:session][:is_student] == '1'
         name_user = user.code_name

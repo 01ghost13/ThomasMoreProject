@@ -19,7 +19,6 @@ class AdministratorsController < ApplicationController
   def create
     #Loading data
     @user = Administrator.new(administrator_params)
-    #@user_info.is_mail_confirmed = true
     #If data ok - creating
     if @user.save
       flash[:success] = 'Account created!'
@@ -49,10 +48,9 @@ class AdministratorsController < ApplicationController
     #finding user
     @user = Administrator.find(params[:id])
     #is exist?
-    unless @user.nil?
-      #checking rights
-    else
-      #throw 404
+    if @user.nil?
+      flash[:error] = 'User does not exist.'
+      redirect_to current_user
     end
   end
   
@@ -61,8 +59,8 @@ class AdministratorsController < ApplicationController
     @user = Administrator.find(params[:id])
     #debugger
     if @user.update(administrator_params)
-      redirect_to(@user)
-      flash[:success] = "Update Complete"
+      redirect_to @user
+      flash[:success] = 'Update Complete'
     else
       render :edit
     end
@@ -71,6 +69,10 @@ class AdministratorsController < ApplicationController
   #Profile page
   def show
     @user = Administrator.find(params[:id])
+    if @user.nil?
+      flash[:error] = 'User does not exist.'
+      redirect_to :root
+    end
     @user_info = @user.show.to_a
   end
 
@@ -89,7 +91,7 @@ class AdministratorsController < ApplicationController
     #Callback for checking session
     def check_log_in
       unless logged_in?
-        flash[:warning] = "Only registrated people can see this page."
+        flash[:warning] = 'Only registrated people can see this page.'
         #Redirecting to home page
         redirect_to :root 
       end
@@ -100,8 +102,8 @@ class AdministratorsController < ApplicationController
       #Only SA or user can edit/delete their accounts
       #debugger
       unless is_super? || session[:user_type] == 'administrator' && session[:type_id] == params[:id].to_i
-        flash[:warning] = "You have no access to this page."
-        #Redirect back or?
+        flash[:warning] = 'You have no access to this page.'
+        #Redirect
         redirect_to current_user
       end
     end
@@ -118,7 +120,7 @@ class AdministratorsController < ApplicationController
     #Callback for checking type of user
     def check_type_rights
       unless session[:user_type] == 'administrator' || is_super?
-        flash[:danger] = "You have no access to this page!"
+        flash[:danger] = 'You have no access to this page!'
         redirect_to current_user
       end
     end
