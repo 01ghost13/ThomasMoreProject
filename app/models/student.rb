@@ -10,9 +10,10 @@ class Student < ActiveRecord::Base
   #1 – dunno
   #2 – Men
   #3 – Women
-  validates :password_digest,:tutor_id,:schooling_id,:mode_id, presence: true
+  validates :tutor_id,:schooling_id,:mode_id, presence: true
   validates :is_active, :is_current_in_school, exclusion: { in: [nil] }
-  
+  validates :password, presence: true, allow_nil: true, length: {minimum: 4}
+
   #Setups default fields
   def setup_fields
     self.is_active = true
@@ -38,7 +39,7 @@ class Student < ActiveRecord::Base
     schooling = Schooling.find(self.schooling_id)
     user_info[:Schooling] = schooling.name
     user_info[:Current_in_school] = self.is_current_in_school ? 'Yes' : 'No'
-    return user_info
+    user_info
   end
   #TODO: Make a reverse of tutor-administrator
   def show_short
@@ -48,6 +49,6 @@ class Student < ActiveRecord::Base
     adm = Administrator.find(tutor.administrator_id)
     user_info[:organisation] = adm.organisation
     user_info[:id] = self.id
-    return user_info
+    user_info
   end
 end
