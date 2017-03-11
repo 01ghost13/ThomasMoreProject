@@ -85,7 +85,7 @@ class StudentsController < ApplicationController
   
   #Function for ajax updating
   def update_tutors
-    @tutors = Tutor.where(administrator_id: params[:administrator_id])
+    @tutors = Tutor.tutors_list(params[:administrator_id])
     respond_to do |format|
        format.js {}
     end
@@ -166,11 +166,14 @@ class StudentsController < ApplicationController
       @is_super_adm = is_super?
       if @is_super_adm
         #Loading Choosing of adm
-        local_admins = Administrator.where(is_super: false)
-        @admins = local_admins.map { |adm| [adm.info.name, adm.id] }
-        @tutors = Tutor.where(administrator_id: local_admins.take.id).map { |t| [t.info.name, t.id] }
+        @admins = Administrator.admins_list
+        if @admins.nil?
+          @tutors = []
+        else
+          @tutors = Tutor.tutors_list(@admins.first[1])
+        end
       elsif session[:user_type] == 'administrator'
-        @tutors = Tutor.where(administrator_id: session[:type_id]).map { |t| [t.info.name, t.id] }
+        @tutors = Tutor.tutors_list(session[:type_id])
       end
     end
     
@@ -179,11 +182,15 @@ class StudentsController < ApplicationController
       @is_super_adm = is_super?
       if @is_super_adm
         #Loading Choosing of adm
-        local_admins = Administrator.where(is_super: false)
-        @admins = local_admins.map { |adm| [adm.info.name, adm.id] }
-        @tutors = Tutor.where(administrator_id: local_admins.take.id).map { |t| [t.info.name, t.id] }
-        @admins_cur = @admins.to_a.index { |t| t.last == @user.tutor.administrator_id}
-        @tutors_cur = @tutors.to_a.index { |t| t.last == @user.tutor.id}
+        @admins = Administrator.admins_list
+        if @admins.nil?
+          @tutors = []
+        else
+          administrator_of_student = @user.tutor.administrator_id
+          @tutors = Tutor.tutors_list(administrator_of_student)
+          @tutors_cur = @user.tutor_id
+          @admins_cur = administrator_of_student
+        end
       elsif session[:user_type] == 'administrator'
         @tutors = Tutor.where(administrator_id: session[:type_id]).map { |t| [t.info.name, t.id] }
         @tutors_cur = @tutors.to_a.index { |t| t.last == @user.tutor.id}

@@ -15,18 +15,23 @@ class Tutor < ActiveRecord::Base
     info_adm = adm.info
     user_info[:administrator] = info_adm.name + " " + info_adm.last_name
     user_info[:organisation] = adm.organisation
-    return user_info
+    user_info
   end
   def is_my_student? (student_id)
     student = Student.find(student_id)
     return false if student.nil?
-    return student.tutor_id == self.id
+    student.tutor_id == self.id
   end
   def show_short
     user_info = self.info.show_short
     user_info[:id] = self.id
     adm = Administrator.find(self.administrator_id)
     user_info[:administrator] = adm.show_short
-    return user_info
+    user_info
+  end
+  def self.tutors_list (administrator_id)
+    tutors = Tutor.where(administrator_id: administrator_id).order(:id).map {
+        |t| ['%{mail}: %{lname} %{name}'%{mail: t.info.mail, lname: t.info.last_name, name: t.info.name},t.id]
+    }
   end
 end
