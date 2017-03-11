@@ -186,14 +186,13 @@ class StudentsController < ApplicationController
         if @admins.nil?
           @tutors = []
         else
-          administrator_of_student = @user.tutor.administrator_id
-          @tutors = Tutor.tutors_list(administrator_of_student)
+          @admins_cur = @user.tutor.administrator_id
+          @tutors = Tutor.tutors_list(@admins_cur)
           @tutors_cur = @user.tutor_id
-          @admins_cur = administrator_of_student
         end
       elsif session[:user_type] == 'administrator'
-        @tutors = Tutor.where(administrator_id: session[:type_id]).map { |t| [t.info.name, t.id] }
-        @tutors_cur = @tutors.to_a.index { |t| t.last == @user.tutor.id}
+        @tutors = Tutor.tutors_list(session[:type_id])
+        @tutors_cur = @user.tutor_id
       end
    end
 end
