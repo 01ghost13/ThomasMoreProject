@@ -8,16 +8,17 @@ class ResultOfTest < ActiveRecord::Base
   
   def setup_fields
     self.is_ended = false
-    return true
+    true
   end
   #Returns the question after last answered
   def last_question
     questions = QuestionResult.order(:number).where(result_of_test_id: self.id)
-    return Question.where("test_id = :test and number = :number", {test: self.test_id, number:(questions.count == 0)? 1 :questions.count+1}).take
+    Question.where("test_id = :test and number = :number", {test: self.test_id, number:(questions.count == 0)? 1 :questions.count+1}).take
   end
+  #Returns question before current
   def previous_question
     questions = QuestionResult.order(:number).where(result_of_test_id: self.id)
-    return Question.where("test_id = :test and number = :number", {test: self.test_id, number:(questions.count == 0)? 1 :questions.count-1}).take
+    Question.where("test_id = :test and number = :number", {test: self.test_id, number:(questions.count == 0)? 1 :questions.count-1}).take
   end
   def show_short
     result_info = {date_of_start: self.created_at}  
@@ -25,6 +26,6 @@ class ResultOfTest < ActiveRecord::Base
     result_info[:id] = self.id
     result_info[:student_id] = self.student_id
     result_info[:is_ended] = self.is_ended ? 'Yes' : 'No'
-    return result_info
+    result_info
   end
 end

@@ -15,9 +15,11 @@
 		</div>
 	</div>
 	<div class="row col-sm-offset-2 form-group">
-		<div class="col-sm-4">
-			<%= f.check_box(:is_student, :checked => true) %><br />
-			<%= f.label(:is_student, "I am student") %>
+    <div class="col-sm-2 control-label">
+      <%= f.label :is_student, 'I am student' %>
+    </div>
+    <div class="col-sm-1">
+			<%= f.check_box :is_student, :checked => true, class: 'form-control'  %>
 		</div>
 	</div>
 	<div class="row col-sm-offset-2 form-group">
@@ -26,7 +28,11 @@
 		</div>
 	</div>
 <% end %>
-<div class="row col-sm-offset-2 col-sm-2">
+<div class="row col-sm-offset-2 col-sm-10">
+  Forgot your password? <%= link_to 'Restore here!', '#' %>
+</div>
+<div class="row col-sm-offset-2 col-sm-10">
 	Want to join? <%= link_to 'Sign up, now!', new_administrator_path %>
 </div>
+
 		

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170203165947) do
+ActiveRecord::Schema.define(version: 20170310172635) do
 
   create_table "administrators", force: :cascade do |t|
     t.boolean  "is_super"
@@ -65,16 +65,6 @@ ActiveRecord::Schema.define(version: 20170203165947) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
-  end
-
-  create_table "points", force: :cascade do |t|
-    t.integer  "earned_points"
-    t.integer  "interest_id"
-    t.integer  "result_of_test_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.index ["interest_id"], name: "index_points_on_interest_id"
-    t.index ["result_of_test_id"], name: "index_points_on_result_of_test_id"
   end
 
   create_table "question_results", force: :cascade do |t|
