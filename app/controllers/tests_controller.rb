@@ -41,7 +41,7 @@ class TestsController < ApplicationController
       ##switch off btn back
       @show_btn_back = 'visibility:hidden'
       session[:next_rewrite] = true #Flag to know, next click - to update
-      step = -100 / Question.where(test_id: res.test_id).count
+      step = -100.0 / Question.where(test_id: res.test_id).count
       pic = prev_q.picture
       session[:cur_question] -= 1
     else
@@ -67,11 +67,11 @@ class TestsController < ApplicationController
         render js: %(window.location.pathname='#{student_result_of_test_path(res.student_id,res.id)}')
         return
       end
-      step = 100 / Question.where(test_id: res.test_id).count
+      step = 100.0 / Question.where(test_id: res.test_id).count
       pic = next_q.picture
-      session[:cur_question] += 1  
+      session[:cur_question] += 1
     end
-    @progress_bar_value = params[:progress].to_i + step.to_i
+    @progress_bar_value = params[:progress].to_f + step
     @description = pic.description
     @image = pic.image
     session[:start_time] = DateTime.current
