@@ -41,15 +41,16 @@ class TutorsController < ApplicationController
     @user = Tutor.find(params[:id])
     #Checking: redirect if can't load user or info
     if @user.nil?
-      flash[:error] = 'User does not exist'
+      flash[:danger] = 'User does not exist'
       redirect_to current_user
     else
       @user_info = @user.info
       unless @user_info.nil?
         info_for_forms
+        return
       end
       redirect_to current_user
-      flash[:error] = "Can't load user information"
+      flash[:danger] = "Can't load user information"
     end
   end
   
@@ -87,7 +88,7 @@ class TutorsController < ApplicationController
   def show
     @user = Tutor.find(params[:id])
     if @user.nil?
-      flash[:error] = 'User does not exist.'
+      flash[:danger] = 'User does not exist.'
       redirect_to :root
     end
     @user_info = @user.show.to_a
