@@ -167,7 +167,7 @@ class StudentsController < ApplicationController
       if @is_super_adm
         #Loading Choosing of adm
         @admins = Administrator.admins_list
-        if @admins.nil?
+        if @admins.empty?
           @tutors = []
         else
           @tutors = Tutor.tutors_list(@admins.first[1])
@@ -183,7 +183,7 @@ class StudentsController < ApplicationController
       if @is_super_adm
         #Loading Choosing of adm
         @admins = Administrator.admins_list
-        if @admins.nil?
+        if @admins.empty?
           @tutors = []
         else
           @admins_cur = @user.tutor.administrator_id
