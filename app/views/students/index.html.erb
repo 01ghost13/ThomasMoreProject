@@ -25,7 +25,7 @@
                       tutor_path(student[:tutor][:id])) %>
         </small></h4></td>
         <td><%= link_to('Profile', student_path(student[:id]), class: 'btn btn-default') %></td>
-        <td><%= link_to('Edit', edit_student_path(student[:id]), class: 'btn btn-default') %></td>
+        <td><%= link_to('Edit', edit_student_path(student[:id]), class: 'btn btn-warning') %></td>
       </tr>
 		<% end %>
 	</table>

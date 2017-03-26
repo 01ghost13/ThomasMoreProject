@@ -19,7 +19,7 @@
         <td><h4><small><%= admin[:organisation].titleize %></small></h4></td>
         <td><h4><small><%= admin[:organisation_address].titleize %></small></h4></td>
         <td><%= link_to('Profile', administrator_path(admin[:id]), class: 'btn btn-default') %></td>
-				<td><%= link_to('Edit', edit_administrator_path(admin[:id]), class: 'btn btn-default') %></td>
+				<td><%= link_to('Edit', edit_administrator_path(admin[:id]), class: 'btn btn-warning') %></td>
 			</tr>
 		<% end %>
 	</table>

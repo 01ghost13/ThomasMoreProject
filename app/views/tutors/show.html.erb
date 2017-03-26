@@ -4,8 +4,8 @@
 <% if is_super? || session[:user_type] == 'administrator' && @user.administrator_id == session[:type_id] %>
 	<div class="row">
 		<div class="btn-group col-sm-4" role="group" aria-label="...">
-			<%= link_to("Edit", edit_tutor_path(params[:id]), class: "btn btn-default") %>
-			<%= link_to("Delete", @user, method: :delete, data: { confirm: "You sure?" }, class: "btn btn-warning") %>
+			<%= link_to("Edit", edit_tutor_path(params[:id]), class: "btn btn-warning") %>
+			<%= link_to("Delete", @user, method: :delete, data: { confirm: "You sure?" }, class: "btn btn-danger") %>
 		</div>
 	</div>
 <% end %>

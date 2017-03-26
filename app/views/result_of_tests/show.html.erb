@@ -4,7 +4,7 @@
 </div>
 <div class= "row">
 	<% unless @i_am_student %>
-		<%= link_to("Edit", edit_student_result_of_test_path(params[:student_id],params[:result_id]), class: "btn btn-primary col-sm-1") %>
+		<%= link_to("Edit", edit_student_result_of_test_path(params[:student_id],params[:result_id]), class: "btn btn-warning col-sm-1") %>
 	<% else %>
 		<h4>For editing the result, please log in as a tutor or local administrator.</h4>
 	<% end %>
