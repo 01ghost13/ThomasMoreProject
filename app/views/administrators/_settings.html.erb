@@ -23,11 +23,11 @@
 </a>
 	<ul class="dropdown-menu">
 		<li>
-			<%= link_to "Tutors", tutors_path %>
-		</li>
-		<li>
 			<%= link_to "Students", students_path %>
 		</li>
+    <li>
+      <%= link_to "Tutors", tutors_path %>
+    </li>
 		<% if is_super? %>
 		<li>
 			<%= link_to("Administrators", administrators_path) %>
