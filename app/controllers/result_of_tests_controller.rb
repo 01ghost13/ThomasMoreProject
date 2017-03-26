@@ -6,13 +6,17 @@ class ResultOfTestsController < ApplicationController
     #Loading res info
     @result = ResultOfTest.find(params[:result_id])
     @user = @result
+    unless @result.is_ended
+	    flash[:warning] = 'Test is not finished'
+      redirect_back fallback_location: student_path(params[:student_id])
+    end
   end
   def update
     #Loading res info
     @result = ResultOfTest.find(params[:result_id])
     @user = @result
     if @result.update(result_params)
-      redirect_to(student_result_of_test_path(params[:student_id],params[:result_id]))
+      redirect_to(student_result_of_test_path(params[:student_id], params[:result_id]))
       flash[:success] = 'Update Complete'
     else
       render :edit
@@ -57,7 +61,12 @@ class ResultOfTestsController < ApplicationController
   end
   
   def index
-    
+    #TODO: Add check of rights; CHeck sql injection
+    results = ResultOfTest.where(student_id: params[:student_id])
+    @results = []
+    results.each do |result|
+      @results << result.show_short
+    end
   end
   private
     def result_params
