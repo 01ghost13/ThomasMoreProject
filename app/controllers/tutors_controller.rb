@@ -82,6 +82,7 @@ class TutorsController < ApplicationController
     tutors.each do |tutor|
       @tutors << tutor.show_short
     end
+    @tutors = Kaminari.paginate_array(@tutors).page(params[:page]).per(5)
   end
 
   #Tutor Profile
