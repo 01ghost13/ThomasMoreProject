@@ -10,12 +10,11 @@ Rails.application.routes.draw do
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
 
-  resources :interests, only: [:index, :destroy] do
+  resources :interests, only: [:index, :destroy]
+  resources :interests, only: [] do
     collection do
-      post 'new' => 'interests#create'
-      get 'new' => 'interests#index'
-      patch 'update' => 'interests#update'
-      get 'update' => 'interests#index'
+      post '' => 'interests#create'
+      patch '' => 'interests#update'
     end
   end
   resources :administrators, concerns: :group_result 
