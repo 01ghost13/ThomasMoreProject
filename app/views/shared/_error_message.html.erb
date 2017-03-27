@@ -1,4 +1,4 @@
-<% if @user.errors.any? %>
+<% if not @user.nil? and @user.errors.any? %>
     <div class="row">
     	<div class="col-sm-offset-2 col-sm-6">
 		    <div class="alert alert-danger" role="alert">
