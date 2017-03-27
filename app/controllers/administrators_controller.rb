@@ -37,10 +37,12 @@ class AdministratorsController < ApplicationController
       return
     end
     administrators = Administrator.order(:organisation).all
+    #todo change order to order.except superadmin
     @admins = []
     administrators.each do |admin|
       @admins << admin.show_short unless admin.is_super
     end
+    @admins = Kaminari.paginate_array(@admins).page(params[:page]).per(5)
   end
 
   #Editing page
