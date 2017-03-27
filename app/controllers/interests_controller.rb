@@ -5,7 +5,7 @@ class InterestsController < ApplicationController
       flash[:success] = 'Interest added!'
       redirect_to interests_path
     else
-      @interests_list = Interest.all
+      @interests_list = Interest.order(:created_at).page(params[:page]).per(5)
       @user = @interest
       render :index
     end
@@ -17,7 +17,7 @@ class InterestsController < ApplicationController
       flash[:success] = 'Interest updated!'
       redirect_to interests_path
     else
-      @interests_list = Interest.all
+      @interests_list = Interest.order(:created_at).page(params[:page]).per(5)
       @interest = Interest.new
       @user = interest
       render :index
@@ -30,7 +30,7 @@ class InterestsController < ApplicationController
       flash[:success] = 'Interest deleted!'
       redirect_to interests_path
     else
-      @interests_list = Interest.all
+      @interests_list = Interest.order(:created_at).page(params[:page]).per(5)
       @interest = Interest.new
       @user = interest
       render :index
@@ -38,7 +38,7 @@ class InterestsController < ApplicationController
   end
 
   def index
-    @interests_list = Interest.all
+    @interests_list = Interest.order(:created_at).page(params[:page]).per(5)
     @interest = Interest.new
     @user = @interest
   end
