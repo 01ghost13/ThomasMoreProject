@@ -9,8 +9,15 @@ Rails.application.routes.draw do
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
-  
-  resources :interests, except:[:show,:new]
+
+  resources :interests, only: [:index, :destroy] do
+    collection do
+      post 'new' => 'interests#create'
+      get 'new' => 'interests#index'
+      patch 'update' => 'interests#update'
+      get 'update' => 'interests#index'
+    end
+  end
   resources :administrators, concerns: :group_result 
   resources :tutors, concerns: :group_result 
   resources :students, concerns: :group_result do
