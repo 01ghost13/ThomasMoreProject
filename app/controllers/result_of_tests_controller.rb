@@ -63,6 +63,7 @@ class ResultOfTestsController < ApplicationController
   def index
     #TODO: Add check of rights; CHeck sql injection
     results = ResultOfTest.where(student_id: params[:student_id])
+    @code_name = Student.find(params[:student_id]).code_name
     @results = []
     results.each do |result|
       @results << result.show_short

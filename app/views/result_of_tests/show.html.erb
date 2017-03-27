@@ -10,32 +10,34 @@
 	<% end %>
 </div>
 <div class="row">
-	<div class="col-sm-4">
+	<div class="col-sm-6 row">
 		<h1>Questions</h1>
 		<table class="table table-hover">
 			<% i = 0 %>
-			<tr>
-				<td><h4>#</h4></td>		
-				<td><h4>Start</h4></td>
-				<td><h4>End</h4></td>
-				<td><h4>Time</h4></td>
-				<td><h4>Was rewrited</h4></td>
-				<td><h4>Answer</h4></td>
-			</tr>
+      <thead>
+        <tr>
+          <td><h4>#</h4></td>
+          <td><h4>Start</h4></td>
+          <td><h4>End</h4></td>
+          <td><h4>Time</h4></td>
+          <td><h4>Was rewrited</h4></td>
+          <td><h4>Answer</h4></td>
+        </tr>
+      </thead>
 			<% @list_timestamps.each do |element|%>
 				<tr>
-					<td><h4><%= i+=1 %></h4></td>		
-					<td><h4><small><%= element[:start] %></small></h4></td>
-					<td><h4><small><%= element[:end] %></small></h4></td>
-					<td><h4><small><%= (element[:end] - element[:start]) %></small></h4></td>
-					<td><h4><small>
-						<% if element[:was_rewrited] == true %>
+					<td class="col-sm-1"><h4><%= i+=1 %></h4></td>
+					<td class="col-sm-3"><h4><small><%= element[:start].to_s(:short) %></small></h4></td>
+					<td class="col-sm-3"><h4><small><%= element[:end].to_s(:short) %></small></h4></td>
+					<td class="col-sm-2"><h4><small><%= '%0.2f s'%[element[:end] - element[:start]] %></small></h4></td>
+					<td class="col-sm-1"><h4><small>
+						<% if element[:was_rewrited] %>
 						<div>Yes</div>
 						<% else %>
 						<div>No</div>
 						<% end %>
 						</small></h4></td>
-					<td><h4><small>
+					<td class="col-sm-3"><h4><small>
 						<% if element[:was_checked] == 3 %>
 						<div>Thumbs up</div>
 						<% elsif element[:was_checked] == 1 %>
@@ -48,13 +50,15 @@
 			<% end %>
 		</table>
 	</div>
-	<div class="col-sm-offset-3 col-sm-4">
+	<div class="col-sm-offset-2 col-sm-4">
 		<h1>Interests points</h1>
 		<table class="table table-hover">
-			<tr>
-				<td><h4>Interest</h4></td>		
-				<td><h4>Earned points</h4></td>
-			</tr>
+      <thead>
+        <tr>
+          <td><h4>Interest</h4></td>
+          <td><h4>Earned points</h4></td>
+        </tr>
+      </thead>
 			<% @list_interests.each do |element|%>
 				<tr>
 					<td><h4><small><%= element[0].to_s.humanize %></small></h4></td>		
