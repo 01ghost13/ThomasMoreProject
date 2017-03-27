@@ -11,9 +11,9 @@ class QuestionResult < ActiveRecord::Base
   def setup_fields
     self.was_rewrited = false
     self.end = DateTime.current
-    return true
+    true
   end
   def show
-    return {start: self.start, :end => self.end, was_rewrited: self.was_rewrited, was_checked: self.was_checked }
+    {start: self.start, :end => self.end, was_rewrited: self.was_rewrited, was_checked: self.was_checked }
   end
 end
