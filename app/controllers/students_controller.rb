@@ -114,6 +114,7 @@ class StudentsController < ApplicationController
     students.each do |student|
       @students << student.show_short
     end
+    @students = Kaminari.paginate_array(@students).page(params[:page]).per(5)
   end
   
   private
