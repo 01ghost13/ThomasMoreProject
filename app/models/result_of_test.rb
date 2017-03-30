@@ -1,11 +1,11 @@
 class ResultOfTest < ActiveRecord::Base
   before_validation :setup_fields, on: :create
   has_many :points
-  has_many :question_results
+  has_many :question_results, dependent: :destroy
   accepts_nested_attributes_for :question_results
   validates :test_id,:schooling_id,:student_id, presence: true
   validates :was_in_school, exclusion: { in: [nil] }
-  
+
   def setup_fields
     self.is_ended = false
     true

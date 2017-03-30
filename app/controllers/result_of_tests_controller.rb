@@ -11,6 +11,7 @@ class ResultOfTestsController < ApplicationController
       redirect_back fallback_location: student_path(params[:student_id])
     end
   end
+
   def update
     #Loading res info
     @result = ResultOfTest.find(params[:result_id])
@@ -69,6 +70,18 @@ class ResultOfTestsController < ApplicationController
       @results << result.show_short
     end
   end
+
+  def destroy
+    result = ResultOfTest.find(params[:result_id])
+    if result.destroy
+      flash[:success] = 'Result deleted!'
+      redirect_to student_result_of_tests_path(params[:student_id])
+    else
+      @user = result
+      render :index
+    end
+  end
+
   private
     def result_params
       params.require(:result_of_test).permit(question_results_attributes: [:was_checked,:id])
