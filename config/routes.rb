@@ -1,15 +1,18 @@
 Rails.application.routes.draw do
+
   #Concerns
   concern :group_result do
     resources :result_of_tests, only: [:index], path: 'results', param: :result_id
   end
   
   #Routes
+  #Login pages
   root 'sessions#new'
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
 
+  #Interests pages
   resources :interests, only: [:index, :destroy]
   resources :interests, only: [] do
     collection do
@@ -17,6 +20,7 @@ Rails.application.routes.draw do
       patch '' => 'interests#update'
     end
   end
+  #User pages
   resources :administrators, concerns: :group_result 
   resources :tutors, concerns: :group_result 
   resources :students, concerns: :group_result do
@@ -30,8 +34,12 @@ Rails.application.routes.draw do
     resources :result_of_tests, except: [:new,:create,:index], path: 'results', param: :result_id
     get 'update_tutors' => 'students#update_tutors', on: :new
   end
+  #Tests pages
+
   resources :tests, except:[:index]
 
+  #Picture pages
+  resources :pictures
 # The priority is based upon order of creation: first created -> highest priority.
 # See how all your routes lay out with "rake routes".
 

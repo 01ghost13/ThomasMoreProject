@@ -1,0 +1,30 @@
+<% provide(:title,'Pictures List') %>
+<h1>All pictures</h1>
+<%= link_to('Add picture', new_picture_path, class: 'btn btn-primary')%>
+<div class="col-sm-12">
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <td>Picture</td>
+      <td>Description</td>
+      <td>Profile</td>
+      <td>Edit</td>
+      <td>Delete</td>
+    </tr>
+    </thead>
+    <% @pictures.each do |picture| %>
+        <tr>
+          <td class="col-sm-5"><%= image_tag picture.image.url(:thumb) %></td>
+          <td class="col-sm-4"><h4><%= picture.description %></h4></td>
+          <td class="col-sm-1"><%= link_to('Profile', picture_path(picture.id), class: 'btn btn-default') %></td>
+          <td class="col-sm-1"><%= link_to('Edit', edit_picture_path(picture.id), class: 'btn btn-warning') %></td>
+          <td class="col-sm-1"><%= link_to('Delete', picture_path(picture.id), method: :delete,
+                                           data: { confirm: "Deleting will affect on results.\n Are you sure?" },
+                                           class: 'btn btn-danger') %></td>
+        </tr>
+    <% end %>
+  </table>
+</div>
+<div class="col-sm-12">
+  <%= paginate @pictures %>
+</div>

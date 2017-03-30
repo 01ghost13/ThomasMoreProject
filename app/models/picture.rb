@@ -3,8 +3,9 @@ class Picture < ActiveRecord::Base
   has_many :interests, :through => :picture_interests
   has_many :questions
   has_attached_file :image,
-                    path: ':rails_root/public/system/:class/:id_:basename.:extension',
-                    url: '/system/:class/:id_:basename.:extension'
+                    path: ':rails_root/public/system/:class/:style/:id_:basename.:extension',
+                    url: '/system/:class/:style/:id_:basename.:extension',
+                    styles: {thumb: ['40%']}
   validates :path, presence: true, length: {in: 5..40}
   validates :description, presence: true, length: {in: 5..50}
   validates_attachment :image, presence: true, size: {less_than: 2.megabytes}
