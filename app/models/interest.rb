@@ -7,4 +7,11 @@ class Interest < ActiveRecord::Base
     #delete all entries in picture_interests
     PictureInterest.where(interest_id: self.id).destroy_all
   end
+
+  def self.interests_list
+    interests = Interest.order(:name).map {
+        |t| ["%{name}"%{name: t.name.titleize},t.id]
+    }
+    interests
+  end
 end
