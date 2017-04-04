@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170310172635) do
+ActiveRecord::Schema.define(version: 20170404174057) do
 
   create_table "administrators", force: :cascade do |t|
     t.boolean  "is_super"
@@ -57,7 +57,6 @@ ActiveRecord::Schema.define(version: 20170310172635) do
   end
 
   create_table "pictures", force: :cascade do |t|
-    t.string   "path"
     t.string   "description"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
