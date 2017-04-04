@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170404174057) do
+ActiveRecord::Schema.define(version: 20170404181629) do
 
   create_table "administrators", force: :cascade do |t|
     t.boolean  "is_super"
@@ -95,8 +95,9 @@ ActiveRecord::Schema.define(version: 20170404174057) do
     t.integer  "test_id"
     t.integer  "schooling_id"
     t.integer  "student_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.boolean  "is_outdated",   default: false
   end
 
   create_table "schoolings", force: :cascade do |t|
