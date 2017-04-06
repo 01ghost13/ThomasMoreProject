@@ -24,7 +24,7 @@
         </tr>
       </thead>
 			<% @list_timestamps.each_with_index do |element, i|%>
-				<tr class="<%='danger' if element[:number] == nil %>"
+				<tr class="<%='danger' if element[:question_id] == nil %>"
             title="<%='This question was deleted from test' if element[:number] == nil%>">
 					<td class="col-sm-1"><h4><%= i+1 %></h4></td>
 					<td class="col-sm-3"><h4><small><%= element[:start].to_s(:short) %></small></h4></td>

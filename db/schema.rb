@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170404181629) do
+ActiveRecord::Schema.define(version: 20170406180936) do
 
   create_table "administrators", force: :cascade do |t|
     t.boolean  "is_super"
@@ -75,6 +75,8 @@ ActiveRecord::Schema.define(version: 20170404181629) do
     t.integer  "was_checked"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
+    t.integer  "question_id"
+    t.index ["question_id"], name: "index_question_results_on_question_id"
     t.index ["result_of_test_id"], name: "index_question_results_on_result_of_test_id"
   end
 

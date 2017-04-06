@@ -59,7 +59,9 @@ class TestsController < ApplicationController
         q_to_upd = QuestionResult.where('result_of_test_id = :res and number = :number',{res: res.id, number: cur_question}).take
         q_to_upd.update({start: session[:start_time],:end => DateTime.current,was_checked: params[:value], was_rewrited: true})
       else
-        res.question_results << QuestionResult.new(number: cur_question, start: session[:start_time],was_checked: params[:value])
+        cur_q = Question.find_by(test_id: res.test_id, number: cur_question)
+        res.question_results << QuestionResult.new(number: cur_question, start: session[:start_time],
+                                                   was_checked: params[:value], question_id: cur_q.id)
       end
       #Changing variables
       ##Finding next pic name
