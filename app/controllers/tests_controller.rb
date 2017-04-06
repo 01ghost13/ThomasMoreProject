@@ -95,7 +95,7 @@ class TestsController < ApplicationController
       #Cant find test or student
       flash[:danger] = "Can't find student" if student.nil?
       flash[:danger] = "Can't find test" if test.nil?
-      redirect_to current_user
+      redirect_to current_user and return
     end
 
     #Checking questions in test

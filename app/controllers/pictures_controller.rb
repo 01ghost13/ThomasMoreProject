@@ -16,7 +16,7 @@ class PicturesController < ApplicationController
     @interests = Interest.interests_list
     if @picture.save
       flash[:success] = 'Picture created!'
-      redirect_to :pictures
+      redirect_to pictures_path
     else
       @user = @picture
       render :new

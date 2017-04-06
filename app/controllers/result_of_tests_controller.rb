@@ -17,8 +17,8 @@ class ResultOfTestsController < ApplicationController
     @result = ResultOfTest.find(params[:result_id])
     @user = @result
     if @result.update(result_params)
-      redirect_to(student_result_of_test_path(params[:student_id], params[:result_id]))
       flash[:success] = 'Update Complete'
+      redirect_to(student_result_of_test_path(params[:student_id], params[:result_id]))
     else
       render :edit
     end
@@ -67,7 +67,8 @@ class ResultOfTestsController < ApplicationController
   def index
     #TODO: Add check of rights; CHeck sql injection
     results = ResultOfTest.where(student_id: params[:student_id])
-    @code_name = Student.find(params[:student_id]).code_name
+    student = Student.find(params[:student_id])
+    @code_name = student.code_name
     @results = []
     results.each do |result|
       @results << result.show_short
