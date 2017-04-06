@@ -1,7 +1,7 @@
 class PicturesController < ApplicationController
   before_action :check_log_in
   before_action :check_rights
-  
+
   def index
     @pictures = Picture.order(:created_at).reverse_order.page(params[:page]).per(5)
   end

@@ -53,8 +53,8 @@ class StudentsController < ApplicationController
 
     #Trying update 
     if !@user.nil? && @user.update(student_update_params)
-      redirect_to(@user)
-      flash[:success] = "Update Complete"
+      flash[:success] = 'Update Complete'
+      redirect_to @user
     else
       render :edit
     end

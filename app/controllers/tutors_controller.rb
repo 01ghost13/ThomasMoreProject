@@ -74,7 +74,7 @@ class TutorsController < ApplicationController
   def index
     unless session[:user_type] == 'administrator'
       flash[:danger] = 'You have no access to this page!'
-      redirect_to current_user
+      redirect_to current_user and return
     end
     @is_super_adm = is_super?
     tutors = @is_super_adm ? Tutor.all : Tutor.where(administrator_id: session[:type_id])
@@ -90,7 +90,7 @@ class TutorsController < ApplicationController
     @user = Tutor.find(params[:id])
     if @user.nil?
       flash[:danger] = 'User does not exist.'
-      redirect_to :root
+      redirect_to :root and return
     end
     @user_info = @user.show.to_a
   end
