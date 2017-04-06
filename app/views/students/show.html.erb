@@ -9,7 +9,9 @@
         <td>Start date</td>
         <td>Ended</td>
         <td>Result</td>
-        <td>Edit</td>
+        <% if @is_super_adm || @is_my_student || @is_student_of_my_tutor %>
+            <td>Edit</td>
+        <% end %>
       </tr>
       </thead>
 		<% @test_results.each do |res| %>
@@ -19,8 +21,10 @@
 				<td><h4><small>Is ended? <%= res[:is_ended] %></small></h4></td>
         <td><%= link_to('Result', student_result_of_test_path(res[:student_id], res[:id]),
                         class: 'btn btn-default') %></td>
-				<td><%= link_to('Edit', edit_student_result_of_test_path(res[:student_id],res[:id]),
+        <% if @is_super_adm || @is_my_student || @is_student_of_my_tutor %>
+				  <td><%= link_to('Edit', edit_student_result_of_test_path(res[:student_id],res[:id]),
                         class: 'btn btn-warning') %></td>
+        <% end %>
 			</tr>
 		<% end %>
 	</table>
