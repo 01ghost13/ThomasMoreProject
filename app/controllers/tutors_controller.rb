@@ -79,7 +79,7 @@ class TutorsController < ApplicationController
     @is_super_adm = is_super?
     tutors = @is_super_adm ? Tutor.all : Tutor.where(administrator_id: session[:type_id])
     @tutors = []
-    tutors.each do |tutor|
+    tutors.order(:created_at).reverse_order.each do |tutor|
       @tutors << tutor.show_short
     end
     @tutors = Kaminari.paginate_array(@tutors).page(params[:page]).per(5)

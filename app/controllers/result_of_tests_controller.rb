@@ -67,13 +67,14 @@ class ResultOfTestsController < ApplicationController
   end
   
   def index
-    results = ResultOfTest.where(student_id: params[:student_id])
+    results = ResultOfTest.where(student_id: params[:student_id]).order(:created_at).reverse_order
     student = Student.find(params[:student_id])
     @code_name = student.code_name
     @results = []
     results.each do |result|
       @results << result.show_short
     end
+    @results = Kaminari.paginate_array(@results).page(params[:page]).per(5)
   end
 
   def destroy
