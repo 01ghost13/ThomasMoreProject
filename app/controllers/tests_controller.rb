@@ -4,11 +4,14 @@ class TestsController < ApplicationController
   before_action :check_rights, only: [:testing]
   def new
   end
+
   def create
     
   end
+
   def edit
   end
+
   def update
     
   end
@@ -20,14 +23,15 @@ class TestsController < ApplicationController
       @tests << test.show_short
     end
   end
+
   def exit
-    #debugger
     session.delete(:cur_question)
     session.delete(:result_of_test_id)
     session.delete(:start_time)
     session.delete(:next_rewrite)
     nil
   end
+
   def update_picture
     #Finding our result of test
     res = ResultOfTest.find(session[:result_of_test_id])
@@ -93,7 +97,12 @@ class TestsController < ApplicationController
       flash[:danger] = "Can't find test" if test.nil?
       redirect_to current_user
     end
-    
+
+    #Checking questions in test
+    if test.questions.empty?
+      flash[:danger] = 'Test is empty and probably not ready for testing! Please, contact with administrator.'
+      redirect_back fallback_location: current_user and return
+    end
     #Checking continue or creating new result
     res = ResultOfTest.where('student_id = :student and test_id = :test and is_ended = :is_ended', { student: student.id, test: test.id, is_ended: false }).take
     if res.nil?
@@ -116,6 +125,7 @@ class TestsController < ApplicationController
     @image = question.picture.image
     session[:next_rewrite] = false
   end
+
   private
     def check_login
       unless logged_in?
@@ -124,6 +134,7 @@ class TestsController < ApplicationController
         redirect_to :root 
       end
     end
+  
     def check_rights
       user = Student.find(params[:id])
       is_super_adm = is_super?
