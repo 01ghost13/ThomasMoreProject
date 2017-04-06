@@ -1,9 +1,6 @@
 <% provide(:title,"Edit result") %>
 <%= render 'shared/error_message' %>
 <h1 class="row col-sm-offset-4">Update result of test</h1>
-<% unless @result.is_ended %>
-	<h2 class="row col-sm-offset-4">Test is not finished</h2>
-<% end %>
 <%= form_for @result,class: "form-horizontal", url: student_result_of_test_path(params[:student_id],params[:result_id]) do |result_form| %>
 	<%= result_form.fields_for :question_results do |question_form| %>
 		<div class="row col-sm-offset-2">

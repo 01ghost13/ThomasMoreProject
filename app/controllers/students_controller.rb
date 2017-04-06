@@ -38,7 +38,7 @@ class StudentsController < ApplicationController
     #Loading info
     if @user.nil?
       flash[:error] = 'User does not exist.'
-      redirect_to current_user
+      redirect_to current_user and return
     end
     info_for_edit_page
   end
@@ -65,7 +65,7 @@ class StudentsController < ApplicationController
     @user = Student.find(params[:id])
     if @user.nil?
       flash[:error] = 'User does not exist.'
-      redirect_to :root
+      redirect_to :root and return
     end
     @is_super_adm = is_super?
     @is_my_student = session[:user_type] == 'tutor' && @user.tutor_id == session[:type_id]
@@ -73,12 +73,12 @@ class StudentsController < ApplicationController
     unless @user.is_active
       #Student is inactive
       flash[:warning] = 'This student was deactivated in: ' + @user.date_off
-      redirect_to current_user
+      redirect_to current_user and return
     end
     @user_info = @user.show_info.to_a
     #Loading all test results
     @test_results = []
-    ResultOfTest.order(:created_at).where(student_id: @user.id).take(5).each do |res|
+    ResultOfTest.order(:created_at).where(student_id: @user.id).reverse.take(5).each do |res|
       @test_results << res.show_short
     end
   end
@@ -94,7 +94,7 @@ class StudentsController < ApplicationController
   def index
     if session[:user_type] == 'student'
       flash[:danger] = 'You have no access to this page!'
-      redirect_to current_user
+      redirect_to current_user and return
     end
     @students = []
     students = []
@@ -114,6 +114,7 @@ class StudentsController < ApplicationController
     students.each do |student|
       @students << student.show_short
     end
+    @students = Kaminari.paginate_array(@students).page(params[:page]).per(5)
   end
   
   private
@@ -167,7 +168,7 @@ class StudentsController < ApplicationController
       if @is_super_adm
         #Loading Choosing of adm
         @admins = Administrator.admins_list
-        if @admins.nil?
+        if @admins.empty?
           @tutors = []
         else
           @tutors = Tutor.tutors_list(@admins.first[1])
@@ -183,7 +184,7 @@ class StudentsController < ApplicationController
       if @is_super_adm
         #Loading Choosing of adm
         @admins = Administrator.admins_list
-        if @admins.nil?
+        if @admins.empty?
           @tutors = []
         else
           @admins_cur = @user.tutor.administrator_id

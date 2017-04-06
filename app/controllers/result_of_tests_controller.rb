@@ -6,14 +6,19 @@ class ResultOfTestsController < ApplicationController
     #Loading res info
     @result = ResultOfTest.find(params[:result_id])
     @user = @result
+    unless @result.is_ended
+	    flash[:warning] = 'Test is not finished'
+      redirect_back fallback_location: student_path(params[:student_id])
+    end
   end
+
   def update
     #Loading res info
     @result = ResultOfTest.find(params[:result_id])
     @user = @result
     if @result.update(result_params)
-      redirect_to(student_result_of_test_path(params[:student_id],params[:result_id]))
       flash[:success] = 'Update Complete'
+      redirect_to(student_result_of_test_path(params[:student_id], params[:result_id]))
     else
       render :edit
     end
@@ -22,6 +27,9 @@ class ResultOfTestsController < ApplicationController
   def show
     #Loading result
     result = ResultOfTest.find(params[:result_id])
+    if result.is_outdated?
+      flash.now[:warning] = 'The test was edited. Points for interests are outdated!'
+    end
     #Loading q results
     q_res  = result.question_results
     q_test = Question.where(test_id: result.test_id)
@@ -33,7 +41,7 @@ class ResultOfTestsController < ApplicationController
     q_res.each do |r|
       timestamps << r.show
       #Related interests for result
-      related_i = []
+      related_i = {}
       q_test.each do |q|
         related_i = q.picture.related_interests if q.number == r.number
       end
@@ -57,8 +65,27 @@ class ResultOfTestsController < ApplicationController
   end
   
   def index
-    
+    #TODO: Add check of rights; CHeck sql injection
+    results = ResultOfTest.where(student_id: params[:student_id])
+    student = Student.find(params[:student_id])
+    @code_name = student.code_name
+    @results = []
+    results.each do |result|
+      @results << result.show_short
+    end
   end
+
+  def destroy
+    result = ResultOfTest.find(params[:result_id])
+    if result.destroy
+      flash[:success] = 'Result deleted!'
+      redirect_to student_result_of_tests_path(params[:student_id])
+    else
+      @user = result
+      render :index
+    end
+  end
+
   private
     def result_params
       params.require(:result_of_test).permit(question_results_attributes: [:was_checked,:id])

@@ -7,8 +7,7 @@ class AdministratorsController < ApplicationController
   #Create Page
   def new
     if logged_in? && !is_super?
-      redirect_back fallback_location: current_user
-      return
+      redirect_back fallback_location: current_user and return
     end
     @user = Administrator.new
     @user_info = Info.new
@@ -33,14 +32,15 @@ class AdministratorsController < ApplicationController
   def index
     unless is_super?
       flash[:danger] = 'You have no access to this page!'
-      redirect_to current_user
-      return
+      redirect_to current_user and return
     end
     administrators = Administrator.order(:organisation).all
+    #todo change order to order.except superadmin
     @admins = []
     administrators.each do |admin|
       @admins << admin.show_short unless admin.is_super
     end
+    @admins = Kaminari.paginate_array(@admins).page(params[:page]).per(5)
   end
 
   #Editing page
@@ -57,10 +57,10 @@ class AdministratorsController < ApplicationController
   #Update querry
   def update
     @user = Administrator.find(params[:id])
-    #debugger
+
     if @user.update(administrator_params)
-      redirect_to @user
       flash[:success] = 'Update Complete'
+      redirect_to @user
     else
       render :edit
     end
@@ -71,7 +71,7 @@ class AdministratorsController < ApplicationController
     @user = Administrator.find(params[:id])
     if @user.nil?
       flash[:error] = 'User does not exist.'
-      redirect_to :root
+      redirect_to :root and return
     end
     @user_info = @user.show.to_a
   end

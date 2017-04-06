@@ -1,13 +1,29 @@
 <% provide(:title,"Administrators List") %>
-<h1>Names of all administrators</h1>
-<div class="col-sm-4">
+<h1>All administrators</h1>
+<div class="col-sm-12">
 	<table class="table table-hover">
+    <thead>
+      <tr>
+        <td>Last name</td>
+        <td>Name</td>
+        <td>Organisation</td>
+        <td>Organisation address</td>
+        <td>Profile</td>
+        <td>Edit</td>
+      </tr>
+    </thead>
 		<% @admins.each do |admin| %>
 			<tr>
-				<td><h4><%= admin[:last_name].titleize + " " + admin[:name] %></h4></td>		
-				<td><h4><small><%= admin[:organisation].titleize %></small></h4></td>
-				<td><%= link_to("Edit", edit_administrator_path(admin[:id]), class: "btn btn-default") %></td>
+				<td><h4><%= admin[:last_name].titleize %></h4></td>
+        <td><h4><%= admin[:name].titleize %></h4></td>
+        <td><h4><small><%= admin[:organisation].titleize %></small></h4></td>
+        <td><h4><small><%= admin[:organisation_address].titleize %></small></h4></td>
+        <td><%= link_to('Profile', administrator_path(admin[:id]), class: 'btn btn-default') %></td>
+				<td><%= link_to('Edit', edit_administrator_path(admin[:id]), class: 'btn btn-warning') %></td>
 			</tr>
 		<% end %>
 	</table>
+</div>
+<div class="col-sm-12">
+  <%= paginate @admins %>
 </div>

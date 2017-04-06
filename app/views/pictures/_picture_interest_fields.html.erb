@@ -1,0 +1,12 @@
+<div class="row col-sm-offset-2 form-group nested-fields">
+  <%= interest_form.label :interest_id, 'Interest', class: 'col-sm-2 control-label' %>
+  <div class="col-sm-4">
+    <%= interest_form.select(:interest_id, options_for_select(@interests, interest_form.object.interest_id),{},{class: 'form-control'}) %>
+  </div>
+  <div class="col-sm-2">
+    <%= interest_form.number_field :earned_points, placeholder: 'Weight', in: 1..5, step: 1, class: 'form-control' %>
+  </div>
+  <div class="col-sm-4">
+    <%= link_to_remove_association 'Remove interest', interest_form, class: 'btn btn-warning' %>
+  </div>
+</div>

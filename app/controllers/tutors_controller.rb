@@ -41,15 +41,16 @@ class TutorsController < ApplicationController
     @user = Tutor.find(params[:id])
     #Checking: redirect if can't load user or info
     if @user.nil?
-      flash[:error] = 'User does not exist'
+      flash[:danger] = 'User does not exist'
       redirect_to current_user
     else
       @user_info = @user.info
       unless @user_info.nil?
         info_for_forms
+        return
       end
+      flash[:danger] = "Can't load user information"
       redirect_to current_user
-      flash[:error] = "Can't load user information"
     end
   end
   
@@ -61,8 +62,8 @@ class TutorsController < ApplicationController
     @user = Tutor.find(params[:id])
     #If tutor exit and data - OK, changing
     if @user.update(tutor_params)
-      redirect_to(@user)
       flash[:success] = 'Update Complete'
+      redirect_to @user
     else
       render :edit
     end
@@ -81,13 +82,14 @@ class TutorsController < ApplicationController
     tutors.each do |tutor|
       @tutors << tutor.show_short
     end
+    @tutors = Kaminari.paginate_array(@tutors).page(params[:page]).per(5)
   end
 
   #Tutor Profile
   def show
     @user = Tutor.find(params[:id])
     if @user.nil?
-      flash[:error] = 'User does not exist.'
+      flash[:danger] = 'User does not exist.'
       redirect_to :root
     end
     @user_info = @user.show.to_a
@@ -137,12 +139,14 @@ class TutorsController < ApplicationController
         redirect_to current_user
       end
     end
+
     #Strict params
     def tutor_params
       t_param = params
       t_param[:tutor][:info_attributes][:id] = @user.info.id unless params[:id].nil?
       t_param.require(:tutor).permit(:administrator_id,info_attributes: [:id,:name,:last_name,:mail,:phone,:password,:password_confirmation])
     end
+
     #Callback for checking confirmation of mail
     def check_mail_confirmation
       user = current_user

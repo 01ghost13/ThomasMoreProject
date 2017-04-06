@@ -1,14 +1,31 @@
 <% provide(:title,"Tutors List") %>
 <h1>All tutors</h1>
-<div class="col-sm-8">
+<div class="col-sm-12">
 	<table class="table table-hover">
+    <thead>
+    <tr>
+      <td>Last name</td>
+      <td>Name</td>
+      <td>Organisation</td>
+      <td>Header</td>
+      <td>Profile</td>
+      <td>Edit</td>
+    </tr>
+    </thead>
 		<% @tutors.each do |tutor| %>
 			<tr>
-				<td><h4><%= tutor[:last_name].titleize + " " + tutor[:name].titleize %></h4></td>		
-				<td><h4><small>From: <%= tutor[:administrator][:organisation].titleize %></small></h4></td>
-				<td><h4><small>Header: <%= tutor[:administrator][:last_name].titleize + " " + tutor[:administrator][:name].titleize %></small></h4></td>
-				<td><%= link_to("Edit", edit_tutor_path(tutor[:id]), class: "btn btn-default") %></td>
+				<td><h4><%= tutor[:last_name].titleize %></h4></td>
+        <td><h4><%= tutor[:name].titleize %></h4></td>
+				<td><h4><small><%= tutor[:administrator][:organisation].titleize %></small></h4></td>
+				<td><h4><small>
+          <%= link_to "#{tutor[:administrator][:last_name].titleize} #{tutor[:administrator][:name].titleize}",
+                      administrator_path(tutor[:administrator][:id]) %></small></h4></td>
+        <td><%= link_to('Profile', tutor_path(tutor[:id]), class: 'btn btn-default') %></td>
+        <td><%= link_to('Edit', edit_tutor_path(tutor[:id]), class: 'btn btn-warning') %></td>
 			</tr>
 		<% end %>
 	</table>
+</div>
+<div class="col-sm-12">
+  <%= paginate @tutors %>
 </div>

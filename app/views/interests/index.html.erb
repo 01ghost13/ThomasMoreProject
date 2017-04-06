@@ -1,1 +1,45 @@
-
+<% provide :title, 'Interests' %>
+<%= render 'shared/error_message' %>
+<div class="row form-group">
+  <%= form_for @interest, url: interests_path do |interest_form| %>
+        <h4><%= interest_form.label :name,'Create interest:', class: 'col-sm-offset-5 col-sm-2 control-label' %></h4>
+        <div class="col-sm-4">
+          <%= interest_form.text_field :name, class: 'form-control', placeholder: 'Name' %>
+        </div>
+        <%= interest_form.submit 'Add', class: 'col-sm-1 btn btn-primary' %>
+  <% end %>
+</div>
+<h1>All interests</h1>
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <td>Name</td>
+    <!--<td>Profile</td>-->
+    <td>Edit</td>
+    <td>Delete</td>
+  </tr>
+  </thead>
+    <% @interests_list.each do |interest| %>
+        <tr>
+          <td class="col-sm-5"><h4><%= interest.name.titleize %></h4></td>
+          <!--<td class="col-sm-1"><%= link_to('Profile','#', class: 'btn btn-default') %></td>-->
+          <td class="col-sm-5 row">
+            <%= form_for interest, url:{action: :update} do |interest_form| %>
+              <div class="col-sm-10">
+                <%= interest_form.text_field :name, class: 'form-control', placeholder: 'Name' %>
+              </div>
+              <%= interest_form.hidden_field :id %>
+              <%= interest_form.submit 'Edit', class: 'col-sm-2 btn btn-warning' %>
+            <% end %>
+          </td>
+          <td class="col-sm-1">
+            <%= link_to('Delete', interest, method: :delete,
+                        data: { confirm: "Deleting will affect on results.\n Are you sure?" },
+                        class: 'btn btn-danger') %>
+          </td>
+        </tr>
+    <% end %>
+</table>
+<div class="col-sm-12">
+  <%= paginate @interests_list %>
+</div>

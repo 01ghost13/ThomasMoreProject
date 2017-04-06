@@ -1,6 +1,6 @@
 class QuestionResult < ActiveRecord::Base
   before_validation :setup_fields, on: :create
-  validates :number, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :number, presence: true, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validates :start, :end, :result_of_test_id, presence: true
   validates :was_checked, inclusion: { in: [1,2,3] }
   # 1 - td
@@ -11,9 +11,10 @@ class QuestionResult < ActiveRecord::Base
   def setup_fields
     self.was_rewrited = false
     self.end = DateTime.current
-    return true
+    true
   end
   def show
-    return {start: self.start, :end => self.end, was_rewrited: self.was_rewrited, was_checked: self.was_checked }
+    {start: self.start, end: self.end, was_rewrited: self.was_rewrited, was_checked: self.was_checked,
+     number: self.number }
   end
 end
