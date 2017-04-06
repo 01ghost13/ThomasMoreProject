@@ -1,7 +1,9 @@
 class ResultOfTestsController < ApplicationController
   #TODO: Add group stats
   before_action :check_login
-  before_action :check_rights
+  before_action :check_rights, only: [:show, :index]
+  before_action :check_admin_rights, except: [:show, :index]
+
   def edit
     #Loading res info
     @result = ResultOfTest.find(params[:result_id])
@@ -65,7 +67,6 @@ class ResultOfTestsController < ApplicationController
   end
   
   def index
-    #TODO: Add check of rights; CHeck sql injection
     results = ResultOfTest.where(student_id: params[:student_id])
     student = Student.find(params[:student_id])
     @code_name = student.code_name
@@ -105,6 +106,16 @@ class ResultOfTestsController < ApplicationController
       @i_am_student = session[:user_type] == 'student'
       is_i = @i_am_student && params[:student_id].to_i == session[:type_id]
       unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
+        flash[:warning] = 'You have no access to this page.'
+        redirect_to current_user
+      end
+    end
+    def check_admin_rights
+      student = Student.find(params[:student_id])
+      is_super_adm = is_super?
+      is_my_student = session[:user_type] == 'tutor' && student.tutor_id == session[:type_id]
+      is_student_of_my_tutor = session[:user_type] == 'administrator' && student.tutor.administrator_id == session[:type_id]
+      unless is_super_adm || is_my_student || is_student_of_my_tutor
         flash[:warning] = 'You have no access to this page.'
         redirect_to current_user
       end

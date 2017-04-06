@@ -9,8 +9,10 @@
       <td>Ended</td>
       <td>End date</td>
       <td>Result</td>
-      <td>Edit</td>
-      <td>Delete</td>
+      <% unless session[:user_type] == 'student' %>
+        <td>Edit</td>
+        <td>Delete</td>
+      <% end %>
     </tr>
     </thead>
     <% @results.each do |result| %>
@@ -22,11 +24,13 @@
           <td><h4><%= result[:date_of_end] %></h4></td>
           <td><%= link_to('Result', student_result_of_test_path(params[:student_id], result[:id]),
                           class: 'btn btn-default') %></td>
-          <td><%= link_to('Edit', edit_student_result_of_test_path(params[:student_id], result[:id]),
+          <% unless session[:user_type] == 'student' %>
+            <td><%= link_to('Edit', edit_student_result_of_test_path(params[:student_id], result[:id]),
                           class: 'btn btn-warning') %></td>
-          <td><%= link_to('Delete', student_result_of_test_path(params[:student_id], result[:id]), method: :delete,
+            <td><%= link_to('Delete', student_result_of_test_path(params[:student_id], result[:id]), method: :delete,
                           data: { confirm: 'Are you sure?' },
                           class: 'btn btn-danger') %></td>
+          <% end %>
         </tr>
     <% end %>
   </table>
