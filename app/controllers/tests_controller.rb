@@ -134,7 +134,7 @@ class TestsController < ApplicationController
         redirect_to :root 
       end
     end
-  
+
     def check_rights
       user = Student.find(params[:id])
       is_super_adm = is_super?

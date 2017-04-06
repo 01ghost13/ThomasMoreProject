@@ -28,7 +28,7 @@ class ResultOfTestsController < ApplicationController
     #Loading result
     result = ResultOfTest.find(params[:result_id])
     if result.is_outdated?
-      flash[:warning] = 'The test was edited. Points for interests are outdated!'
+      flash.now[:warning] = 'The test was edited. Points for interests are outdated!'
     end
     #Loading q results
     q_res  = result.question_results

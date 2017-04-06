@@ -9,6 +9,6 @@ class Question < ActiveRecord::Base
       question.number -= 1
       question.save
     end
-    QuestionResult
+    #QuestionResult.where(['test_id = ? and number = ?', self.test_id, self.number]).update_all(number: nil)
   end
 end

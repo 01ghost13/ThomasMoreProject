@@ -13,7 +13,6 @@
 	<div class="col-sm-6 row">
 		<h1>Questions</h1>
 		<table class="table table-hover">
-			<% i = 0 %>
       <thead>
         <tr>
           <td><h4>#</h4></td>
@@ -24,9 +23,10 @@
           <td><h4>Answer</h4></td>
         </tr>
       </thead>
-			<% @list_timestamps.each do |element|%>
-				<tr>
-					<td class="col-sm-1"><h4><%= i+=1 %></h4></td>
+			<% @list_timestamps.each_with_index do |element, i|%>
+				<tr class="<%='danger' if element[:number] == nil %>"
+            title="<%='This question was deleted from test' if element[:number] == nil%>">
+					<td class="col-sm-1"><h4><%= i+1 %></h4></td>
 					<td class="col-sm-3"><h4><small><%= element[:start].to_s(:short) %></small></h4></td>
 					<td class="col-sm-3"><h4><small><%= element[:end].to_s(:short) %></small></h4></td>
 					<td class="col-sm-2"><h4><small><%= '%0.2f s'%[element[:end] - element[:start]] %></small></h4></td>

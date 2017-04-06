@@ -10,6 +10,7 @@ class Student < ActiveRecord::Base
   #1 – dunno
   #2 – Men
   #3 – Women
+  #TODO: Change tutor_id -> tutor etc
   validates :tutor_id,:schooling_id,:mode_id, presence: true
   validates :is_active, :is_current_in_school, exclusion: { in: [nil] }
   validates :password, presence: true, allow_nil: true, length: {minimum: 4}
