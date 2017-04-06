@@ -33,6 +33,7 @@ class ResultOfTest < ActiveRecord::Base
     if is_ended?
       result_info[:date_of_end] = QuestionResult.order(:created_at).where(result_of_test_id: self.id).last.created_at
     end
+    result_info[:is_outdated] = self.is_outdated
     result_info
   end
 end
