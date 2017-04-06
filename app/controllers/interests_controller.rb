@@ -1,4 +1,7 @@
 class InterestsController < ApplicationController
+  before_action :check_log_in
+  before_action :check_rights
+
   def create
     @interest = Interest.new(interest_params)
     if @interest.save
@@ -42,8 +45,28 @@ class InterestsController < ApplicationController
     @interest = Interest.new
     @user = @interest
   end
+
   private
     def interest_params
       params.require(:interest).permit(:name, :id)
     end
+
+  #Callback for checking session
+  def check_log_in
+    unless logged_in?
+      flash[:warning] = 'Only registrated people can see this page.'
+      #Redirecting to home page
+      redirect_to :root
+    end
+  end
+
+  #Callback for checking rights
+  def check_rights
+    #Only SA
+    unless is_super?
+      flash[:warning] = 'You have no access to this page.'
+      #Redirect
+      redirect_to current_user
+    end
+  end
 end
