@@ -27,6 +27,9 @@ class ResultOfTestsController < ApplicationController
   def show
     #Loading result
     result = ResultOfTest.find(params[:result_id])
+    if result.is_outdated?
+      flash[:warning] = 'The test was edited. Points for interests are outdated!'
+    end
     #Loading q results
     q_res  = result.question_results
     q_test = Question.where(test_id: result.test_id)
@@ -38,7 +41,7 @@ class ResultOfTestsController < ApplicationController
     q_res.each do |r|
       timestamps << r.show
       #Related interests for result
-      related_i = []
+      related_i = {}
       q_test.each do |q|
         related_i = q.picture.related_interests if q.number == r.number
       end

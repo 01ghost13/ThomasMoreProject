@@ -32,7 +32,15 @@ class PicturesController < ApplicationController
   end
 
   def destroy
-
+    picture = Picture.find(params[:id])
+    if picture.destroy
+      flash[:success] = 'Picture deleted!'
+      redirect_to pictures_path
+    else
+      @user = picture
+      index
+      render :index
+    end
   end
 
   def show
