@@ -1,16 +1,32 @@
+<% provide(:title,'Choosing test') %>
 <div class="row">
-	<%= render "shared/profile" %>
-	<div class="col-sm-8">
+  <div class="col-sm-2">
+    <%= link_to('Back to profile', student_path(params[:id]), class: 'btn btn-primary') %>
+  </div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
 		<h1>All tests</h1>
 		<table class="table table-hover">
+      <thead>
+      <tr>
+        <td>Test name and version</td>
+        <td>Description</td>
+        <td>Count of questions</td>
+        <td>Start</td>
+      </tr>
+      </thead>
 		<% @tests.each do |test| %>
 			<tr>
-				<td><h4><%= test[:name]+" "+test[:version] %></h4></td>		
-				<td><h4><small><%= test[:description] %></small></h4></td>
-				<td><h4><small>Count of questions <%= test[:question_count] %></small></h4></td>
-				<td><h4><small><%= link_to("Start", testing_student_path(params[:id],test[:id]), class: "btn btn-success") %></small></h4></td>
+				<td><h4><%= test[:name]+' '+test[:version] %></h4></td>
+				<td><h4><%= test[:description] %></h4></td>
+				<td><h4><%= test[:question_count] %></h4></td>
+				<td><%= link_to('Start', testing_student_path(params[:id],test[:id]), class: 'btn btn-success') %></td>
 			</tr>
 		<% end %>
 	</table>
 	</div>
+</div>
+<div class="col-sm-12">
+  <%= paginate @tests %>
 </div>

@@ -53,7 +53,7 @@ class PicturesController < ApplicationController
       render :index
     end
   end
-  
+
   private
     def picture_params
       p_params = params.require(:picture).permit(

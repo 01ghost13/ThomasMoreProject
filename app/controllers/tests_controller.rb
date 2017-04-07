@@ -22,6 +22,7 @@ class TestsController < ApplicationController
     tests.each do |test|
       @tests << test.show_short
     end
+    @tests = Kaminari.paginate_array(@tests).page(params[:page]).per(10)
   end
 
   def exit
