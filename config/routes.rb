@@ -36,7 +36,7 @@ Rails.application.routes.draw do
   end
   #Tests pages
 
-  resources :tests, except:[:index]
+  resources :tests
 
   #Picture pages
   resources :pictures, except: [:show]

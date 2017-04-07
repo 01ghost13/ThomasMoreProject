@@ -17,6 +17,11 @@ class TestsController < ApplicationController
   end
 
   def index
+    if params[:id].nil? && !is_super?
+      flash[:warning] = 'You have no access to this page.'
+      redirect_to current_user
+      return
+    end
     tests = Test.all
     @tests = []
     tests.each do |test|

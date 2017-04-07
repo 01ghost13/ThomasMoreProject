@@ -1,19 +1,29 @@
 <% provide(:title,'Choosing test') %>
+<h1>All tests</h1>
 <div class="row">
   <div class="col-sm-2">
-    <%= link_to('Back to profile', student_path(params[:id]), class: 'btn btn-primary') %>
+    <% if params[:id].nil? %>
+      <%= link_to('Create Test', new_test_path, class: 'btn btn-primary') %>
+    <% else %>
+      <%= link_to('Back to profile', student_path(params[:id]), class: 'btn btn-primary') %>
+    <% end %>
   </div>
 </div>
 <div class="row">
 	<div class="col-sm-12">
-		<h1>All tests</h1>
 		<table class="table table-hover">
       <thead>
       <tr>
         <td>Test name and version</td>
         <td>Description</td>
         <td>Count of questions</td>
-        <td>Start</td>
+        <% if params[:id].nil? %>
+            <td>Show</td>
+            <td>Edit</td>
+            <td>Delete</td>
+        <% else %>
+            <td>Start</td>
+        <% end %>
       </tr>
       </thead>
 		<% @tests.each do |test| %>
@@ -21,7 +31,13 @@
 				<td><h4><%= test[:name]+' '+test[:version] %></h4></td>
 				<td><h4><%= test[:description] %></h4></td>
 				<td><h4><%= test[:question_count] %></h4></td>
-				<td><%= link_to('Start', testing_student_path(params[:id],test[:id]), class: 'btn btn-success') %></td>
+        <% if params[:id].nil? %>
+            <td><%= link_to('Show', test_path(test[:id]), class: 'btn btn-default') %></td>
+            <td><%= link_to('Edit', edit_test_path(test[:id]), class: 'btn btn-warning') %></td>
+            <td><%= link_to('Delete', test_path(test[:id]), class: 'btn btn-danger') %></td>
+        <% else %>
+          <td><%= link_to('Start', testing_student_path(params[:id],test[:id]), class: 'btn btn-success') %></td>
+        <% end %>
 			</tr>
 		<% end %>
 	</table>
