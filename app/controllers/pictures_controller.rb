@@ -11,7 +11,6 @@ class PicturesController < ApplicationController
     picture_interests = [PictureInterest.new]
     @picture.picture_interests << picture_interests
     @interests = Interest.interests_list
-    @count = picture_interests.count
   end
 
   def create
@@ -27,11 +26,20 @@ class PicturesController < ApplicationController
   end
 
   def edit
-
+    @picture = Picture.find(params[:id])
+    @interests = Interest.interests_list
   end
 
   def update
-
+    @picture = Picture.find(params[:id])
+    if @picture.update(picture_params)
+      flash[:success] = 'Picture updated!'
+      redirect_to pictures_path
+    else
+      @user = @picture
+      @interests = Interest.interests_list
+      render :edit
+    end
   end
 
   def destroy
