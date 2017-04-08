@@ -1,7 +1,8 @@
 class Test < ActiveRecord::Base
   has_many :questions, inverse_of: :test
-  has_many :result_of_tests
+  has_many :result_of_tests, dependent: :restrict_with_error
   accepts_nested_attributes_for :questions, reject_if: :all_blank, allow_destroy: true
+
   validates :name,:description,:version, presence: true
   validates :name, uniqueness: true, length: {in: 5..20}
   validates :description, length: {in: 5..50}

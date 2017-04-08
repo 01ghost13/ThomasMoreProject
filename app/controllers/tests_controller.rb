@@ -40,6 +40,16 @@ class TestsController < ApplicationController
     
   end
 
+  def destroy
+    test = Test.find(params[:id])
+    if test.destroy
+      flash[:success] = 'Test deleted!'
+    else
+      flash[:danger] = 'This test has associated results, please, delete them first.'
+    end
+    redirect_to tests_path
+  end
+
   def index
     if params[:id].nil? && !is_super?
       flash[:warning] = 'You have no access to this page.'

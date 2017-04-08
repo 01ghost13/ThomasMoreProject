@@ -30,12 +30,5 @@ class Picture < ActiveRecord::Base
         |t| ["%{name}"%{name: t.image_file_name},t.id]
     }
   end
-
-  private
-  def mark_outdated
-    #Setting results as outdated
-    q = Question.where(picture_id: self.id)
-    ResultOfTest.where(test_id: q.select(:test_id)).update_all(is_outdated: true)
-  end
 end
 

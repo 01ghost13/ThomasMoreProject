@@ -34,7 +34,9 @@
         <% if params[:id].nil? %>
             <td><%= link_to('Show', test_path(test[:id]), class: 'btn btn-default') %></td>
             <td><%= link_to('Edit', edit_test_path(test[:id]), class: 'btn btn-warning') %></td>
-            <td><%= link_to('Delete', test_path(test[:id]), class: 'btn btn-danger') %></td>
+            <td><%= link_to('Delete', test_path(test[:id]), method: :delete,
+                            data: { confirm: "Deleting will destroy all results of this test.\n Are you sure?" },
+                            class: 'btn btn-danger') %></td>
         <% else %>
           <td><%= link_to('Start', testing_student_path(params[:id],test[:id]), class: 'btn btn-success') %></td>
         <% end %>
