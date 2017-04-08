@@ -53,8 +53,8 @@ class StudentsController < ApplicationController
 
     #Trying update 
     if !@user.nil? && @user.update(student_update_params)
-      redirect_to(@user)
-      flash[:success] = "Update Complete"
+      flash[:success] = 'Update Complete'
+      redirect_to @user
     else
       render :edit
     end
@@ -78,7 +78,7 @@ class StudentsController < ApplicationController
     @user_info = @user.show_info.to_a
     #Loading all test results
     @test_results = []
-    ResultOfTest.order(:created_at).where(student_id: @user.id).reverse.take(5).each do |res|
+    ResultOfTest.order(:created_at).reverse_order.where(student_id: @user.id).limit(5).each do |res|
       @test_results << res.show_short
     end
   end

@@ -3,7 +3,10 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
   $(document).on 'change', '#administrator_selection', (evt) ->
-    $.ajax window.location.pathname + '/update_tutors',
+    url = window.location.pathname
+    url += '/edit' if /students\/\d+\/?$/.test(url)
+    url += '/new' if /students\/?$/.test(url)
+    $.ajax url + '/update_tutors',
       type: 'GET'
       dataType: 'script'
       data: {

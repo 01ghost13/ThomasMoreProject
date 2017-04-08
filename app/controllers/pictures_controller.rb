@@ -1,4 +1,7 @@
 class PicturesController < ApplicationController
+  before_action :check_log_in
+  before_action :check_rights
+
   def index
     @pictures = Picture.order(:created_at).reverse_order.page(params[:page]).per(5)
   end
@@ -8,7 +11,6 @@ class PicturesController < ApplicationController
     picture_interests = [PictureInterest.new]
     @picture.picture_interests << picture_interests
     @interests = Interest.interests_list
-    @count = picture_interests.count
   end
 
   def create
@@ -24,11 +26,20 @@ class PicturesController < ApplicationController
   end
 
   def edit
-
+    @picture = Picture.find(params[:id])
+    @interests = Interest.interests_list
   end
 
   def update
-
+    @picture = Picture.find(params[:id])
+    if @picture.update(picture_params)
+      flash[:success] = 'Picture updated!'
+      redirect_to pictures_path
+    else
+      @user = @picture
+      @interests = Interest.interests_list
+      render :edit
+    end
   end
 
   def destroy
@@ -43,14 +54,27 @@ class PicturesController < ApplicationController
     end
   end
 
-  def show
-
-  end
-
   private
     def picture_params
       p_params = params.require(:picture).permit(
           :description, :image, picture_interests_attributes: [
           :interest_id, :earned_points, :_destroy, :id])
     end
+  def check_log_in
+    unless logged_in?
+      flash[:warning] = 'Only registrated people can see this page.'
+      #Redirecting to home page
+      redirect_to :root
+    end
+  end
+
+  #Callback for checking rights
+  def check_rights
+    #Only SA
+    unless is_super?
+      flash[:warning] = 'You have no access to this page.'
+      #Redirect
+      redirect_to current_user
+    end
+  end
 end

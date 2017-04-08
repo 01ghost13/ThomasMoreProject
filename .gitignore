@@ -15,7 +15,8 @@
 /log/*
 !/log/.keep
 /tmp
-/.directory
+.directory
 /.idea
 
 /public/system/pictures/*
+

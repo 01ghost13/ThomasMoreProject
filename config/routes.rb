@@ -36,10 +36,12 @@ Rails.application.routes.draw do
   end
   #Tests pages
 
-  resources :tests, except:[:index]
+  resources :tests do
+    get 'update_image' => 'tests#update_image', on: :new
+  end
 
   #Picture pages
-  resources :pictures
+  resources :pictures, except: [:show]
 # The priority is based upon order of creation: first created -> highest priority.
 # See how all your routes lay out with "rake routes".
 

@@ -1,12 +1,12 @@
 <% provide(:title,"Result") %>
 <div class= "row">
-	<h4>Result of student: <%=@student%><br /><%= link_to("To profile", student_path(params[:student_id]), class: "btn btn-default") %></h4>
+	<h2>Results of <%= link_to @student, student_path(params[:student_id]) %></h2>
 </div>
 <div class= "row">
 	<% unless @i_am_student %>
 		<%= link_to("Edit", edit_student_result_of_test_path(params[:student_id],params[:result_id]), class: "btn btn-warning col-sm-1") %>
 	<% else %>
-		<h4>For editing the result, please log in as a tutor or local administrator.</h4>
+		<h4>If you want to edit the results, ask your tutor.</h4>
 	<% end %>
 </div>
 <div class="row">
@@ -24,8 +24,11 @@
         </tr>
       </thead>
 			<% @list_timestamps.each_with_index do |element, i|%>
-				<tr class="<%='danger' if element[:number] == nil %>"
-            title="<%='This question was deleted from test' if element[:number] == nil%>">
+          <% if element[:question_id] == nil %>
+              <tr class="danger" title="This question was deleted from test">
+          <% else %>
+              <tr>
+          <% end %>
 					<td class="col-sm-1"><h4><%= i+1 %></h4></td>
 					<td class="col-sm-3"><h4><small><%= element[:start].to_s(:short) %></small></h4></td>
 					<td class="col-sm-3"><h4><small><%= element[:end].to_s(:short) %></small></h4></td>

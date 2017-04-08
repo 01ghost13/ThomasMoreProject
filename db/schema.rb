@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170404181629) do
+ActiveRecord::Schema.define(version: 20170407122430) do
 
   create_table "administrators", force: :cascade do |t|
     t.boolean  "is_super"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 20170404181629) do
     t.integer  "interest_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.index ["interest_id", "picture_id"], name: "index_picture_interests_on_interest_id_and_picture_id", unique: true
     t.index ["interest_id"], name: "index_picture_interests_on_interest_id"
     t.index ["picture_id"], name: "index_picture_interests_on_picture_id"
   end
@@ -75,6 +76,8 @@ ActiveRecord::Schema.define(version: 20170404181629) do
     t.integer  "was_checked"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
+    t.integer  "question_id"
+    t.index ["question_id"], name: "index_question_results_on_question_id"
     t.index ["result_of_test_id"], name: "index_question_results_on_result_of_test_id"
   end
 

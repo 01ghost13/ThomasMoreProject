@@ -9,10 +9,12 @@ class Picture < ActiveRecord::Base
                     path: ':rails_root/public/system/:class/:style/:id_:basename.:extension',
                     url: '/system/:class/:style/:id_:basename.:extension',
                     styles: {thumb: ['40%']}
+
   validates :description, presence: true, length: {in: 5..50}
   validates_attachment :image, presence: true, size: {less_than: 2.megabytes}
   validates_attachment_content_type :image, content_type: /\Aimage/
   validates_attachment_file_name :image, matches: [/png\z/, /jpe?g\z/]
+  validates :picture_interests, nested_attributes_uniqueness: {field: :interest_id}
 
   def related_interests
     links = PictureInterest.where(picture_id: self.id)
@@ -22,10 +24,11 @@ class Picture < ActiveRecord::Base
     end
     result
   end
-  private
-  def mark_outdated
-    #Setting results as outdated
-    q = Question.where(picture_id: self.id)
-    ResultOfTest.where(test_id: q.select(:test_id)).update_all(is_outdated: true)
+
+  def self.pictures_list
+    pictures = Picture.order(:image_file_name).map {
+        |t| ["%{name}"%{name: t.image_file_name},t.id]
+    }
   end
 end
+

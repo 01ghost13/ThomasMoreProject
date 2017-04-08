@@ -74,12 +74,12 @@ class TutorsController < ApplicationController
   def index
     unless session[:user_type] == 'administrator'
       flash[:danger] = 'You have no access to this page!'
-      redirect_to current_user
+      redirect_to current_user and return
     end
     @is_super_adm = is_super?
     tutors = @is_super_adm ? Tutor.all : Tutor.where(administrator_id: session[:type_id])
     @tutors = []
-    tutors.each do |tutor|
+    tutors.order(:created_at).reverse_order.each do |tutor|
       @tutors << tutor.show_short
     end
     @tutors = Kaminari.paginate_array(@tutors).page(params[:page]).per(5)
@@ -90,7 +90,7 @@ class TutorsController < ApplicationController
     @user = Tutor.find(params[:id])
     if @user.nil?
       flash[:danger] = 'User does not exist.'
-      redirect_to :root
+      redirect_to :root and return
     end
     @user_info = @user.show.to_a
   end
@@ -114,10 +114,10 @@ class TutorsController < ApplicationController
     def check_rights
       user = Tutor.find(params[:id])
       #It is my page?
-      is_i = (session[:user_type] == 'tutor' && session[:type_id] == params[:id])
+      is_i = (session[:user_type] == 'tutor' && session[:type_id] == params[:id].to_i)
       #It is my tutor?
-      is_my_adm = (!user.nil? && session[:user_type] == 'administrator' && user.administrator_id == session[:type_id])
-      unless is_i || is_super? || is_my_adm
+      is_my_tutor = (!user.nil? && session[:user_type] == 'administrator' && user.administrator_id == session[:type_id])
+      unless is_i || is_super? || is_my_tutor
         flash[:warning] = 'You have no access to this page.'
         redirect_to current_user
       end  
@@ -126,7 +126,7 @@ class TutorsController < ApplicationController
     #Rights of viewing
     def check_type_rights
       is_my_adm = session[:user_type] == 'administrator'
-      
+      is_i = (session[:user_type] == 'tutor' && session[:type_id] == params[:id].to_i)
       #Checking creation or showing
       unless params[:id].nil?
         user = Tutor.find(params[:id])
@@ -134,7 +134,7 @@ class TutorsController < ApplicationController
       end
       
       #checking rights
-      unless is_super? || is_my_adm
+      unless is_super? || is_my_adm || is_i
         flash[:warning] = 'You have no access to this page.'
         redirect_to current_user
       end

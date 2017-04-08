@@ -1,12 +1,36 @@
 class TestsController < ApplicationController
-  #TODO: Creation of tests
   before_action :check_login
   before_action :check_rights, only: [:testing]
+
   def new
+    @test = Test.new
+    @test.questions << [Question.new]
+    @pictures = Picture.pictures_list
+    @picture = [Picture.find(@pictures.first[1])]
+  end
+
+  def update_image
+    @id = params[:id]
+    @picture = Picture.find(params[:picture_id])
   end
 
   def create
-    
+    @test = Test.new(test_params)
+    @picture = []
+    @test.questions.each_with_index do |q, i|
+      q.number = i + 1
+      q.is_tutorial = false
+      @picture << Picture.find(q.picture_id)
+    end
+    if @test.save
+      flash[:success] = 'Test created!'
+      redirect_to tests_path
+    else
+      @user = @test
+      @pictures = Picture.pictures_list
+      @picture = [Picture.find(@pictures.first[1])] if @picture.empty?
+      render :new
+    end
   end
 
   def edit
@@ -16,12 +40,28 @@ class TestsController < ApplicationController
     
   end
 
+  def destroy
+    test = Test.find(params[:id])
+    if test.destroy
+      flash[:success] = 'Test deleted!'
+    else
+      flash[:danger] = 'This test has associated results, please, delete them first.'
+    end
+    redirect_to tests_path
+  end
+
   def index
+    if params[:id].nil? && !is_super?
+      flash[:warning] = 'You have no access to this page.'
+      redirect_to current_user
+      return
+    end
     tests = Test.all
     @tests = []
     tests.each do |test|
       @tests << test.show_short
     end
+    @tests = Kaminari.paginate_array(@tests).page(params[:page]).per(10)
   end
 
   def exit
@@ -59,7 +99,9 @@ class TestsController < ApplicationController
         q_to_upd = QuestionResult.where('result_of_test_id = :res and number = :number',{res: res.id, number: cur_question}).take
         q_to_upd.update({start: session[:start_time],:end => DateTime.current,was_checked: params[:value], was_rewrited: true})
       else
-        res.question_results << QuestionResult.new(number: cur_question, start: session[:start_time],was_checked: params[:value])
+        cur_q = Question.find_by(test_id: res.test_id, number: cur_question)
+        res.question_results << QuestionResult.new(number: cur_question, start: session[:start_time],
+                                                   was_checked: params[:value], question_id: cur_q.id)
       end
       #Changing variables
       ##Finding next pic name
@@ -145,5 +187,10 @@ class TestsController < ApplicationController
         flash[:warning] = 'You have no access to this page.'
         redirect_to current_user
       end
+    end
+    def test_params
+      p_params = params.require(:test).permit(
+          :description, :name, :version, questions_attributes: [
+          :picture_id, :_destroy, :id])
     end
 end
