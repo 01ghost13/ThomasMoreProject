@@ -25,6 +25,12 @@ class Picture < ActiveRecord::Base
     result
   end
 
+  def self.pictures_list
+    pictures = Picture.order(:image_file_name).map {
+        |t| ["%{name}"%{name: t.image_file_name},t.id]
+    }
+  end
+
   private
   def mark_outdated
     #Setting results as outdated

@@ -1,12 +1,36 @@
 class TestsController < ApplicationController
-  #TODO: Creation of tests
   before_action :check_login
   before_action :check_rights, only: [:testing]
+
   def new
+    @test = Test.new
+    @test.questions << [Question.new]
+    @pictures = Picture.pictures_list
+    @picture = [Picture.find(@pictures.first[1])]
+  end
+
+  def update_image
+    @id = params[:id]
+    @picture = Picture.find(params[:picture_id])
   end
 
   def create
-    
+    @test = Test.new(test_params)
+    @picture = []
+    @test.questions.each_with_index do |q, i|
+      q.number = i + 1
+      q.is_tutorial = false
+      @picture << Picture.find(q.picture_id)
+    end
+    if @test.save
+      flash[:success] = 'Test created!'
+      redirect_to tests_path
+    else
+      @user = @test
+      @pictures = Picture.pictures_list
+      @picture = [Picture.find(@pictures.first[1])] if @picture.empty?
+      render :new
+    end
   end
 
   def edit
@@ -153,5 +177,10 @@ class TestsController < ApplicationController
         flash[:warning] = 'You have no access to this page.'
         redirect_to current_user
       end
+    end
+    def test_params
+      p_params = params.require(:test).permit(
+          :description, :name, :version, questions_attributes: [
+          :picture_id, :_destroy, :id])
     end
 end

@@ -36,7 +36,9 @@ Rails.application.routes.draw do
   end
   #Tests pages
 
-  resources :tests
+  resources :tests do
+    get 'update_image' => 'tests#update_image', on: :new
+  end
 
   #Picture pages
   resources :pictures, except: [:show]

@@ -1,0 +1,13 @@
+<div class="row col-sm-offset-2 form-group nested-fields">
+  <div class="row col-sm-offset-3 form-group" id="image">
+    <%= image_tag @picture[questions_form.index.to_i].image.url :thumb, class: 'col-sm-2' %>
+  </div>
+  <%= questions_form.label :pictures_id, 'Picture', class: 'col-sm-2 control-label' %>
+  <div class="col-sm-4">
+    <%= questions_form.select(:picture_id, options_for_select(@pictures, questions_form.object.picture_id),{},
+                              {class: 'form-control question_selection'}) %>
+  </div>
+  <div class="col-sm-4">
+    <%= link_to_remove_association 'Remove question', questions_form, class: 'btn btn-warning' %>
+  </div>
+</div>
