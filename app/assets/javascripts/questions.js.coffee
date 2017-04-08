@@ -1,6 +1,9 @@
 $ ->
   $(document).on 'change', '.question_selection', (evt) ->
-    $.ajax window.location.pathname + '/update_image',
+    url = window.location.pathname
+    url += '/edit' if /tests\/\d+\/?$/.test(url)
+    url += '/new' if /tests\/?$/.test(url)
+    $.ajax url + '/update_image',
       type: 'GET'
       dataType: 'script'
       data: {
