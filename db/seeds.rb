@@ -71,9 +71,12 @@ if Rails.env.production?
   (0..11).each do |i|
     (0..4).each do |j|
       #puts "app/Pictures/#{picture_names[i]}/#{picture_names[i]} (#{j+1}).jpg"
-      file = File.open("app/Pictures/#{picture_names[i]}/#{picture_names[i]} (#{j+1}).jpg")
+      File.rename("app/Pictures/#{picture_names[i]}/#{picture_names[i]} (#{j+1}).jpg",
+                  "app/Pictures/#{picture_names[i]}/#{picture_names[i]}_#{j+1}.jpg")
+      file = File.open("app/Pictures/#{picture_names[i]}/#{picture_names[i]}_#{j+1}.jpg")
       #puts "#{interests[i].name} #{i} #{j} #{i*picture_names.count + j} #{titles[i*picture_names.count + j]}"
       pic = Picture.create!(description: titles[i*5 + j],
+                            image_file_name: "#{picture_names[i]}_#{j+1}",
                             image: file)
       pictures << pic
       file.close
