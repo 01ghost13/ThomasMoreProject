@@ -1,8 +1,9 @@
 class QuestionResult < ActiveRecord::Base
   before_validation :setup_fields, on: :create
   belongs_to :question
+  belongs_to :result_of_test
   validates :number, presence: true, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
-  validates :start, :end, :result_of_test_id, presence: true
+  validates :start, :end, :result_of_test, presence: true
   validates :was_checked, inclusion: { in: [1,2,3] }
   # 1 - td
   # 2 - qm 

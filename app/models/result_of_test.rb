@@ -9,6 +9,7 @@ class ResultOfTest < ActiveRecord::Base
 
   def setup_fields
     self.is_ended = false
+    self.is_outdated = false
     true
   end
   #Returns the question after last answered

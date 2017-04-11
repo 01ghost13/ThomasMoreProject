@@ -8,7 +8,7 @@ $ ->
       dataType: 'script'
       data: {
         picture_id: $("##{evt.target.id} option:selected").val()
-        id: evt.target.id
+        event_id: evt.target.id
       }
       error: (jqXHR, textStatus, errorThrown) ->
         console.log("AJAX Error: #{textStatus}")
