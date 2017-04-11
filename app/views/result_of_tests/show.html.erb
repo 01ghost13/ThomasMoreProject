@@ -2,13 +2,14 @@
 <div class= "row">
 	<h2>Results of <%= link_to @student, student_path(params[:student_id]) %></h2>
 </div>
+
 <div class= "row">
-	<% unless @i_am_student %>
-		<%= link_to("Edit", edit_student_result_of_test_path(params[:student_id],params[:result_id]), class: "btn btn-warning col-sm-1") %>
-	<% else %>
-		<h4>If you want to edit the results, ask your tutor.</h4>
-	<% end %>
+  <h3>Education of student at the moment of testing: <%= @res[0].titleize %></h3>
 </div>
+<div class= "row">
+  <h3>Attending at the moment of testing: <%= t @res[1].class %></h3>
+</div>
+
 <div class="row">
 	<div class="col-sm-6 row">
 		<h1>Questions</h1>
@@ -33,13 +34,7 @@
 					<td class="col-sm-3"><h4><small><%= element[:start].to_s(:short) %></small></h4></td>
 					<td class="col-sm-3"><h4><small><%= element[:end].to_s(:short) %></small></h4></td>
 					<td class="col-sm-2"><h4><small><%= '%0.2f s'%[element[:end] - element[:start]] %></small></h4></td>
-					<td class="col-sm-1"><h4><small>
-						<% if element[:was_rewrited] %>
-						<div>Yes</div>
-						<% else %>
-						<div>No</div>
-						<% end %>
-						</small></h4></td>
+					<td class="col-sm-1"><h4><small><%= t element[:was_rewrited].class %></small></h4></td>
 					<td class="col-sm-3"><h4><small>
 						<% if element[:was_checked] == 3 %>
 						<div>Thumbs up</div>
@@ -52,6 +47,14 @@
 				</tr>
 			<% end %>
 		</table>
+
+    <div class="cols-sm-4">
+      <% unless @i_am_student %>
+          <%= link_to("Edit results", edit_student_result_of_test_path(params[:student_id],params[:result_id]), class: "btn btn-warning") %>
+      <% else %>
+          <h4>If you want to edit the results, ask your tutor.</h4>
+      <% end %>
+    </div>
 	</div>
 	<div class="col-sm-offset-2 col-sm-4">
 		<h1>Interests points</h1>
