@@ -1,6 +1,9 @@
 class ResultOfTest < ActiveRecord::Base
   before_validation :setup_fields, on: :create
-
+  
+  belongs_to :test
+  belongs_to :schooling
+  belongs_to :student
   has_many :question_results, dependent: :destroy
   accepts_nested_attributes_for :question_results
 
