@@ -6,11 +6,12 @@ class TestsController < ApplicationController
     @test = Test.new
     @test.questions << [Question.new]
     @pictures = Picture.pictures_list
-    @picture = [Picture.find(@pictures.first[1])]
+    @dummy = Picture.find(@pictures.first[1])
+    @picture = [@dummy]
   end
 
   def update_image
-    @id = params[:id]
+    @id = params[:event_id]
     @picture = Picture.find(params[:picture_id])
   end
 
@@ -28,16 +29,39 @@ class TestsController < ApplicationController
     else
       @user = @test
       @pictures = Picture.pictures_list
-      @picture = [Picture.find(@pictures.first[1])] if @picture.empty?
+      @dummy = Picture.find(@pictures.first[1])
+      @picture = [@dummy] if @picture.empty?
       render :new
     end
   end
 
   def edit
+    @test = Test.find(params[:id])
+    @picture = []
+    @pictures = Picture.pictures_list
+    @test.questions.each do |q|
+      @picture << Picture.find(q.picture_id)
+    end
+    @dummy = Picture.find(@pictures.first[1])
+    @picture = [@dummy] if @picture.empty?
   end
 
   def update
-    
+    @test = Test.find(params[:id])
+    if @test.update(test_params)
+      flash[:success] = 'Test updated!'
+      redirect_to tests_path
+    else
+      @picture = []
+      @test.questions.each do |q|
+        @picture << Picture.find(q.picture_id)
+      end
+      @user = @test
+      @pictures = Picture.pictures_list
+      @dummy = Picture.find(@pictures.first[1])
+      @picture = [@dummy] if @picture.empty?
+      render :edit
+    end
   end
 
   def destroy
@@ -146,11 +170,13 @@ class TestsController < ApplicationController
       redirect_back fallback_location: current_user and return
     end
     #Checking continue or creating new result
-    res = ResultOfTest.where('student_id = :student and test_id = :test and is_ended = :is_ended', { student: student.id, test: test.id, is_ended: false }).take
+    res = ResultOfTest.where('student_id = :student and test_id = :test and is_ended = :is_ended',
+                             { student: student.id, test: test.id, is_ended: false }).take
     if res.nil?
       #All tests were ended
       #Creating new result
-      res = ResultOfTest.create(test_id: test.id, was_in_school: student.is_current_in_school, schooling_id: student.schooling.id, student_id: student.id)
+      res = ResultOfTest.create(test_id: test.id, was_in_school: student.is_current_in_school,
+                                schooling_id: student.schooling.id, student_id: student.id)
     else
       total_q = Question.where(test_id: res.test_id).count.to_f
       done_q = res.question_results.count
@@ -189,8 +215,13 @@ class TestsController < ApplicationController
       end
     end
     def test_params
+      i = 1
+      params[:test][:questions_attributes].each_pair do |key, _|
+        params[:test][:questions_attributes][key][:number] = i
+        i+=1
+      end
       p_params = params.require(:test).permit(
           :description, :name, :version, questions_attributes: [
-          :picture_id, :_destroy, :id])
+          :picture_id, :_destroy, :id, :number, :is_tutorial])
     end
 end

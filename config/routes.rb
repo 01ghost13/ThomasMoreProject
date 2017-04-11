@@ -38,6 +38,9 @@ Rails.application.routes.draw do
 
   resources :tests do
     get 'update_image' => 'tests#update_image', on: :new
+    member do
+      get 'edit/update_image' => 'tests#update_image'
+    end
   end
 
   #Picture pages

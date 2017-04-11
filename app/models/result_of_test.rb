@@ -1,6 +1,9 @@
 class ResultOfTest < ActiveRecord::Base
   before_validation :setup_fields, on: :create
 
+  belongs_to :test
+  belongs_to :schooling
+  belongs_to :student
   has_many :question_results, dependent: :destroy
   accepts_nested_attributes_for :question_results
 
@@ -9,6 +12,7 @@ class ResultOfTest < ActiveRecord::Base
 
   def setup_fields
     self.is_ended = false
+    self.is_outdated = false
     true
   end
   #Returns the question after last answered
@@ -30,7 +34,7 @@ class ResultOfTest < ActiveRecord::Base
     result_info[:name_of_test] = Test.find(self.test_id).name
     result_info[:id] = self.id
     result_info[:student_id] = self.student_id
-    result_info[:is_ended] = self.is_ended ? 'Yes' : 'No'
+    result_info[:is_ended] = self.is_ended
     result_info[:test_id] = self.test_id
     result_info[:date_of_end] = ''
     if is_ended?

@@ -1,4 +1,6 @@
 class Test < ActiveRecord::Base
+  after_save :set_outdated
+  #TODO: Check callback, fix error on starting tests
   has_many :questions, inverse_of: :test
   has_many :result_of_tests, dependent: :restrict_with_error
   accepts_nested_attributes_for :questions, reject_if: :all_blank, allow_destroy: true
@@ -16,4 +18,9 @@ class Test < ActiveRecord::Base
     test_info[:description] = self.description
     test_info
   end
+  private
+    def set_outdated
+      #Setting results as outdated
+      ResultOfTest.where(test_id: self.id).update_all(is_outdated: true)
+    end
 end

@@ -10,7 +10,7 @@
 			<h4 class="col-sm-4">Time: <%=question_form.object.end - question_form.object.start %></h4>
 		</div>
 		<div class="row col-sm-offset-2 form-group">
-			<%= question_form.label :was_checked,class: "col-sm-2 control-label" %>
+			<%= question_form.label :was_checked,'Answer',class: "col-sm-2 control-label" %>
 			<div class="col-sm-4">
 				<%= question_form.select(:was_checked, options_for_select(
 				  [

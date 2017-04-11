@@ -64,6 +64,7 @@ class ResultOfTestsController < ApplicationController
     @list_timestamps = timestamps
     @list_interests_max = interests_max
     @student = student.code_name.titleize
+    @res = [result.schooling.name, result.was_in_school]
   end
   
   def index
