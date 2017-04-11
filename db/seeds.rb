@@ -43,18 +43,18 @@ if Rails.env.production?
 #Tests
   test = Test.create(name: 'Labour test',description:'Test for finding an interests', version: '0.01')
 #Pictures
-  picture_names = ['1. Semi-industrieel werk',
-                   '2. Huishoudelijk werk',
-                   '3. Voedselbereidend werk',
-                   '4. Administratief werk',
-                   '5. Dienstverlenend werk',
-                   '6. Textiele werkvormen',
-                   '7. Dierenverzorging',
-                   '8. Tuinieren',
-                   '9. Creatief werk',
-                   '10. Zorg & Welzijn',
-                   '11. Ambachtelijk werk',
-                   '12. Klantgericht werk',
+  picture_names = ['Semi-industrieel werk',
+                   'Huishoudelijkwerk',
+                   'Voedselbereidendwerk',
+                   'Administratiefwerk',
+                   'Dienstverlenendwerk',
+                   'Textielewerkvormen',
+                   'Dierenverzorging',
+                   'Tuinieren',
+                   'Creatiefwerk',
+                   'Zorg&Welzijn',
+                   'Ambachtelijkwerk',
+                   'Klantgerichtwerk',
   ]
   titles = ['Sort products', 'Pack batteries', 'Seal bags', 'Fold boxes', 'Stick stickers', 'Clean windows',
             'Fold laundry', 'Floor mop', 'Clear the tables', 'Vacuum', 'Knead dough', 'Make cookies', 'Make soup',
@@ -71,12 +71,9 @@ if Rails.env.production?
   (0..11).each do |i|
     (0..4).each do |j|
       #puts "app/Pictures/#{picture_names[i]}/#{picture_names[i]} (#{j+1}).jpg"
-      File.rename("app/Pictures/#{picture_names[i]}/#{picture_names[i]} (#{j+1}).jpg",
-                  "app/Pictures/#{picture_names[i]}/#{picture_names[i]}_#{j+1}.jpg")
       file = File.open("app/Pictures/#{picture_names[i]}/#{picture_names[i]}_#{j+1}.jpg")
       #puts "#{interests[i].name} #{i} #{j} #{i*picture_names.count + j} #{titles[i*picture_names.count + j]}"
       pic = Picture.create!(description: titles[i*5 + j],
-                            image_file_name: "#{picture_names[i]}_#{j+1}",
                             image: file)
       pictures << pic
       file.close

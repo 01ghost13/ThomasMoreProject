@@ -5,7 +5,8 @@ class Picture < ActiveRecord::Base
   has_many :questions, dependent: :destroy
   has_attached_file :image,
                     path: ':rails_root/public/system/:class/:style/:id_:basename.:extension',
-                    url: '/system/:class/:style/:id_:basename.:extension',
+                    url: '/system/:class/:style/:id_:hash.:extension',
+                    hash_secret: 'TWILIGHT_IS_BEST_PONY',
                     styles: {thumb: ['40%']},
                     storage: :cloudinary if Rails.env.production?
   has_attached_file :image,
