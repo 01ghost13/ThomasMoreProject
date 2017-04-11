@@ -43,7 +43,7 @@ if Rails.env.production?
 #Tests
   test = Test.create(name: 'Labour test',description:'Test for finding an interests', version: '0.01')
 #Pictures
-  picture_names = ['Semi-industrieel werk',
+  picture_names = ['Semi-industrieelwerk',
                    'Huishoudelijkwerk',
                    'Voedselbereidendwerk',
                    'Administratiefwerk',
