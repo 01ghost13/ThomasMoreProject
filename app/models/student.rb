@@ -1,7 +1,7 @@
 class Student < ActiveRecord::Base
   before_validation :setup_fields, on: :create
   has_secure_password
-  has_many :result_of_tests
+  has_many :result_of_tests, dependent: :destroy
   belongs_to :tutor, inverse_of: :students
   belongs_to :schooling, inverse_of: :students
   #Validating
@@ -10,8 +10,7 @@ class Student < ActiveRecord::Base
   #1 – dunno
   #2 – Men
   #3 – Women
-  #TODO: Change tutor_id -> tutor etc
-  validates :tutor_id,:schooling_id,:mode_id, presence: true
+  validates :tutor,:schooling,:mode_id, presence: true
   validates :is_active, :is_current_in_school, exclusion: { in: [nil] }
   validates :password, presence: true, allow_nil: true, length: {minimum: 4}
 
@@ -48,6 +47,16 @@ class Student < ActiveRecord::Base
     tutor = Tutor.find(self.tutor_id)
     user_info[:tutor] = tutor.show_short
     user_info[:id] = self.id
+    user_info[:is_active] = self.is_active
     user_info
+  end
+  def hide
+    if self.is_active
+      self.date_off = Date.current
+    else
+      self.date_off = nil
+    end
+    self.is_active = !self.is_active
+    self.save
   end
 end

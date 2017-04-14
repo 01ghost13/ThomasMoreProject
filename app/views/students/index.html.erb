@@ -10,6 +10,10 @@
       <td>Tutor</td>
       <td>Profile</td>
       <td>Edit</td>
+      <td>Hide</td>
+      <% if @is_super_adm%>
+        <td>Delete</td>
+      <% end %>
     </tr>
     </thead>
 		<% @students.each do |student| %>
@@ -26,6 +30,16 @@
         </small></h4></td>
         <td><%= link_to('Profile', student_path(student[:id]), class: 'btn btn-default') %></td>
         <td><%= link_to('Edit', edit_student_path(student[:id]), class: 'btn btn-warning') %></td>
+        <% if student[:is_active] %>
+          <td><%= link_to('Hide', student_path(student[:id], paranoic: true), method: :delete, class: 'btn btn-warning') %></td>
+        <% else %>
+          <td><%= link_to('Recover', student_path(student[:id], paranoic: true), method: :delete, class: 'btn btn-primary') %></td>
+        <% end %>
+        <% if @is_super_adm %>
+          <td><%= link_to('Delete', student_path(student[:id], paranoic: false),
+                        method: :delete, data: { confirm: "Deleting will also delete all results.\n Are you sure?" },
+                          class: 'btn btn-danger') %></td>
+        <% end %>
       </tr>
 		<% end %>
 	</table>

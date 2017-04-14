@@ -28,7 +28,22 @@ class StudentsController < ApplicationController
   end
   
   def destroy
-    
+    student = Student.find(params[:id])
+    if params[:paranoic] == 'true' || params[:paranoic] == nil
+      if student.hide
+        flash[:success] = 'Student was hided/recovered.'
+      else
+        flash[:warning] = "Can't hide/recover student"
+      end
+    elsif params[:paranoic] == 'false' && is_super?
+      #True deleting
+      if student.destroy
+        flash[:success] = 'Student was deleted.'
+      else
+        flash[:danger] = "You can't delete this student"
+      end
+    end
+    redirect_back fallback_location: current_user
   end
   
   #Update page
@@ -37,8 +52,12 @@ class StudentsController < ApplicationController
     @user = Student.find(params[:id])
     #Loading info
     if @user.nil?
-      flash[:error] = 'User does not exist.'
+      flash[:danger] = 'User does not exist.'
       redirect_to current_user and return
+    end
+    if !is_super? && @user.date_off != nil
+      flash[:warning] = "You can't edit deactivated student!"
+      redirect_back fallback_location: current_user and return
     end
     info_for_edit_page
   end
@@ -47,7 +66,10 @@ class StudentsController < ApplicationController
   def update 
     #Listening params
     @user = Student.find(params[:id])
-    
+    if !is_super? && @user.date_off != nil
+      flash[:warning] = "You can't edit deactivated student!"
+      redirect_to current_user and return
+    end
     #Loading info for page
     info_for_edit_page
 
@@ -72,8 +94,8 @@ class StudentsController < ApplicationController
     @is_student_of_my_tutor = session[:user_type] == 'administrator' && @user.tutor.administrator_id == session[:type_id]
     unless @user.is_active
       #Student is inactive
-      flash[:warning] = 'This student was deactivated in: ' + @user.date_off
-      redirect_to current_user and return
+      flash[:warning] = 'Student was deactivated in: ' + @user.date_off.to_s
+      redirect_back fallback_location: current_user and return
     end
     @user_info = @user.show_info.to_a
     #Loading all test results
@@ -96,17 +118,18 @@ class StudentsController < ApplicationController
       flash[:danger] = 'You have no access to this page!'
       redirect_to current_user and return
     end
+    @is_super_adm = is_super?
     @students = []
     students = []
-    if is_super?
+    if @is_super_adm
       students = Student.order(:code_name).all
     elsif session[:user_type] == 'tutor'
-      students = Student.order(:code_name).where(tutor_id: session[:type_id])
+      students = Student.order(:code_name).where(tutor_id: session[:type_id], is_active: true)
     elsif session[:user_type] == 'administrator'
       #TODO: Make get only id's
       tutors = Tutor.where(administrator_id: session[:type_id])
       tutors.each do |tutor|
-        Student.order(:code_name).where(tutor_id: tutor.id).each do |student|
+        Student.order(:code_name).where(tutor_id: tutor.id, is_active: true).each do |student|
           students << student
         end
       end
