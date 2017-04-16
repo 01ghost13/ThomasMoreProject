@@ -10,6 +10,7 @@
         <td>Organisation address</td>
         <td>Profile</td>
         <td>Edit</td>
+        <td>Delete</td>
       </tr>
     </thead>
 		<% @admins.each do |admin| %>
@@ -20,6 +21,7 @@
         <td><h4><small><%= admin[:organisation_address].titleize %></small></h4></td>
         <td><%= link_to('Profile', administrator_path(admin[:id]), class: 'btn btn-default') %></td>
 				<td><%= link_to('Edit', edit_administrator_path(admin[:id]), class: 'btn btn-warning') %></td>
+        <td><%= link_to('Delete', delete_administrator_path(admin[:id]), class: 'btn btn-danger') %></td>
 			</tr>
 		<% end %>
 	</table>

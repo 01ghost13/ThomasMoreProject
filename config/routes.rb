@@ -21,7 +21,12 @@ Rails.application.routes.draw do
     end
   end
   #User pages
-  resources :administrators, concerns: :group_result 
+  resources :administrators, concerns: :group_result  do
+    member do
+      get 'delete' => 'administrators#delegate'
+      delete 'delete' => 'administrators#delete'
+    end
+  end
   resources :tutors, concerns: :group_result do
     member do
       get 'delete' => 'tutors#delegate'

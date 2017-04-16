@@ -169,7 +169,7 @@ class TutorsController < ApplicationController
     end
 
     def delete_tutor_params
-      params.require(:tutor).permit(:_destroy,students_attributes: [:tutor_id, :id])
+      params.require(:tutor).permit(students_attributes: [:tutor_id, :id])
     end
 
     #Callback for checking confirmation of mail
