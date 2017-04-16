@@ -1,8 +1,8 @@
 class AdministratorsController < ApplicationController
-  before_action :check_log_in, only: [:index,:edit,:update,:show,:destroy]
-  before_action :check_rights, only: [:edit,:update,:destroy,:show]
-  before_action :check_type_rights, only: [:edit,:update,:show,:destroy]
-  before_action :check_mail_confirmation, only: [:edit,:update,:show,:destroy]
+  before_action :check_log_in, only: [:index,:edit,:update,:show, :delegate]
+  before_action :check_rights, only: [:edit,:update,:show]
+  before_action :check_type_rights, only: [:edit,:update,:show]
+  before_action :check_mail_confirmation, only: [:edit,:update,:show]
    #TODO: Create DRY index
   #Create Page
   def new
@@ -76,9 +76,43 @@ class AdministratorsController < ApplicationController
     @user_info = @user.show.to_a
   end
 
-  #Deleting record
-  def destroy
-    
+   #Page of deletion of Admin
+  def delegate
+    unless is_super?
+      flash[:danger] = 'You have no access to this page!'
+      redirect_to current_user and return
+    end
+    @administrator = Administrator.find(params[:id])
+    if @administrator.is_super
+      flash[:danger] = "You can't delete this administrator!"
+      redirect_to current_user and return
+    end
+    @admins = @administrator.other_administrators
+    @tutors = @administrator.tutors.to_a
+  end
+
+
+  def delete
+    @administrator = Administrator.find(params[:id])
+    if @administrator.is_super
+      flash[:danger] = "You can't delete this administrator!"
+      redirect_to current_user and return
+    end
+    if @administrator.tutors.empty? || @administrator.update(delete_administrator_params)
+      if @administrator.reload.destroy
+        flash[:success] = 'Administrator was deleted!'
+        redirect_to administrators_path
+      else
+        @admins = @administrator.other_administrators
+        @user = @administrator
+        render :delegate
+      end
+    else
+      @tutors = @administrator.tutors
+      @admins = @administrator.other_administrators
+      @user = @administrator
+      render :delegate
+    end
   end
   
   private
@@ -88,6 +122,11 @@ class AdministratorsController < ApplicationController
       adm_param[:administrator][:info_attributes][:id] = @user.info.id unless params[:id].nil?
       adm_param.require(:administrator).permit(:organisation,:organisation_address,info_attributes: [:id,:name,:last_name,:mail,:phone,:password,:password_confirmation])
     end
+
+    def delete_administrator_params
+      params.require(:administrator).permit(tutors_attributes: [:administrator_id, :id])
+    end
+
     #Callback for checking session
     def check_log_in
       unless logged_in?

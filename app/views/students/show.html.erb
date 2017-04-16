@@ -35,12 +35,20 @@
 	<div class='row'>
 		<div class='btn-group col-sm-4' role='group' aria-label='...'>
 			<%= link_to('Edit', edit_student_path(params[:id]), class: 'btn btn-warning col-sm-4') %>
-			<%= link_to('Delete',@user, method: :delete, data: { confirm: 'You sure?' }, class: 'btn btn-danger col-sm-4') %>
+      <div class="col-sm-1"></div>
+      <%= link_to('Hide', student_path(params[:id], paranoic: true), method: :delete,
+                  class: 'btn btn-warning col-sm-4') %>
 		</div>
 	</div>
 <% end %>
 <div class='row'>
 	<div class='btn-group col-sm-4' role='group' aria-label='...'>
 		<%= link_to('Choose test',tests_student_path(params[:id]), class: 'btn btn-primary col-sm-4') %>
+    <% if @is_super_adm %>
+        <div class="col-sm-1"></div>
+        <%= link_to('Delete', student_path(params[:id], paranoic: false), method: :delete,
+                    data: { confirm: "Deleting will also delete all results.\n Are you sure?" },
+                    class: 'btn btn-danger col-sm-4') %>
+    <% end %>
 	</div>
 </div>
