@@ -1,0 +1,126 @@
+<% provide(:title, 'About') %>
+<style>
+  ul li {
+    font-size: 18px;
+  }
+  small {
+    font-size: 14px;
+    margin-left: 2.5em;
+  }
+</style>
+<div class="row">
+<h1 class="text-center">About Project</h1>
+  <h4><p class="text-left">The LIT (Labour Interest Test) for people with intellectual disabilities
+    is an online test that probes interest for different labour opportunities.</p></h4>
+</div>
+
+<div class="row">
+  <h1 class="text-center">User roles and their capabilities</h1>
+  <h2 class="text-left">Super Administrator</h2>
+    <ul>
+      <li>Create Local administrators</li>
+      <li>Edit all Local administrators</li>
+      <li>Delete all Local administrators</li>
+        <small> Deleting is possible, only when Local administrator hasn't any associated tutors</small>
+      <li>See all Local administrators</li>
+      <br>
+      <li>Create Tutors</li>
+      <li>Edit all Tutors</li>
+      <li>Delete all Tutors</li>
+        <small> Deleting is possible, only when Tutor hasn't any associated Students</small>
+      <li>See all Tutors</li>
+      <br>
+      <li>Create Students</li>
+      <li>Edit all Students</li>
+      <li>Delete all Students</li>
+        <small> Only Super Administrator has ability to delete without recover any student</small>
+      <li>See all Students</li>
+      <br>
+      <li>Create Tests</li>
+      <li>Edit all Tests</li>
+        <small> Editing of Test will affect on counting of Interest Points</small>
+      <li>Delete all Tests</li>
+        <small> Deleting is possible, only when Test hasn't any associated Results</small>
+      <br>
+      <li>Load Pictures</li>
+      <li>Edit all Pictures and links between them and interests</li>
+      <li>Delete all Pictures</li>
+        <small> Deletion of Picture will affect on counting of Interest Points</small>
+      <li>See all Pictures</li>
+      <br>
+      <li>Create Interests</li>
+      <li>Edit all Interests</li>
+      <li>Delete all Interests</li>
+        <small> Deletion of Interest will affect on counting of Interest Points</small>
+      <li>See all Pictures</li>
+      <br>
+      <li>Edit all Results</li>
+      <li>Delete all Results</li>
+      <li>See all Results</li>
+    </ul>
+  <h2 class="text-left">(Local) Administrator</h2>
+    <ul>
+      <li>Create Tutors</li>
+      <li>Edit his Tutors</li>
+      <li>Delete his Tutors</li>
+        <small> Deleting is possible, only when Tutor hasn't any associated Students</small>
+      <li>See his Tutors</li>
+      <br>
+      <li>Create Students</li>
+      <li>Edit his Students</li>
+      <li>Delete his Students</li>
+        <small> Deletion will hide student from search of Tutor</small>
+      <li>Recover his Students</li>
+      <li>See his Students</li>
+      <li>Perform a test for Student</li>
+        <small> It's needed, if student has problem with logging into his account.</small>
+      <br>
+      <li>Edit Results of his Students</li>
+      <li>Delete Results of his Students</li>
+      <li>See Results of his Students</li>
+    </ul>
+  <h2 class="text-left">Tutor</h2>
+    <ul>
+      <li>Create Students</li>
+      <li>Edit his Students</li>
+      <li>Delete his Students</li>
+        <small> Deletion will hide student from search</small>
+      <li>See his Students</li>
+      <li>Perform a test for Student</li>
+        <small> It's needed, if student has problem with logging into his account.</small>
+      <br>
+      <li>Edit Results of his Students</li>
+      <li>Delete Results of his Students</li>
+      <li>See Results of his Students</li>
+    </ul>
+  <h2 class="text-left">Student</h2>
+    <ul>
+      <li>See his Account</li>
+      <li>Perform a test</li>
+      <li>See Results of his Students</li>
+    </ul>
+</div>
+
+<div class="row">
+  <h1 class="text-center">Features</h1>
+  <table class="table-bordered table-hover">
+    <thead>
+      <tr>
+        <td class="col-sm-3"><h3>Feature</h3></td>
+        <td class="col-sm-1"><h3>Status</h3></td>
+      </tr>
+    </thead>
+    <% @arr.each do |k,v| %>
+      <tr>
+        <td><%= k %></td>
+        <td>
+          <% if v %>
+            <div style="size: 10px; color: green">Added</div>
+          <% else %>
+              <div style="size: 10px; color: red">Will be added soon</div>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>
