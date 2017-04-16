@@ -10,6 +10,7 @@
       <td>Header</td>
       <td>Profile</td>
       <td>Edit</td>
+      <td>Delete</td>
     </tr>
     </thead>
 		<% @tutors.each do |tutor| %>
@@ -22,6 +23,7 @@
                       administrator_path(tutor[:administrator][:id]) %></small></h4></td>
         <td><%= link_to('Profile', tutor_path(tutor[:id]), class: 'btn btn-default') %></td>
         <td><%= link_to('Edit', edit_tutor_path(tutor[:id]), class: 'btn btn-warning') %></td>
+        <td><%= link_to('Delete', delete_tutor_path(tutor[:id]), class: 'btn btn-danger') %></td>
 			</tr>
 		<% end %>
 	</table>

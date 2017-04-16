@@ -1,7 +1,7 @@
 class TutorsController < ApplicationController
-  before_action :check_login, only: [:new,:create,:edit,:update,:show,:index,:destroy]
-  before_action :check_type_rights, only: [:new,:create,:show,:index]
-  before_action :check_rights, only: [:edit,:update,:destroy]
+  before_action :check_login, only: [:new,:create,:edit,:update,:show,:index,:delegate, :delete]
+  before_action :check_type_rights, only: [:new,:create,:index,:delegate, :delete]
+  before_action :check_rights, only: [:edit,:update,:show]
   before_action :check_mail_confirmation
   
   #TODO: Create DRY index
@@ -94,10 +94,32 @@ class TutorsController < ApplicationController
     end
     @user_info = @user.show.to_a
   end
-  
-  #Destroy querry
-  def destroy
-    
+
+  #Page of deletion of Tutor
+  def delegate
+    @tutor = Tutor.find(params[:id])
+    @tutors = @tutor.other_tutors
+    @students = @tutor.students.to_a
+  end
+
+
+  def delete
+    @tutor = Tutor.find(params[:id])
+    if @tutor.students.empty? || @tutor.update(delete_tutor_params)
+      if @tutor.reload.destroy
+        flash[:success] = 'Tutor was deleted!'
+        redirect_to tutors_path
+      else
+        @tutors = @tutor.other_tutors
+        @user = @tutor
+        render :delegate
+      end
+    else
+      @students = @tutor.students
+      @tutors = @tutor.other_tutors
+      @user = @tutor
+      render :delegate
+    end
   end
   
   private
@@ -126,7 +148,6 @@ class TutorsController < ApplicationController
     #Rights of viewing
     def check_type_rights
       is_my_adm = session[:user_type] == 'administrator'
-      is_i = (session[:user_type] == 'tutor' && session[:type_id] == params[:id].to_i)
       #Checking creation or showing
       unless params[:id].nil?
         user = Tutor.find(params[:id])
@@ -134,7 +155,7 @@ class TutorsController < ApplicationController
       end
       
       #checking rights
-      unless is_super? || is_my_adm || is_i
+      unless is_super? || is_my_adm
         flash[:warning] = 'You have no access to this page.'
         redirect_to current_user
       end
@@ -145,6 +166,10 @@ class TutorsController < ApplicationController
       t_param = params
       t_param[:tutor][:info_attributes][:id] = @user.info.id unless params[:id].nil?
       t_param.require(:tutor).permit(:administrator_id,info_attributes: [:id,:name,:last_name,:mail,:phone,:password,:password_confirmation])
+    end
+
+    def delete_tutor_params
+      params.require(:tutor).permit(:_destroy,students_attributes: [:tutor_id, :id])
     end
 
     #Callback for checking confirmation of mail

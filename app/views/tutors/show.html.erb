@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="btn-group col-sm-4" role="group" aria-label="...">
 			<%= link_to("Edit", edit_tutor_path(params[:id]), class: "btn btn-warning") %>
-			<%= link_to("Delete", @user, method: :delete, data: { confirm: "You sure?" }, class: "btn btn-danger") %>
+			<%= link_to("Delete", delete_tutor_path(params[:id]), class: "btn btn-danger") %>
 		</div>
 	</div>
 <% end %>
