@@ -24,7 +24,7 @@
         <td><h4><%= link_to "#{result[:name_of_test].titleize}",
                             test_path(result[:test_id]) %></h4></td>
         <td><h4><%= result[:date_of_start] %></h4></td>
-        <td><h4><%= result[:is_ended].titleize %></h4></td>
+        <td><h4><%= t result[:is_ended].class %></h4></td>
         <td><h4><%= result[:date_of_end] %></h4></td>
         <td><%= link_to('Result', student_result_of_test_path(params[:student_id], result[:id]),
                         class: 'btn btn-default') %></td>
