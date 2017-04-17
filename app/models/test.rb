@@ -1,7 +1,7 @@
 class Test < ActiveRecord::Base
   after_save :set_outdated
-  #TODO: Check callback, fix error on starting tests
-  has_many :questions, inverse_of: :test
+
+  has_many :questions, inverse_of: :test, dependent: :delete_all
   has_many :result_of_tests, dependent: :restrict_with_error
   accepts_nested_attributes_for :questions, reject_if: :all_blank, allow_destroy: true
 
