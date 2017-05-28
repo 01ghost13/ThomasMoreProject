@@ -1,4 +1,7 @@
 class AdministratorsController < ApplicationController
+  include Recaptcha::ClientHelper
+  include Recaptcha::Verify
+
   before_action :check_log_in, only: [:index,:edit,:update,:show, :delegate]
   before_action :check_rights, only: [:edit,:update,:show]
   before_action :check_type_rights, only: [:edit,:update,:show]
@@ -19,7 +22,7 @@ class AdministratorsController < ApplicationController
     #Loading data
     @user = Administrator.new(administrator_params)
     #If data ok - creating
-    if @user.save
+    if verify_recaptcha(model: @user) && @user.save
       flash[:success] = 'Account created!'
       log_in @user.info unless logged_in?
       redirect_to @user
