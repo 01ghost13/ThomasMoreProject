@@ -1,6 +1,6 @@
 class Info < ActiveRecord::Base
   before_validation :setup_fields, on: :create
-  
+  before_create :generate_mail_token
   has_one :administrator, inverse_of: :info
   has_one :tutor, inverse_of: :info
   
@@ -13,9 +13,14 @@ class Info < ActiveRecord::Base
   validates :phone, length: {minimum: 6}, format: {with: /[-0-9)(+]/, message: 'only numbers, plus, minus signs, brackets'}, unless: 'phone.blank?'
 
   def setup_fields
-    #!While system of confirmation isnt work
-    self.is_mail_confirmed = true
+    self.is_mail_confirmed = false
     true
+  end
+
+  def generate_mail_token
+    if self.confirm_token.blank?
+      self.confirm_token = SecureRandom.urlsafe_base64.to_s
+    end
   end
   
   #Shows info
@@ -24,9 +29,17 @@ class Info < ActiveRecord::Base
     user_info[:email] = self.mail
     user_info
   end
+
   def show_short
     user_info = {name: self.name}
     user_info[:last_name] = self.last_name
     user_info
   end
+
+  def email_activate
+    self.is_mail_confirmed = true
+    self.confirm_token = nil
+    save(validate: true)
+  end
+  private :generate_mail_token, :setup_fields
 end

@@ -2,10 +2,10 @@ class AdministratorsController < ApplicationController
   include Recaptcha::ClientHelper
   include Recaptcha::Verify
 
-  before_action :check_log_in, only: [:index,:edit,:update,:show, :delegate]
-  before_action :check_rights, only: [:edit,:update,:show]
-  before_action :check_type_rights, only: [:edit,:update,:show]
-  before_action :check_mail_confirmation, only: [:edit,:update,:show]
+  before_action :check_log_in, only: [:index,:edit, :update, :show, :delegate]
+  before_action :check_rights, only: [:edit, :update, :show]
+  before_action :check_type_rights, only: [:edit, :update, :show]
+  before_action :check_mail_confirmation, except: [:new, :show, :create]
    #TODO: Create DRY index
   #Create Page
   def new
@@ -23,7 +23,8 @@ class AdministratorsController < ApplicationController
     @user = Administrator.new(administrator_params)
     #If data ok - creating
     if verify_recaptcha(model: @user) && @user.save
-      flash[:success] = 'Account created!'
+      flash[:success] = 'Account created! Confirmation of your account was sent to email.'
+      AitscoreMailer.registration_confirmation(@user.info).deliver
       log_in @user.info unless logged_in?
       redirect_to @user
     else
@@ -117,7 +118,7 @@ class AdministratorsController < ApplicationController
       render :delegate
     end
   end
-  
+
   private
     #Attributes
     def administrator_params
@@ -154,7 +155,7 @@ class AdministratorsController < ApplicationController
       user = current_user
       unless session[:user_type] != 'student' && user.info.is_mail_confirmed
         flash[:danger] = "You haven't confirmed your mail! Please, confirm your mail."
-        redirect_to user
+        redirect_to :root
       end
     end
     

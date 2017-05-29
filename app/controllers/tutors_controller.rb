@@ -2,9 +2,8 @@ class TutorsController < ApplicationController
   before_action :check_login, only: [:new,:create,:edit,:update,:show,:index,:delegate, :delete]
   before_action :check_type_rights, only: [:new,:create,:index,:delegate, :delete]
   before_action :check_rights, only: [:edit,:update,:show]
-  before_action :check_mail_confirmation
-  
-  #TODO: Create DRY index
+  before_action :check_mail_confirmation, except: [:show]
+
   #New tutor page
   def new
     #Loading info for page
@@ -24,15 +23,15 @@ class TutorsController < ApplicationController
     @user = Tutor.new(tutor_params)
 
     @user.administrator_id = session[:type_id] unless @is_super_admin
-    #Can use current_user.id instead session[:type_id]
     
     #If all is ok - creating
     if @user.save
       flash[:success] = 'Account created!'
+      AitscoreMailer.registration_confirmation(@user.info).deliver
       redirect_to @user
     else
       render :new
-    end 
+    end
   end
 
   #Edit page
@@ -87,6 +86,10 @@ class TutorsController < ApplicationController
 
   #Tutor Profile
   def show
+    if !current_user.info.is_mail_confirmed? && session[:user_id] != params[:id].to_i
+      flash[:danger] = "You haven't confirmed your mail!\n Please, confirm your mail."
+      redirect_to :root
+    end
     @user = Tutor.find(params[:id])
     if @user.nil?
       flash[:danger] = 'User does not exist.'
@@ -175,9 +178,9 @@ class TutorsController < ApplicationController
     #Callback for checking confirmation of mail
     def check_mail_confirmation
       user = current_user
-      unless user.info.is_mail_confirmed
+      unless session[:user_type] != 'student' && user.info.is_mail_confirmed
         flash[:danger] = "You haven't confirmed your mail!\n Please, confirm your mail."
-        log_out
+        redirect_to :root
       end
     end
     

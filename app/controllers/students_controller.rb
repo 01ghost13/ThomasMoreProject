@@ -1,8 +1,9 @@
 class StudentsController < ApplicationController
   before_action :check_login, only: [:new, :create, :index, :update, :edit, :destroy, :show]
+  before_action :check_mail_confirmation
   before_action :check_rights, only: [:new, :create, :index]
   before_action :check_editing_rights, only: [:update, :edit, :destroy, :show]
-  #TODO: Make DRY Index
+
   #New student page
   def new
     @user = Student.new
@@ -171,8 +172,7 @@ class StudentsController < ApplicationController
         redirect_to current_user
       end
     end
-    
-    
+
     def check_editing_rights
       user = Student.find(params[:id])
       is_super_adm = is_super?
@@ -219,4 +219,12 @@ class StudentsController < ApplicationController
         @tutors_cur = @user.tutor_id
       end
    end
+
+    def check_mail_confirmation
+      user = current_user
+      unless session[:user_type] != 'student' && user.info.is_mail_confirmed
+        flash[:danger] = "You haven't confirmed your mail!\n Please, confirm your mail."
+        redirect_to :root
+      end
+    end
 end

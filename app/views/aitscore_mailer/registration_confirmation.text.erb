@@ -1,0 +1,5 @@
+Hi <%= @user.last_name.titleize %> <%= @user.name.titleize %>,
+
+Thanks for registering! To confirm your registration click the URL below.
+<%= confirmation_email_url(id: @user.confirm_token) %>
+With regards, AitScore.

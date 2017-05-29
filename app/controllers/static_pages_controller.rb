@@ -17,12 +17,12 @@ class StaticPagesController < ApplicationController
     Table\ with\ results
     Switching\ off\ student\ accounts\ instead\ of\ deleting\ from\ DB
     Creation\ of\ tests,\ interests
+    Protection\ from\ spam-bots
+    Confirmation\ of\ registration\ via\ e-mail
     )
     will_be_added = %w(
     Graph\ with\ results
-    Protection\ from\ spam-bots
     Highlighting\ of\ buttons
-    Confirmation\ of\ registration\ via\ e-mail
     Recovering\ of\ account\ via\ e-mail
     Student\ and\ teacher\ search\ page
     Export\ to\ excel
@@ -39,5 +39,31 @@ class StaticPagesController < ApplicationController
 
   def contacts
 
+  end
+
+  def confirmation_email
+    info = Info.find_by_confirm_token(params[:id])
+    if info && !params[:id].nil?
+      info.email_activate
+      flash[:success] = 'Your email has been confirmed!'
+    else
+      flash[:danger] = "Sorry. User doesn't exist"
+    end
+    redirect_to :root
+  end
+
+  def send_confirmation_again
+    if session[:user_type] != 'student' && params[:id].to_i == session[:user_id]
+      user_info = Info.find(params[:id])
+      if user_info.is_mail_confirmed?
+        redirect_back fallback_location: :root
+        return
+      end
+      AitscoreMailer.registration_confirmation(user_info).deliver
+      flash[:success] = 'New email was sent!'
+    else
+      flash[:danger] = "Sorry. User doesn't exist"
+    end
+    redirect_back fallback_location: :root
   end
 end

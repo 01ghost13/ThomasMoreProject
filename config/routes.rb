@@ -13,7 +13,8 @@ Rails.application.routes.draw do
   delete 'logout' => 'sessions#destroy'
   get 'about' => 'static_pages#about'
   get 'contacts' => 'static_pages#contacts'
-
+  get 'confirmation_email' => 'static_pages#confirmation_email'
+  get 'send_confirmation_again' => 'static_pages#send_confirmation_again'
   #Interests pages
   resources :interests, only: [:index, :destroy]
   resources :interests, only: [] do
