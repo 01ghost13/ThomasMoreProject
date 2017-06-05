@@ -15,6 +15,10 @@ Rails.application.routes.draw do
   get 'contacts' => 'static_pages#contacts'
   get 'confirmation_email' => 'static_pages#confirmation_email'
   get 'send_confirmation_again' => 'static_pages#send_confirmation_again'
+  get 'reset_password' => 'static_pages#reset_password'
+  get 'forgot_password' => 'static_pages#forgot_password'
+  post 'forgot_password' => 'static_pages#submit_forgot_password'
+
   #Interests pages
   resources :interests, only: [:index, :destroy]
   resources :interests, only: [] do

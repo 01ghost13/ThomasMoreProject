@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170528143953) do
+ActiveRecord::Schema.define(version: 20170529175329) do
 
   create_table "administrators", force: :cascade do |t|
     t.boolean  "is_super"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 20170528143953) do
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
     t.string   "confirm_token"
+    t.string   "reset_token"
   end
 
   create_table "interests", force: :cascade do |t|

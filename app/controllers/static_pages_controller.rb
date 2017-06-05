@@ -66,4 +66,16 @@ class StaticPagesController < ApplicationController
     end
     redirect_back fallback_location: :root
   end
+
+  def forgot_password
+    #Page for submission
+  end
+
+  def reset_password
+
+  end
+
+  def submit_forgot_password
+
+  end
 end
