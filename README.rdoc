@@ -4,7 +4,7 @@ If you using this app for some purpose, please leave a refer to author.
 This application requires:
     1) Ruby <tt>ruby '2.4.0'</tt>
     2) <tt>rails 4.2.5.1</tt> or later. (Tested on 5)
-    3) All gemed loaded with <tt>bundle install</tt> command
+    3) All gems loaded with <tt>bundle install</tt> command
     4) Prepared environment (for production)
     <tt>CLOUDINARY gem</tt>
     4.1) CLOUD_API_KEY - api key from cloudinary

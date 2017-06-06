@@ -1,7 +1,8 @@
 class TestsController < ApplicationController
   before_action :check_log_in
+  before_action :check_exist_callback, only: [:testing, :edit, :update, :destroy]
   before_action :check_rights, only: [:testing]
-  before_action :check_super_admin, except: [:testing]
+  before_action :check_super_admin, only: [:new, :create, :edit, :update, :destroy]
 
   #Page of creation of Tests
   def new
@@ -28,7 +29,10 @@ class TestsController < ApplicationController
       q.is_tutorial = false
       @picture << Picture.find(q.picture_id)
     end
-    if @test.save
+    unless params[:questions_attributes]
+      @test.errors.add(:questions, :invalid, message: "Test can't be empty")
+    end
+    if params[:questions_attributes] && @test.save
       flash[:success] = 'Test created!'
       redirect_to tests_path
     else
@@ -55,10 +59,13 @@ class TestsController < ApplicationController
   #Action of editing tests
   def update
     @test = Test.find(params[:id])
-    if @test.update(test_params)
+    if params[:questions_attributes] && @test.update(test_params)
       flash[:success] = 'Test updated!'
       redirect_to tests_path
     else
+      unless params[:questions_attributes]
+        @test.errors.add(:questions, :invalid, message: "Test can't be empty")
+      end
       @picture = []
       #Loading questions
       @test.questions.each do |q|
@@ -210,7 +217,8 @@ class TestsController < ApplicationController
     @image = question.picture.image
     session[:next_rewrite] = false
   end
-
+  ##########################################################
+  #Private methods
   private
   def check_rights
     user = Student.find(params[:id])
@@ -225,12 +233,19 @@ class TestsController < ApplicationController
   end
   def test_params
     i = 1
-    params[:test][:questions_attributes].each_pair do |key, _|
-      params[:test][:questions_attributes][key][:number] = i
-      i+=1
+    if params[:test][:questions_attributes]
+      params[:test][:questions_attributes].each_pair do |key, _|
+        params[:test][:questions_attributes][key][:number] = i
+        i+=1
+      end
     end
     params.require(:test).permit(
         :description, :name, :version, questions_attributes: [
         :picture_id, :_destroy, :id, :number, :is_tutorial])
+  end
+  def check_exist_callback
+    unless check_exist(params[:id], Test)
+      redirect_to current_user
+    end
   end
 end

@@ -5,7 +5,6 @@ class StudentsController < ApplicationController
   before_action :check_editing_rights, only: [:update, :edit, :destroy, :show]
   before_action :info_for_new_page, only: [:create, :new]
   before_action :check_deactivated, only: [:edit, :update]
-  before_action :info_for_edit_page, only: [:edit, :update]
 
   #New student page
   def new
@@ -50,6 +49,7 @@ class StudentsController < ApplicationController
   #Update student profile page
   def edit
     @user = Student.find(params[:id])
+    info_for_edit_page
   end
   
   #Action for updating
@@ -59,6 +59,7 @@ class StudentsController < ApplicationController
       flash[:success] = 'Update Complete'
       redirect_to @user
     else
+      info_for_edit_page
       render :edit
     end
   end
@@ -121,15 +122,19 @@ class StudentsController < ApplicationController
   private
   #Attributes for creation page
   def student_params
-    params.require(:student).permit(:code_name,:tutor_id,:gender,:schooling_id,:is_current_in_school,:password,:password_confirmation)
+    params.require(:student).permit(:code_name,:tutor_id,:gender,:schooling_id,
+                                    :is_current_in_school,:password,:password_confirmation)
   end
 
   #Attributes for edit page
   def student_update_params
     if session[:user_type] == 'administrator'
-      params.require(:student).permit(:code_name,:tutor_id,:gender,:mode_id,:schooling_id,:is_current_in_school,:password,:password_confirmation)
+      params[:student][:tutor_id] ||= ''
+      params.require(:student).permit(:code_name,:tutor_id,:gender,:mode_id,:schooling_id,
+                                      :is_current_in_school,:password,:password_confirmation)
     else
-      params.require(:student).permit(:code_name,:gender,:mode_id,:schooling_id,:is_current_in_school,:password,:password_confirmation)
+      params.require(:student).permit(:code_name,:gender,:mode_id,:schooling_id,
+                                      :is_current_in_school,:password,:password_confirmation)
     end
   end
 
@@ -180,9 +185,15 @@ class StudentsController < ApplicationController
       if @admins.empty?
         @tutors = []
       else
-        @admins_cur = @user.tutor.administrator_id
-        @tutors = Tutor.tutors_list(@admins_cur)
-        @tutors_cur = @user.tutor_id
+        if @user.tutor
+          @admins_cur = @user.tutor.administrator_id
+          @tutors = Tutor.tutors_list(@admins_cur)
+          @tutors_cur = @user.tutor_id
+        else
+          @admins_cur = params[:administrator_id]
+          @tutors = Tutor.tutors_list(@admins_cur)
+          @tutors_cur = 0
+        end
       end
     elsif session[:user_type] == 'administrator'
       @tutors = Tutor.tutors_list(session[:type_id])
