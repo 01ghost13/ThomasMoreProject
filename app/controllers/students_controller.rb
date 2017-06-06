@@ -1,20 +1,19 @@
 class StudentsController < ApplicationController
-  before_action :check_login, only: [:new, :create, :index, :update, :edit, :destroy, :show]
-  before_action :check_mail_confirmation
+  before_action :check_exist_callback, only: [:destroy, :edit, :update, :show]
+  before_action :check_log_in, only: [:new, :create, :index, :update, :edit, :destroy, :show]
   before_action :check_rights, only: [:new, :create, :index]
   before_action :check_editing_rights, only: [:update, :edit, :destroy, :show]
+  before_action :info_for_new_page, only: [:create, :new]
+  before_action :check_deactivated, only: [:edit, :update]
+  before_action :info_for_edit_page, only: [:edit, :update]
 
   #New student page
   def new
     @user = Student.new
-    info_for_new_page
   end
   
-  #Creation querry
+  #Action for create student
   def create
-    #Loading data for new.erb page
-    info_for_new_page
-    
     #Creating student
     @user = Student.new(student_params)
     @user.tutor_id = session[:type_id] if session[:user_type] == 'tutor'
@@ -27,7 +26,8 @@ class StudentsController < ApplicationController
       render :new
     end
   end
-  
+
+  #Action for hiding and deleting students
   def destroy
     student = Student.find(params[:id])
     if params[:paranoic] == 'true' || params[:paranoic] == nil
@@ -47,35 +47,15 @@ class StudentsController < ApplicationController
     redirect_back fallback_location: current_user
   end
   
-  #Update page
+  #Update student profile page
   def edit
-    #Searching student
     @user = Student.find(params[:id])
-    #Loading info
-    if @user.nil?
-      flash[:danger] = 'User does not exist.'
-      redirect_to current_user and return
-    end
-    if !is_super? && @user.date_off != nil
-      flash[:warning] = "You can't edit deactivated student!"
-      redirect_back fallback_location: current_user and return
-    end
-    info_for_edit_page
   end
   
-  #Update querry
-  def update 
-    #Listening params
+  #Action for updating
+  def update
     @user = Student.find(params[:id])
-    if !is_super? && @user.date_off != nil
-      flash[:warning] = "You can't edit deactivated student!"
-      redirect_to current_user and return
-    end
-    #Loading info for page
-    info_for_edit_page
-
-    #Trying update 
-    if !@user.nil? && @user.update(student_update_params)
+    if @user.update(student_update_params)
       flash[:success] = 'Update Complete'
       redirect_to @user
     else
@@ -86,10 +66,6 @@ class StudentsController < ApplicationController
   #Profile page
   def show
     @user = Student.find(params[:id])
-    if @user.nil?
-      flash[:error] = 'User does not exist.'
-      redirect_to :root and return
-    end
     @is_super_adm = is_super?
     @is_my_student = session[:user_type] == 'tutor' && @user.tutor_id == session[:type_id]
     @is_student_of_my_tutor = session[:user_type] == 'administrator' && @user.tutor.administrator_id == session[:type_id]
@@ -113,7 +89,8 @@ class StudentsController < ApplicationController
        format.js {}
     end
   end
-  
+
+  #List of students
   def index
     if session[:user_type] == 'student'
       flash[:danger] = 'You have no access to this page!'
@@ -127,7 +104,6 @@ class StudentsController < ApplicationController
     elsif session[:user_type] == 'tutor'
       students = Student.order(:code_name).where(tutor_id: session[:type_id], is_active: true)
     elsif session[:user_type] == 'administrator'
-      #TODO: Make get only id's
       tutors = Tutor.where(administrator_id: session[:type_id])
       tutors.each do |tutor|
         Student.order(:code_name).where(tutor_id: tutor.id, is_active: true).each do |student|
@@ -140,91 +116,92 @@ class StudentsController < ApplicationController
     end
     @students = Kaminari.paginate_array(@students).page(params[:page]).per(5)
   end
-  
+  ##########################################################
+  #Private methods
   private
-  
-    def student_params
-      params.require(:student).permit(:code_name,:tutor_id,:gender,:schooling_id,:is_current_in_school,:password,:password_confirmation)
-    end
-    
-    def student_update_params
-      if session[:user_type] == 'administrator'
-        params.require(:student).permit(:code_name,:tutor_id,:gender,:mode_id,:schooling_id,:is_current_in_school,:password,:password_confirmation)
-      else
-        params.require(:student).permit(:code_name,:gender,:mode_id,:schooling_id,:is_current_in_school,:password,:password_confirmation)
-      end
-    end
-    
-    #Login checking
-    def check_login
-      unless logged_in?
-        flash[:warning] = 'Only registrated people can see this page.'
-        #Redirecting to home page
-        redirect_to :root 
-      end
-    end
-    
-    #Rights checking
-    def check_rights
-      #Sa, admin, tutor
-      unless is_super? || session[:user_type] == 'administrator' || session[:user_type] == 'tutor'
-        flash[:warning] = 'You have no access to this page.'
-        redirect_to current_user
-      end
-    end
+  #Attributes for creation page
+  def student_params
+    params.require(:student).permit(:code_name,:tutor_id,:gender,:schooling_id,:is_current_in_school,:password,:password_confirmation)
+  end
 
-    def check_editing_rights
-      user = Student.find(params[:id])
-      is_super_adm = is_super?
-      is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
-      is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
-      is_i = session[:user_type] == 'student' && user.id == session[:type_id]
-      unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
-        flash[:warning] = 'You have no access to this page.'
-        redirect_to current_user
-      end
+  #Attributes for edit page
+  def student_update_params
+    if session[:user_type] == 'administrator'
+      params.require(:student).permit(:code_name,:tutor_id,:gender,:mode_id,:schooling_id,:is_current_in_school,:password,:password_confirmation)
+    else
+      params.require(:student).permit(:code_name,:gender,:mode_id,:schooling_id,:is_current_in_school,:password,:password_confirmation)
     end
-    
-    #Loads info for 'new' page
-    def info_for_new_page
-      @is_super_adm = is_super?
-      if @is_super_adm
-        #Loading Choosing of adm
-        @admins = Administrator.admins_list
-        if @admins.empty?
-          @tutors = []
-        else
-          @tutors = Tutor.tutors_list(@admins.first[1])
-        end
-      elsif session[:user_type] == 'administrator'
-        @tutors = Tutor.tutors_list(session[:type_id])
-      end
+  end
+
+  #Rights checking
+  def check_rights
+    #Sa, admin, tutor
+    unless is_super? || session[:user_type] == 'administrator' || session[:user_type] == 'tutor'
+      flash[:danger] = 'You have no access to this page.'
+      redirect_to current_user
     end
-    
-    #Loading data for edit.erb page
-    def info_for_edit_page
-      @is_super_adm = is_super?
-      if @is_super_adm
-        #Loading Choosing of adm
-        @admins = Administrator.admins_list
-        if @admins.empty?
-          @tutors = []
-        else
-          @admins_cur = @user.tutor.administrator_id
-          @tutors = Tutor.tutors_list(@admins_cur)
-          @tutors_cur = @user.tutor_id
-        end
-      elsif session[:user_type] == 'administrator'
-        @tutors = Tutor.tutors_list(session[:type_id])
+  end
+
+  #Rights of editing profile
+  def check_editing_rights
+    user = Student.find(params[:id])
+    is_super_adm = is_super?
+    is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
+    is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
+    is_i = session[:user_type] == 'student' && user.id == session[:type_id]
+    unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
+      flash[:warning] = 'You have no access to this page.'
+      redirect_to current_user
+    end
+  end
+
+  #Loads info for 'new' page
+  def info_for_new_page
+    @is_super_adm = is_super?
+    if @is_super_adm
+      #Loading Choosing of adm
+      @admins = Administrator.admins_list
+      if @admins.empty?
+        @tutors = []
+      else
+        @tutors = Tutor.tutors_list(@admins.first[1])
+      end
+    elsif session[:user_type] == 'administrator'
+      @tutors = Tutor.tutors_list(session[:type_id])
+    end
+  end
+
+  #Loading data for edit page
+  def info_for_edit_page
+    @is_super_adm = is_super?
+    if @is_super_adm
+      #Loading Choosing of adm
+      @admins = Administrator.admins_list
+      if @admins.empty?
+        @tutors = []
+      else
+        @admins_cur = @user.tutor.administrator_id
+        @tutors = Tutor.tutors_list(@admins_cur)
         @tutors_cur = @user.tutor_id
       end
-   end
-
-    def check_mail_confirmation
-      user = current_user
-      unless session[:user_type] != 'student' && user.info.is_mail_confirmed
-        flash[:danger] = "You haven't confirmed your mail!\n Please, confirm your mail."
-        redirect_to :root
-      end
+    elsif session[:user_type] == 'administrator'
+      @tutors = Tutor.tutors_list(session[:type_id])
+      @tutors_cur = @user.tutor_id
     end
+  end
+
+  #Callback for checking existence of record
+  def check_exist_callback
+    unless check_exist(params[:id], Student)
+      redirect_to current_user
+    end
+  end
+
+  #Callback for checking deactivated students
+  def check_deactivated
+    if !is_super? && @user.date_off != nil
+      flash[:warning] = "You can't edit deactivated student!"
+      redirect_back fallback_location: current_user
+    end
+  end
 end
