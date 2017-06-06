@@ -12,13 +12,17 @@ Rails.application.routes.draw do
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
 
+  #Static pages
   get 'about' => 'static_pages#about'
   get 'contacts' => 'static_pages#contacts'
 
+  #Pages for working with emails
   get 'confirmation_email' => 'mail#confirmation_email'
   get 'send_confirmation_again' => 'mail#send_confirmation_again'
+  #form for reset password
   get 'reset_password' => 'mail#reset_password'
   post 'reset_password' => 'mail#submit_reset_password'
+  #form for sending reset-link to email
   get 'forgot_password' => 'mail#forgot_password'
   post 'forgot_password' => 'mail#submit_forgot_password'
 
@@ -26,25 +30,31 @@ Rails.application.routes.draw do
   resources :interests, only: [:index, :destroy]
   resources :interests, only: [] do
     collection do
+      #Adding create and update routes to index page
       post '' => 'interests#create'
       patch '' => 'interests#update'
     end
   end
-  #User pages
+
+  #User pages...
+  #...Administrators
   resources :administrators, concerns: :group_result  do
     member do
       get 'delete' => 'administrators#delegate'
       delete 'delete' => 'administrators#delete'
     end
   end
+  #...Tutors
   resources :tutors, concerns: :group_result do
     member do
       get 'delete' => 'tutors#delegate'
       delete 'delete' => 'tutors#delete'
     end
   end
+  #...Students
   resources :students, concerns: :group_result do
     member do
+      #Adding testing pages
       get 'tests' => 'tests#index', as: 'tests'
       get 'tests/:test_id/testing' => 'tests#testing', as: 'testing'
       get 'tests/:test_id/testing/update_picture' => 'tests#update_picture'
@@ -54,8 +64,8 @@ Rails.application.routes.draw do
     resources :result_of_tests, except: [:new,:create,:index], path: 'results', param: :result_id
     get 'update_tutors' => 'students#update_tutors', on: :new
   end
-  #Tests pages
 
+  #Tests pages
   resources :tests do
     get 'update_image' => 'tests#update_image', on: :new
     member do
