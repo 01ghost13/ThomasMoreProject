@@ -1,28 +1,30 @@
 == README
+Programm was developed by student of VSTU as a bachelor work.
+If you using this app for some purpose, please leave a refer to author.
+This application requires:
+    1) Ruby <tt>ruby '2.4.0'<\tt>
+    2) <tt>rails 4.2.5.1<\tt> or later. (Tested on 5)
+    3) All gemed loaded with <tt>bundle install<\tt> command
+    4) Prepared environment (for production)
+    <tt>CLOUDINARY gem<\tt>
+    4.1) CLOUD_API_KEY - api key from cloudinary
+    4.2) CLOUD_API_SECRET - secret key
+    4.3) CLOUD_NAME
+    4.4) CLOUDINARY_URL
+    4.5) DATABASE_URL - only postgres.
+    4.6) HOST en_US.UTF-8
+    4.7) LANG
+    <tt>MAIL<\tt>(for confirmation/reseting email)
+    4.8) MAIL_PASSWORD
+    4.9) MAIL_USER
+    4.10) RACK_ENV = production
+    4.11) RAILS_ENV = production
+    4.12) RAILS_SERVE_STATIC_FILES = enabled
+    <tt>RECAPTCHA<\tt>(from google)
+    4.13) RECAPTCHA_SECRET_KEY
+    4.14) RECAPTCHA_SITE_KEY
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+    4.15) SECRET_KEY_BASE
+    5) Cloudinary requires imagemagic
+    6) This app was tested only on linux systems
+    6) For development app uses default passwords, logins for used gems
