@@ -1,56 +1,56 @@
-<% provide(:title,"Update tutor") %>
+<% provide(:title, 'Update tutor') %>
 <h1 class="row col-sm-offset-4">Update tutor</h1>
 <%= render 'shared/error_message' %>
 
-<%= form_for @user,class: "form-horizontal" do |tutor_form| %>
+<%= form_for @user,class: 'form-horizontal' do |tutor_form| %>
  	
-	<%= tutor_form.fields_for :info, class: "form-horizontal" do |info_form| %>
+	<%= tutor_form.fields_for :info, class: 'form-horizontal' do |info_form| %>
 	<!--Name -->
 	<div class="row col-sm-offset-2 form-group">
-		<%= info_form.label :name, class: "col-sm-2 control-label" %>
+		<%= info_form.label :name, class: 'col-sm-2 control-label' %>
 		<div class="col-sm-4">
-			<%= info_form.text_field :name, class: 'form-control', placeholder: "Name" %>
+			<%= info_form.text_field :name, class: 'form-control', placeholder: 'Name' %>
 		</div>
 	</div>
 	<!--LastName -->
 	<div class="row col-sm-offset-2 form-group">
-		<%= info_form.label :last_name, class: "col-sm-2 control-label" %>
+		<%= info_form.label :last_name, class: 'col-sm-2 control-label' %>
 		<div class="col-sm-4">
-			<%= info_form.text_field :last_name, class: 'form-control', placeholder: "Last name" %>
+			<%= info_form.text_field :last_name, class: 'form-control', placeholder: 'Last name' %>
 		</div>
 	</div>
 	<!--Phone-->
 	<div class="row col-sm-offset-2 form-group">
-		<%= info_form.label :phone, class: "col-sm-2 control-label" %>
+		<%= info_form.label :phone, class: 'col-sm-2 control-label' %>
 		<div class="col-sm-4">
-			<%= info_form.text_field :phone, class: 'form-control', placeholder: "Phone number" %>
+			<%= info_form.text_field :phone, class: 'form-control', placeholder: 'Phone number' %>
 		</div>
 	</div>
 	<!--Password-->
 	<div class="row col-sm-offset-2 form-group">
-		<%= info_form.label :password, class: "col-sm-2 control-label" %>
+		<%= info_form.label :password, class: 'col-sm-2 control-label' %>
 		<div class="col-sm-4">
-			<%= info_form.password_field :password, class: 'form-control', placeholder: "Leave empty for saving old" %>
+			<%= info_form.password_field :password, class: 'form-control', placeholder: 'Leave empty for saving old' %>
 		</div>
 	</div>
 	<div class="row col-sm-offset-2 form-group">
-		<%= info_form.label :password_confirmation, "Confirmation", class: "col-sm-2 control-label" %>
+		<%= info_form.label :password_confirmation, 'Confirmation', class: 'col-sm-2 control-label' %>
 		<div class="col-sm-4">
-			<%= info_form.password_field :password_confirmation, class: 'form-control', placeholder: "Confirm your password" %>
+			<%= info_form.password_field :password_confirmation, class: 'form-control', placeholder: 'Confirm your password' %>
 		</div>
 	</div>
 	<!--Mail(Login)-->
 	<div class="row col-sm-offset-2 form-group">
-		<%= info_form.label :mail, "Email", class: "col-sm-2 control-label" %>
+		<%= info_form.label :mail, 'Email', class: 'col-sm-2 control-label' %>
 		<div class="col-sm-4">
-			<%= info_form.email_field :mail, class: 'form-control', placeholder: "Email"  %>
+			<%= info_form.email_field :mail, class: 'form-control', placeholder: 'Email'  %>
 		</div>
 	</div>
 	<% end %>
 	<!-- Local administrator -->
 	<% if @is_super_admin %>
 	<div class="row col-sm-offset-2 form-group">
-		<%= tutor_form.label :administrator_id, "Choose local administrator", class: "col-sm-2 control-label" %>
+		<%= tutor_form.label :administrator_id, 'Choose local administrator', class: 'col-sm-2 control-label' %>
 		<div class="col-sm-4">
 			<%= tutor_form.select :administrator_id, @admins,{}, class: 'form-control' %>	
 		</div>
@@ -58,7 +58,7 @@
 	<% end %>
 	<div class="row col-sm-offset-2 form-group">
 		<div class="col-sm-offset-2 col-sm-2">
-			<%= tutor_form.submit "Confirm", class: "btn btn-primary" %>
+			<%= tutor_form.submit 'Confirm', class: 'btn btn-primary' %>
 		</div>
 	</div>
 <% end %>

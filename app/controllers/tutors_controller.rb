@@ -1,24 +1,22 @@
 class TutorsController < ApplicationController
-  before_action :check_login, only: [:new,:create,:edit,:update,:show,:index,:delegate, :delete]
+
+  before_action :check_exist_callback, only: [:edit, :update, :show, :delete, :delegate]
+  before_action :check_log_in, only: [:new,:create,:edit,:update,:show,:index,:delegate, :delete]
   before_action :check_type_rights, only: [:new,:create,:index,:delegate, :delete]
   before_action :check_rights, only: [:edit,:update,:show]
   before_action :check_mail_confirmation, except: [:show]
+  before_action :info_for_forms, only: [:new, :create, :edit, :update]
 
-  #New tutor page
+  #Create tutor page
   def new
-    #Loading info for page
-    info_for_forms
-    
     #Creating tutor obj
     @user = Tutor.new
     @user_info = Info.new
     @user.info = @user_info
   end
-  
-  #Create querry
+
+  #Action for create
   def create
-    #Reloading info for page
-    info_for_forms
     #Loading info
     @user = Tutor.new(tutor_params)
 
@@ -34,29 +32,14 @@ class TutorsController < ApplicationController
     end
   end
 
-  #Edit page
+  #Edit profile page
   def edit
     #Finding user
     @user = Tutor.find(params[:id])
-    #Checking: redirect if can't load user or info
-    if @user.nil?
-      flash[:danger] = 'User does not exist'
-      redirect_to current_user
-    else
-      @user_info = @user.info
-      unless @user_info.nil?
-        info_for_forms
-        return
-      end
-      flash[:danger] = "Can't load user information"
-      redirect_to current_user
-    end
   end
   
-  #Update querry
+  #Action for updating user
   def update
-    #Loading info for page
-    info_for_forms
     #Finding tutor
     @user = Tutor.find(params[:id])
     #If tutor exit and data - OK, changing
@@ -76,6 +59,7 @@ class TutorsController < ApplicationController
       redirect_to current_user and return
     end
     @is_super_adm = is_super?
+    #Loading all tutors if super admin
     tutors = @is_super_adm ? Tutor.all : Tutor.where(administrator_id: session[:type_id])
     @tutors = []
     tutors.order(:created_at).reverse_order.each do |tutor|
@@ -84,17 +68,9 @@ class TutorsController < ApplicationController
     @tutors = Kaminari.paginate_array(@tutors).page(params[:page]).per(5)
   end
 
-  #Tutor Profile
+  #Profile page
   def show
-    if !current_user.info.is_mail_confirmed? && session[:user_id] != params[:id].to_i
-      flash[:danger] = "You haven't confirmed your mail!\n Please, confirm your mail."
-      redirect_to :root
-    end
     @user = Tutor.find(params[:id])
-    if @user.nil?
-      flash[:danger] = 'User does not exist.'
-      redirect_to :root and return
-    end
     @user_info = @user.show.to_a
   end
 
@@ -102,94 +78,79 @@ class TutorsController < ApplicationController
   def delegate
     @tutor = Tutor.find(params[:id])
     @tutors = @tutor.other_tutors
-    @students = @tutor.students.to_a
   end
 
-
+  #Action for deleting Tutor
   def delete
     @tutor = Tutor.find(params[:id])
     if @tutor.students.empty? || @tutor.update(delete_tutor_params)
       if @tutor.reload.destroy
         flash[:success] = 'Tutor was deleted!'
-        redirect_to tutors_path
-      else
-        @tutors = @tutor.other_tutors
-        @user = @tutor
-        render :delegate
+        redirect_to tutors_path and return
       end
-    else
-      @students = @tutor.students
-      @tutors = @tutor.other_tutors
-      @user = @tutor
-      render :delegate
+    end
+
+    @tutors = @tutor.other_tutors
+    @user = @tutor
+    render :delegate
+  end
+  ##########################################################
+  #Private methods
+  private
+  #Rights checking
+  def check_rights
+    user = Tutor.find(params[:id])
+    #It is my page?
+    is_i = (session[:user_type] == 'tutor' && session[:type_id] == params[:id].to_i)
+    #It is my tutor?
+    is_my_tutor = (!user.nil? && session[:user_type] == 'administrator' && user.administrator_id == session[:type_id])
+    unless is_i || is_super? || is_my_tutor
+      flash[:danger] = 'You have no access to this page.'
+      redirect_to current_user
     end
   end
-  
-  private
-    #Login checking
-    def check_login
-      unless logged_in?
-        flash[:warning] = 'Only registrated people can see this page.'
-        #Redirecting to home page
-        redirect_to :root 
-      end
-    end
-    
-    #Rights checking
-    def check_rights
+
+  #Rights of viewing
+  def check_type_rights
+    is_my_adm = session[:user_type] == 'administrator'
+    #Checking creation or showing
+    unless params[:id].nil?
       user = Tutor.find(params[:id])
-      #It is my page?
-      is_i = (session[:user_type] == 'tutor' && session[:type_id] == params[:id].to_i)
-      #It is my tutor?
-      is_my_tutor = (!user.nil? && session[:user_type] == 'administrator' && user.administrator_id == session[:type_id])
-      unless is_i || is_super? || is_my_tutor
-        flash[:warning] = 'You have no access to this page.'
-        redirect_to current_user
-      end  
-    end
-    
-    #Rights of viewing
-    def check_type_rights
-      is_my_adm = session[:user_type] == 'administrator'
-      #Checking creation or showing
-      unless params[:id].nil?
-        user = Tutor.find(params[:id])
-        is_my_adm = (!user.nil? && session[:user_type] == 'administrator' && user.administrator_id == session[:type_id])
-      end
-      
-      #checking rights
-      unless is_super? || is_my_adm
-        flash[:warning] = 'You have no access to this page.'
-        redirect_to current_user
-      end
+      is_my_adm = (!user.nil? && session[:user_type] == 'administrator' && user.administrator_id == session[:type_id])
     end
 
-    #Strict params
-    def tutor_params
-      t_param = params
-      t_param[:tutor][:info_attributes][:id] = @user.info.id unless params[:id].nil?
-      t_param.require(:tutor).permit(:administrator_id,info_attributes: [:id,:name,:last_name,:mail,:phone,:password,:password_confirmation])
+    #checking rights
+    unless is_super? || is_my_adm
+      flash[:danger] = 'You have no access to this page.'
+      redirect_to current_user
     end
+  end
 
-    def delete_tutor_params
-      params.require(:tutor).permit(students_attributes: [:tutor_id, :id])
-    end
+  #Attributes for forms
+  def tutor_params
+    t_param = params
+    t_param[:tutor][:info_attributes][:id] = @user.info.id unless params[:id].nil?
+    t_param.require(:tutor).permit(:administrator_id,info_attributes: [:id,:name,:last_name,:mail,:phone,:password,:password_confirmation])
+  end
 
-    #Callback for checking confirmation of mail
-    def check_mail_confirmation
-      user = current_user
-      unless session[:user_type] != 'student' && user.info.is_mail_confirmed
-        flash[:danger] = "You haven't confirmed your mail!\n Please, confirm your mail."
-        redirect_to :root
-      end
+  #Attributes for delete forms
+  def delete_tutor_params
+    params.require(:tutor).permit(students_attributes: [:tutor_id, :id])
+  end
+
+  #Loads info for creation/new pages
+  def info_for_forms
+    #Info for page
+    #Saving info if we are SA
+    @is_super_admin = is_super?
+    #Array of admins for SA
+    @admins = Administrator.admins_list if @is_super_admin
+  end
+
+  #Callback for checking existence of record
+  def check_exist_callback
+    unless check_exist(params[:id], Tutor)
+      redirect_to current_user
     end
-    
-    #Loads info for creation/new pages
-    def info_for_forms
-      #Info for page
-      #Saving info if we are SA
-      @is_super_admin = is_super?    
-      #Array of admins for SA
-      @admins = Administrator.admins_list if @is_super_admin
-    end
+  end
 end
