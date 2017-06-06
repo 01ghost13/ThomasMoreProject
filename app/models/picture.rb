@@ -3,12 +3,14 @@ class Picture < ActiveRecord::Base
   has_many :interests, :through => :picture_interests
   accepts_nested_attributes_for :picture_interests, reject_if: :all_blank, allow_destroy: true
   has_many :questions, dependent: :destroy
+  #Settigns for production
   has_attached_file :image,
                     path: ':class/:style/:id_:hash.:extension',
                     url: '/:class/:style/:id_:hash.:extension',
                     hash_secret: 'TWILIGHT_IS_BEST_PONY',
                     styles: {thumb: ['40%']},
                     storage: :cloudinary if Rails.env.production?
+  #Settings for dev
   has_attached_file :image,
                     path: ':rails_root/public/system/:class/:style/:id_:hash.:extension',
                     url: '/system/:class/:style/:id_:hash.:extension',
@@ -22,6 +24,7 @@ class Picture < ActiveRecord::Base
   validates_attachment_file_name :image, matches: [/png\z/, /jpe?g\z/]
   validates :picture_interests, nested_attributes_uniqueness: {field: :interest_id}
 
+  #returns related interests to a picture
   def related_interests
     links = PictureInterest.where(picture_id: self.id)
     result = {}
@@ -31,8 +34,9 @@ class Picture < ActiveRecord::Base
     result
   end
 
+  #Returns all pictures
   def self.pictures_list
-    pictures = Picture.order(:image_file_name).map {
+    Picture.order(:image_file_name).map {
         |t| ["%{name}"%{name: t.image_file_name},t.id]
     }
   end

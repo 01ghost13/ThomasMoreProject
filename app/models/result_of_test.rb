@@ -10,11 +10,13 @@ class ResultOfTest < ActiveRecord::Base
   validates :test,:schooling,:student, presence: true
   validates :was_in_school, exclusion: { in: [nil] }
 
+  #Setups default fields
   def setup_fields
     self.is_ended = false
     self.is_outdated = false
     true
   end
+
   #Returns the question after last answered
   def last_question
     questions = QuestionResult.order(:number).where(result_of_test_id: self.id)
@@ -43,4 +45,5 @@ class ResultOfTest < ActiveRecord::Base
     result_info[:is_outdated] = self.is_outdated
     result_info
   end
+  private :setup_fields
 end

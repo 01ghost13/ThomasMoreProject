@@ -1,10 +1,11 @@
 class Student < ActiveRecord::Base
   before_validation :setup_fields, on: :create
+
   has_secure_password
   has_many :result_of_tests, dependent: :destroy
   belongs_to :tutor, inverse_of: :students
   belongs_to :schooling, inverse_of: :students
-  #Validating
+
   validates :code_name, presence: true, uniqueness: true, length: { in: 6..20}
   validates :gender, presence: true, inclusion: { in: [1,2,3] }
   #1 – dunno
@@ -50,6 +51,8 @@ class Student < ActiveRecord::Base
     user_info[:is_active] = self.is_active
     user_info
   end
+
+  #Hides student for all users except SA
   def hide
     if self.is_active
       self.date_off = Date.current
@@ -59,4 +62,5 @@ class Student < ActiveRecord::Base
     self.is_active = !self.is_active
     self.save
   end
+  private :setup_fields
 end

@@ -19,11 +19,13 @@ class Tutor < ActiveRecord::Base
     user_info[:organisation] = adm.organisation
     user_info
   end
+
   def is_my_student? (student_id)
     student = Student.find(student_id)
     return false if student.nil?
     student.tutor_id == self.id
   end
+
   def show_short
     user_info = self.info.show_short
     user_info[:id] = self.id
@@ -31,13 +33,16 @@ class Tutor < ActiveRecord::Base
     user_info[:administrator] = adm.show_short
     user_info
   end
+
   def self.tutors_list (administrator_id)
-    tutors = Tutor.where(administrator_id: administrator_id).order(:id).map {
+    Tutor.where(administrator_id: administrator_id).order(:id).map {
         |t| ['%{mail}: %{lname} %{name}'%{mail: t.info.mail, lname: t.info.last_name, name: t.info.name},t.id]
     }
   end
+
+  #List of tutors except current
   def other_tutors
-    tutors = Tutor.where.not(id: self.id).order(:id).map {
+    Tutor.where.not(id: self.id).order(:id).map {
         |t| ['%{mail}: %{lname} %{name}'%{mail: t.info.mail, lname: t.info.last_name, name: t.info.name},t.id]
     }
   end
