@@ -2,14 +2,14 @@ class AdministratorsController < ApplicationController
   include Recaptcha::ClientHelper
   include Recaptcha::Verify
 
-  before_action :check_exist_callback, only: [:edit, :update, :show]
+  before_action :check_exist_callback, only: [:edit, :update, :show, :delete, :delegate]
   before_action :check_log_in, only: [:index,:edit, :update, :show, :delegate]
   before_action :check_rights, only: [:edit, :update, :show]
   before_action :check_type_rights, only: [:edit, :update, :show]
   before_action :check_mail_confirmation, except: [:new, :show, :create]
   before_action :check_super_admin, only: [:index, :delegate, :delete]
 
-  #Create Page
+  #Create admin page
   def new
     #If super administrator, then have access
     if logged_in? && !is_super?
@@ -47,7 +47,7 @@ class AdministratorsController < ApplicationController
     @admins = Kaminari.paginate_array(@admins).page(params[:page]).per(5)
   end
 
-  #Editing page
+  #Edit profile page
   def edit
     @user = Administrator.find(params[:id])
   end
@@ -71,7 +71,7 @@ class AdministratorsController < ApplicationController
     @user_info = @user.show.to_a
   end
 
-   #Page of deletion of admins
+  #Page of deletion of admins
   def delegate
     @administrator = load_admin_for_deletion
 
@@ -88,14 +88,12 @@ class AdministratorsController < ApplicationController
       if @administrator.reload.destroy
         flash[:success] = 'Administrator was deleted!'
         redirect_to administrators_path and return
-      else
-        render :delegate
       end
-    else
-      render :delegate
     end
+
     @admins = @administrator.other_administrators
     @user = @administrator
+    render :delegate
   end
   ##########################################################
   #Private methods
