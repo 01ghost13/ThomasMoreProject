@@ -6,18 +6,21 @@ class AdministratorsController < ApplicationController
   before_action :check_rights, only: [:edit, :update, :show]
   before_action :check_type_rights, only: [:edit, :update, :show]
   before_action :check_mail_confirmation, except: [:new, :show, :create]
+  before_action :check_super_admin, only: [:index, :delegate, :delete]
 
   #Create Page
   def new
+    #If super administrator, then have access
     if logged_in? && !is_super?
       redirect_back fallback_location: current_user and return
     end
+    #Loading info for viewing
     @user = Administrator.new
     @user_info = Info.new
     @user.info = @user_info
   end
 
-  #Creation query
+  #Action for create
   def create
     #Loading data
     @user = Administrator.new(administrator_params)
@@ -25,6 +28,7 @@ class AdministratorsController < ApplicationController
     if verify_recaptcha(model: @user) && @user.save
       flash[:success] = 'Account created! Confirmation of your account was sent to email.'
       AitscoreMailer.registration_confirmation(@user.info).deliver
+      #Logging in as a new user if not logged
       log_in @user.info unless logged_in?
       redirect_to @user
     else
@@ -32,33 +36,27 @@ class AdministratorsController < ApplicationController
     end
   end
   
-  #Only for SA
+  #Page with list of admins
   def index
-    unless is_super?
-      flash[:danger] = 'You have no access to this page!'
-      redirect_to current_user and return
-    end
-    administrators = Administrator.order(:organisation).all
-    #todo change order to order.except superadmin
+    administrators = Administrator.where(is_super: false).order(:organisation)
     @admins = []
     administrators.each do |admin|
-      @admins << admin.show_short unless admin.is_super
+      @admins << admin.show_short #Getting short info
     end
     @admins = Kaminari.paginate_array(@admins).page(params[:page]).per(5)
   end
 
   #Editing page
   def edit
-    #finding user
     @user = Administrator.find(params[:id])
-    #is exist?
+
     if @user.nil?
       flash[:error] = 'User does not exist.'
       redirect_to current_user
     end
   end
   
-  #Update querry
+  #Action for updating user
   def update
     @user = Administrator.find(params[:id])
 
@@ -77,93 +75,92 @@ class AdministratorsController < ApplicationController
       flash[:error] = 'User does not exist.'
       redirect_to :root and return
     end
+    #Gaining info for profile
     @user_info = @user.show.to_a
   end
 
-   #Page of deletion of Admin
+   #Page of deletion of admins
   def delegate
-    unless is_super?
-      flash[:danger] = 'You have no access to this page!'
-      redirect_to current_user and return
-    end
-    @administrator = Administrator.find(params[:id])
-    if @administrator.is_super
-      flash[:danger] = "You can't delete this administrator!"
-      redirect_to current_user and return
-    end
+    @administrator = load_admin_for_deletion
+
+    #Loading information about tutors and admins for page
     @admins = @administrator.other_administrators
-    @tutors = @administrator.tutors.to_a
   end
 
-
+  #Action for deleting admin
   def delete
-    @administrator = Administrator.find(params[:id])
-    if @administrator.is_super
-      flash[:danger] = "You can't delete this administrator!"
-      redirect_to current_user and return
-    end
+    @administrator = load_admin_for_deletion
+
+    #Admin can be deleted only if hasn't tutors
     if @administrator.tutors.empty? || @administrator.update(delete_administrator_params)
       if @administrator.reload.destroy
         flash[:success] = 'Administrator was deleted!'
-        redirect_to administrators_path
+        redirect_to administrators_path and return
       else
-        @admins = @administrator.other_administrators
-        @user = @administrator
         render :delegate
       end
     else
-      @tutors = @administrator.tutors
-      @admins = @administrator.other_administrators
-      @user = @administrator
       render :delegate
+    end
+    @admins = @administrator.other_administrators
+    @user = @administrator
+  end
+  ##########################################################
+  #Private methods
+  private
+  def load_admin_for_deletion
+    administrator = Administrator.find(params[:id])
+    #Blocking a deletion of super administrator
+    if administrator.is_super
+      flash[:danger] = "You can't delete this administrator!"
+      redirect_to current_user
+    end
+    administrator
+  end
+
+  def check_super_admin
+    unless is_super?
+      flash[:danger] = 'You have no access to this page!'
+      redirect_to current_user
     end
   end
 
-  private
-    #Attributes
-    def administrator_params
-      adm_param = params
-      adm_param[:administrator][:info_attributes][:id] = @user.info.id unless params[:id].nil?
-      adm_param.require(:administrator).permit(:organisation,:organisation_address,info_attributes: [:id,:name,:last_name,:mail,:phone,:password,:password_confirmation])
-    end
+  #Attributes for forms
+  def administrator_params
+    adm_param = params
+    adm_param[:administrator][:info_attributes][:id] = @user.info.id unless params[:id].nil?
+    adm_param.require(:administrator).permit(:organisation,:organisation_address,info_attributes: [:id,:name,:last_name,:mail,:phone,:password,:password_confirmation])
+  end
 
-    def delete_administrator_params
-      params.require(:administrator).permit(tutors_attributes: [:administrator_id, :id])
-    end
+  #Attributes for delete forms
+  def delete_administrator_params
+    params.require(:administrator).permit(tutors_attributes: [:administrator_id, :id])
+  end
 
-    #Callback for checking session
-    def check_log_in
-      unless logged_in?
-        flash[:warning] = 'Only registrated people can see this page.'
-        #Redirecting to home page
-        redirect_to :root 
-      end
+  #Callback for checking rights
+  def check_rights
+    #Only SA or user can edit/delete their accounts
+    unless is_super? || session[:user_type] == 'administrator' && session[:type_id] == params[:id].to_i
+      flash[:warning] = 'You have no access to this page.'
+      #Redirect
+      redirect_to current_user
     end
-    
-    #Callback for checking rights
-    def check_rights
-      #Only SA or user can edit/delete their accounts
-      unless is_super? || session[:user_type] == 'administrator' && session[:type_id] == params[:id].to_i
-        flash[:warning] = 'You have no access to this page.'
-        #Redirect
-        redirect_to current_user
-      end
+  end
+
+  #Callback for checking confirmation of mail
+  def check_mail_confirmation
+    user = current_user
+    unless session[:user_type] != 'student' && user.info.is_mail_confirmed
+      flash[:danger] = "You haven't confirmed your mail! Please, confirm your mail."
+      redirect_to :root
     end
-    
-    #Callback for checking confirmation of mail
-    def check_mail_confirmation
-      user = current_user
-      unless session[:user_type] != 'student' && user.info.is_mail_confirmed
-        flash[:danger] = "You haven't confirmed your mail! Please, confirm your mail."
-        redirect_to :root
-      end
+  end
+
+  #Callback for checking type of user
+  def check_type_rights
+    unless session[:user_type] == 'administrator' || is_super?
+      flash[:danger] = 'You have no access to this page!'
+      redirect_to current_user
     end
-    
-    #Callback for checking type of user
-    def check_type_rights
-      unless session[:user_type] == 'administrator' || is_super?
-        flash[:danger] = 'You have no access to this page!'
-        redirect_to current_user
-      end
-    end
+  end
 end
