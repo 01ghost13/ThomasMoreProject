@@ -31,13 +31,19 @@ class ApplicationController < ActionController::Base
     end
   end
 
-
   def check_exist(id, class_ref)
     if class_ref.exists?(id)
       true
     else
       flash[:danger] = 'User does not exist.'
       false
+    end
+  end
+
+  def check_super_admin
+    unless is_super?
+      flash[:danger] = 'You have no access to this page!'
+      redirect_to current_user
     end
   end
 end

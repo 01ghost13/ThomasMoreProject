@@ -108,13 +108,6 @@ class AdministratorsController < ApplicationController
     administrator
   end
 
-  def check_super_admin
-    unless is_super?
-      flash[:danger] = 'You have no access to this page!'
-      redirect_to current_user
-    end
-  end
-
   #Attributes for forms
   def administrator_params
     adm_param = params
