@@ -55,9 +55,9 @@ module SessionsHelper
   #Checks is user - SA
   def is_super?
     if session[:user_type] == 'administrator'
-      return Administrator.find_by(id: session[:type_id]).is_super
+      Administrator.find_by(id: session[:type_id]).is_super
     else
-      return false
+      false
     end
   end
 end
