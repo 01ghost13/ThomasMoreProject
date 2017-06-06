@@ -2,6 +2,7 @@ class AdministratorsController < ApplicationController
   include Recaptcha::ClientHelper
   include Recaptcha::Verify
 
+  before_action :check_exist_callback, only: [:edit, :update, :show]
   before_action :check_log_in, only: [:index,:edit, :update, :show, :delegate]
   before_action :check_rights, only: [:edit, :update, :show]
   before_action :check_type_rights, only: [:edit, :update, :show]
@@ -26,7 +27,7 @@ class AdministratorsController < ApplicationController
     @user = Administrator.new(administrator_params)
     #If data ok - creating
     if verify_recaptcha(model: @user) && @user.save
-      flash[:success] = 'Account created! Confirmation of your account was sent to email.'
+      flash[:success] = 'Account created! Confirmation of account was sent to email.'
       AitscoreMailer.registration_confirmation(@user.info).deliver
       #Logging in as a new user if not logged
       log_in @user.info unless logged_in?
@@ -49,11 +50,6 @@ class AdministratorsController < ApplicationController
   #Editing page
   def edit
     @user = Administrator.find(params[:id])
-
-    if @user.nil?
-      flash[:error] = 'User does not exist.'
-      redirect_to current_user
-    end
   end
   
   #Action for updating user
@@ -67,14 +63,10 @@ class AdministratorsController < ApplicationController
       render :edit
     end
   end
-  
+
   #Profile page
   def show
     @user = Administrator.find(params[:id])
-    if @user.nil?
-      flash[:error] = 'User does not exist.'
-      redirect_to :root and return
-    end
     #Gaining info for profile
     @user_info = @user.show.to_a
   end
@@ -141,18 +133,9 @@ class AdministratorsController < ApplicationController
   def check_rights
     #Only SA or user can edit/delete their accounts
     unless is_super? || session[:user_type] == 'administrator' && session[:type_id] == params[:id].to_i
-      flash[:warning] = 'You have no access to this page.'
+      flash[:danger] = 'You have no access to this page.'
       #Redirect
       redirect_to current_user
-    end
-  end
-
-  #Callback for checking confirmation of mail
-  def check_mail_confirmation
-    user = current_user
-    unless session[:user_type] != 'student' && user.info.is_mail_confirmed
-      flash[:danger] = "You haven't confirmed your mail! Please, confirm your mail."
-      redirect_to :root
     end
   end
 
@@ -160,6 +143,13 @@ class AdministratorsController < ApplicationController
   def check_type_rights
     unless session[:user_type] == 'administrator' || is_super?
       flash[:danger] = 'You have no access to this page!'
+      redirect_to current_user
+    end
+  end
+
+  #Callback for checking existence of record
+  def check_exist_callback
+    unless check_exist(params[:id], Administrator)
       redirect_to current_user
     end
   end
