@@ -1,23 +1,28 @@
 class TestsController < ApplicationController
-  before_action :check_login
+  before_action :check_log_in
   before_action :check_rights, only: [:testing]
+  before_action :check_super_admin, except: [:testing]
 
+  #Page of creation of Tests
   def new
     @test = Test.new
     @test.questions << [Question.new]
     @pictures = Picture.pictures_list
     @dummy = Picture.find(@pictures.first[1])
-    @picture = [@dummy]
+    @picture = [@dummy] #Adding dummy picture
   end
 
+  #Action for ajax
   def update_image
     @id = params[:event_id]
     @picture = Picture.find(params[:picture_id])
   end
 
+  #Action for creation of test
   def create
     @test = Test.new(test_params)
     @picture = []
+    #Numering questions
     @test.questions.each_with_index do |q, i|
       q.number = i + 1
       q.is_tutorial = false
@@ -35,6 +40,7 @@ class TestsController < ApplicationController
     end
   end
 
+  #Page of editing tests
   def edit
     @test = Test.find(params[:id])
     @picture = []
@@ -46,6 +52,7 @@ class TestsController < ApplicationController
     @picture = [@dummy] if @picture.empty?
   end
 
+  #Action of editing tests
   def update
     @test = Test.find(params[:id])
     if @test.update(test_params)
@@ -53,6 +60,7 @@ class TestsController < ApplicationController
       redirect_to tests_path
     else
       @picture = []
+      #Loading questions
       @test.questions.each do |q|
         @picture << Picture.find(q.picture_id)
       end
@@ -64,6 +72,7 @@ class TestsController < ApplicationController
     end
   end
 
+  #Action for deleting tests
   def destroy
     test = Test.find(params[:id])
     if test.destroy
@@ -74,7 +83,9 @@ class TestsController < ApplicationController
     redirect_to tests_path
   end
 
+  #Page of list of tests
   def index
+    #Only super admin has access to aitscore\tests
     if params[:id].nil? && !is_super?
       flash[:warning] = 'You have no access to this page.'
       redirect_to current_user
@@ -88,6 +99,7 @@ class TestsController < ApplicationController
     @tests = Kaminari.paginate_array(@tests).page(params[:page]).per(10)
   end
 
+  #Exits /testing process
   def exit
     session.delete(:cur_question)
     session.delete(:result_of_test_id)
@@ -96,32 +108,37 @@ class TestsController < ApplicationController
     nil
   end
 
+  #Updates picture in /testing process
   def update_picture
     #Finding our result of test
     res = ResultOfTest.find(session[:result_of_test_id])
     cur_question = session[:cur_question].to_i
+
     if params[:value] == '0'
-    #We are going back
+      #Was pressed btn - go back
       return if cur_question == 1 || session[:next_rewrite] == true #If was pressed on first question - returning
-      #Loading prev q
+      #Loading prev question
       prev_q = Question.where('test_id = :test and number = :number',{test: res.test_id, number: cur_question-1}).take
       #Loading info
-      ##switch off btn back
+      ##hiding btn back
       @show_btn_back = 'visibility:hidden'
       session[:next_rewrite] = true #Flag to know, next click - to update
+      ##Changing progress bar
       step = -100.0 / Question.where(test_id: res.test_id).count
       pic = prev_q.picture
       session[:cur_question] -= 1
     else
-      #Loading next q
+      #Loading next question and writing to db current
       @show_btn_back = ''
       #Writing result
       ##Checking - is it rewriting?
       if session[:next_rewrite]
         session[:next_rewrite] = false
-        #Updating cur q result
-        q_to_upd = QuestionResult.where('result_of_test_id = :res and number = :number',{res: res.id, number: cur_question}).take
-        q_to_upd.update({start: session[:start_time],:end => DateTime.current,was_checked: params[:value], was_rewrited: true})
+        #Updating cur question result
+        q_to_upd = QuestionResult.where('result_of_test_id = :res and number = :number',
+                                        {res: res.id, number: cur_question}).take
+        q_to_upd.update({start: session[:start_time],:end => DateTime.current,
+                         was_checked: params[:value], was_rewrited: true})
       else
         cur_q = Question.find_by(test_id: res.test_id, number: cur_question)
         res.question_results << QuestionResult.new(number: cur_question, start: session[:start_time],
@@ -195,33 +212,25 @@ class TestsController < ApplicationController
   end
 
   private
-    def check_login
-      unless logged_in?
-        flash[:warning] = 'Only registrated people can see this page.'
-        #Redirecting to home page
-        redirect_to :root 
-      end
+  def check_rights
+    user = Student.find(params[:id])
+    is_super_adm = is_super?
+    is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
+    is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
+    is_i = session[:user_type] == 'student' && params[:id].to_i == session[:type_id]
+    unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
+      flash[:warning] = 'You have no access to this page.'
+      redirect_to current_user
     end
-
-    def check_rights
-      user = Student.find(params[:id])
-      is_super_adm = is_super?
-      is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
-      is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
-      is_i = session[:user_type] == 'student' && params[:id].to_i == session[:type_id]
-      unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
-        flash[:warning] = 'You have no access to this page.'
-        redirect_to current_user
-      end
+  end
+  def test_params
+    i = 1
+    params[:test][:questions_attributes].each_pair do |key, _|
+      params[:test][:questions_attributes][key][:number] = i
+      i+=1
     end
-    def test_params
-      i = 1
-      params[:test][:questions_attributes].each_pair do |key, _|
-        params[:test][:questions_attributes][key][:number] = i
-        i+=1
-      end
-      p_params = params.require(:test).permit(
-          :description, :name, :version, questions_attributes: [
-          :picture_id, :_destroy, :id, :number, :is_tutorial])
-    end
+    params.require(:test).permit(
+        :description, :name, :version, questions_attributes: [
+        :picture_id, :_destroy, :id, :number, :is_tutorial])
+  end
 end
