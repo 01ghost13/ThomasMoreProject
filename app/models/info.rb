@@ -39,7 +39,24 @@ class Info < ActiveRecord::Base
   def email_activate
     self.is_mail_confirmed = true
     self.confirm_token = nil
-    save(validate: true)
+    save(validate: false)
   end
+
+  def email_reset
+    self.reset_token = SecureRandom.urlsafe_base64.to_s
+    save(validate: false)
+  end
+
+  def reset_password(params)
+    permitted = params.permit(:password, :password_confirmation)
+    if update(permitted)
+      self.reset_token = nil
+      save(validate: false)
+      true
+    else
+      false
+    end
+  end
+
   private :generate_mail_token, :setup_fields
 end

@@ -6,7 +6,7 @@ class AdministratorsController < ApplicationController
   before_action :check_rights, only: [:edit, :update, :show]
   before_action :check_type_rights, only: [:edit, :update, :show]
   before_action :check_mail_confirmation, except: [:new, :show, :create]
-   #TODO: Create DRY index
+
   #Create Page
   def new
     if logged_in? && !is_super?
@@ -17,7 +17,7 @@ class AdministratorsController < ApplicationController
     @user.info = @user_info
   end
 
-  #Create querry
+  #Creation query
   def create
     #Loading data
     @user = Administrator.new(administrator_params)

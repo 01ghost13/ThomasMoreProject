@@ -11,13 +11,16 @@ Rails.application.routes.draw do
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
+
   get 'about' => 'static_pages#about'
   get 'contacts' => 'static_pages#contacts'
-  get 'confirmation_email' => 'static_pages#confirmation_email'
-  get 'send_confirmation_again' => 'static_pages#send_confirmation_again'
-  get 'reset_password' => 'static_pages#reset_password'
-  get 'forgot_password' => 'static_pages#forgot_password'
-  post 'forgot_password' => 'static_pages#submit_forgot_password'
+
+  get 'confirmation_email' => 'mail#confirmation_email'
+  get 'send_confirmation_again' => 'mail#send_confirmation_again'
+  get 'reset_password' => 'mail#reset_password'
+  post 'reset_password' => 'mail#submit_reset_password'
+  get 'forgot_password' => 'mail#forgot_password'
+  post 'forgot_password' => 'mail#submit_forgot_password'
 
   #Interests pages
   resources :interests, only: [:index, :destroy]
