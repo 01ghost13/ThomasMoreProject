@@ -1,11 +1,13 @@
 class PicturesController < ApplicationController
   before_action :check_log_in
-  before_action :check_rights
+  before_action :check_super_admin
 
+  #Page of list of pictures
   def index
     @pictures = Picture.order(:created_at).reverse_order.page(params[:page]).per(5)
   end
 
+  #Create picture page
   def new
     @picture = Picture.new
     picture_interests = [PictureInterest.new]
@@ -13,6 +15,7 @@ class PicturesController < ApplicationController
     @interests = Interest.interests_list
   end
 
+  #Action for create
   def create
     @picture = Picture.new(picture_params)
     @interests = Interest.interests_list
@@ -25,11 +28,13 @@ class PicturesController < ApplicationController
     end
   end
 
+  #Page for edit picture
   def edit
     @picture = Picture.find(params[:id])
     @interests = Interest.interests_list
   end
 
+  #Action for edit
   def update
     @picture = Picture.find(params[:id])
     if @picture.update(picture_params)
@@ -42,6 +47,7 @@ class PicturesController < ApplicationController
     end
   end
 
+  #Action for deleting Picture
   def destroy
     picture = Picture.find(params[:id])
     if picture.destroy
@@ -53,28 +59,13 @@ class PicturesController < ApplicationController
       render :index
     end
   end
-
+  ##########################################################
+  #Private methods
   private
-    def picture_params
-      p_params = params.require(:picture).permit(
-          :description, :image, picture_interests_attributes: [
-          :interest_id, :earned_points, :_destroy, :id])
-    end
-  def check_log_in
-    unless logged_in?
-      flash[:warning] = 'Only registrated people can see this page.'
-      #Redirecting to home page
-      redirect_to :root
-    end
-  end
-
-  #Callback for checking rights
-  def check_rights
-    #Only SA
-    unless is_super?
-      flash[:warning] = 'You have no access to this page.'
-      #Redirect
-      redirect_to current_user
-    end
+  #Attributes for forms
+  def picture_params
+    params.require(:picture).permit(
+        :description, :image, picture_interests_attributes: [
+        :interest_id, :earned_points, :_destroy, :id])
   end
 end
