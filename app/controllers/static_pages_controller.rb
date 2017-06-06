@@ -1,8 +1,9 @@
 class StaticPagesController < ApplicationController
+  #Log in page
   def log_in
-
   end
 
+  #Page about project
   def about
     added = %w(
     All\ pictures\ should\ have\ text\ description
@@ -37,7 +38,7 @@ class StaticPagesController < ApplicationController
     end
   end
 
+  #Page with contacts
   def contacts
-
   end
 end
