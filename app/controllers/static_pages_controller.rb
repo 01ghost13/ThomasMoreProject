@@ -21,10 +21,10 @@ class StaticPagesController < ApplicationController
     Protection\ from\ spam-bots
     Confirmation\ of\ registration\ via\ e-mail
     Recovering\ of\ account\ via\ e-mail
+    Highlighting\ of\ buttons
     )
     will_be_added = %w(
     Graph\ with\ results
-    Highlighting\ of\ buttons
     Student\ and\ teacher\ search\ page
     Export\ to\ excel
     Sound\ description\ of\ images,\ for\ people\ with\ poor\ eyesight
