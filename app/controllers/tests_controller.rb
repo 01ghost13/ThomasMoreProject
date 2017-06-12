@@ -244,7 +244,7 @@ class TestsController < ApplicationController
         :picture_id, :_destroy, :id, :number, :is_tutorial])
   end
   def check_exist_callback
-    unless check_exist(params[:id], Test)
+    unless check_exist(params[:test_id], Test)
       redirect_to current_user
     end
   end
