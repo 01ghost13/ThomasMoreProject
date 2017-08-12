@@ -45,5 +45,17 @@ class ResultOfTest < ActiveRecord::Base
     result_info[:is_outdated] = self.is_outdated
     result_info
   end
+
+  def show_time_to_answer
+    timeline = {}
+    duration = 0
+    results = QuestionResult.order(:number).where(result_of_test_id: self.id)
+    results.each do |r|
+      timeline[r.number] = r.end - r.start
+      duration += r.end - r.start
+    end
+    timeline
+  end
+
   private :setup_fields
 end

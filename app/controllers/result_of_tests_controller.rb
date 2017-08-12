@@ -40,6 +40,7 @@ class ResultOfTestsController < ApplicationController
       flash.now[:danger] = 'The test was edited. Points for interests are outdated!'
     end
 
+    avg_time_per_interest = {}
     #Loading question results
     q_res  = result.question_results
     q_test = Question.where(test_id: result.test_id) #questions of test
@@ -59,12 +60,17 @@ class ResultOfTestsController < ApplicationController
         if interests[interest].nil?
           interests_max[interest] = related_i[interest]
           interests[interest] = 0
+          avg_time_per_interest[interest] = r.end - r.start
           interests[interest] = related_i[interest] if r.was_checked == 3 #Was thumbs up
         else
           interests_max[interest] += related_i[interest]
           interests[interest] += related_i[interest] if r.was_checked == 3
+          avg_time_per_interest[interest] += r.end - r.start
         end
       end
+    end
+    avg_time_per_interest.each_key do |k|
+      avg_time_per_interest[k] /= interests.count
     end
     student = Student.find(result.student_id)
     #Sorting
@@ -72,7 +78,7 @@ class ResultOfTestsController < ApplicationController
     @list_timestamps = timestamps
     @list_interests_max = interests_max
     @student = student.code_name.titleize
-    @res = [result.schooling.name, result.was_in_school]
+    @res = [result.schooling.name, result.was_in_school, result.show_time_to_answer, avg_time_per_interest]
   end
 
   #List of results

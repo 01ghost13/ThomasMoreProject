@@ -15,3 +15,5 @@
 //= require turbolinks
 //= require bootstrap
 //= require cocoon
+//= require Chart.bundle
+//= require chartkick

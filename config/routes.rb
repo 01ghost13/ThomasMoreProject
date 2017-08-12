@@ -4,7 +4,12 @@ Rails.application.routes.draw do
   concern :group_result do
     resources :result_of_tests, only: [:index], path: 'results', param: :result_id
   end
-  
+
+  #TODO Group results pages
+  concern :graph_pages do
+    get 'group_results' => 'statistics#group_results'
+  end
+
   #Routes
   #Login pages
   root 'sessions#new'
@@ -63,6 +68,8 @@ Rails.application.routes.draw do
     end 
     resources :result_of_tests, except: [:new,:create,:index], path: 'results', param: :result_id
     get 'update_tutors' => 'students#update_tutors', on: :new
+    #TODO Graphs pages
+    get 'statistics/student_overall'
   end
 
   #Tests pages

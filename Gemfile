@@ -44,6 +44,10 @@ gem 'cocoon', '~> 1.2.9'
 # ReCaptcha
 gem 'recaptcha', :require => 'recaptcha/rails'
 
+# Charts
+# https://github.com/ankane/chartkick
+gem 'chartkick'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
