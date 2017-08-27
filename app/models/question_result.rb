@@ -25,5 +25,10 @@ class QuestionResult < ActiveRecord::Base
     {start: self.start, end: self.end, was_rewrited: self.was_rewrited, was_checked: self.was_checked,
      question_id: self.question_id }
   end
+
+  def human_was_checked
+    Array["Don't like", 'Skipped', 'Liked'][self.was_checked - 1]
+  end
+
   private :setup_fields
 end
