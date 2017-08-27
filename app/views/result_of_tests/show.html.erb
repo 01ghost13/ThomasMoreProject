@@ -1,4 +1,5 @@
 <% provide(:title,"Result") %>
+<%= javascript_include_tag 'https://www.gstatic.com/charts/loader.js' %>
 <div class= "row">
 	<h2>Results of <%= link_to @student, student_path(params[:student_id]) %></h2>
 </div>
@@ -32,8 +33,8 @@
               <tr>
           <% end %>
 					<td class="col-sm-1"><h4><%= i+1 %></h4></td>
-					<td class="col-sm-3"><h4><small><%= element[:start].to_s(:short) %></small></h4></td>
-					<td class="col-sm-3"><h4><small><%= element[:end].to_s(:short) %></small></h4></td>
+					<td class="col-sm-3"><h4><small><%= date_to_local(element[:start]) %></small></h4></td>
+					<td class="col-sm-3"><h4><small><%= date_to_local(element[:end]) %></small></h4></td>
 					<td class="col-sm-2"><h4><small><%= '%0.2f s'%[element[:end] - element[:start]] %></small></h4></td>
 					<td class="col-sm-1"><h4><small><%= t element[:was_rewrited].class %></small></h4></td>
 					<td class="col-sm-3"><h4><small>
@@ -99,22 +100,27 @@
       <div class="tab-pane fade in active" id="answer_time">
         <%= column_chart @res[2], xtitle: 'Question number', ytitle: 'Time of answer(sec)', download: true %>
       </div>
-      <!-- Bug with not "active" panel, names are not showing (fixed)-->
-      <script>
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function() {
-            var chart = Chartkick.charts['avg_interests_chart'];
-            chart.redraw();
-        })
-      </script>
       <div class="tab-pane fade" id="avg_interests">
-        <%= column_chart @res[3], id: 'avg_interests_chart', xtitle: 'Interest', ytitle: 'Avg time of answer(sec)', download: true, discrete: true%>
+        <%= column_chart @res[3], id: 'avg_interests_chart', xtitle: 'Interest', ytitle: 'Avg time of answer(sec)',
+                         download: true, discrete: true %>
       </div>
       <div class="tab-pane fade" id="interests_points">
         <%= pie_chart @list_interests, download: true %>
       </div>
       <div class="tab-pane fade" id="timeline">
-
+        <%= timeline @res[4], id: 'timeline_chart', download: true %>
       </div>
     </div>
   </div>
 </div>
+<!--Fix of bug with not showing titles of OX-->
+<script>
+    $('a[href="#avg_interests"]').on('shown.bs.tab', function() {
+        var chart = Chartkick.charts['avg_interests_chart'];
+        chart.redraw();
+    });
+    $('a[href="#timeline"]').on('shown.bs.tab', function() {
+        var chart = Chartkick.charts['timeline_chart'];
+        chart.redraw();
+    });
+</script>

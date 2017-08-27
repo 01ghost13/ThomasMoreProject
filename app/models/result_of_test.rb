@@ -48,10 +48,19 @@ class ResultOfTest < ActiveRecord::Base
 
   def show_time_to_answer
     timeline = {}
-    duration = 0
     results = QuestionResult.order(:number).where(result_of_test_id: self.id)
     results.each do |r|
       timeline[r.number] = r.end - r.start
+    end
+    timeline
+  end
+
+  def show_timeline
+    timeline = []
+    duration = 0
+    results = QuestionResult.order(:number).where(result_of_test_id: self.id)
+    results.each do |r|
+      timeline << [r.human_was_checked, duration, duration + (r.end - r.start)]
       duration += r.end - r.start
     end
     timeline
