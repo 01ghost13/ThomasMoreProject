@@ -17,3 +17,11 @@
 //= require cocoon
 //= require Chart.bundle
 //= require chartkick
+
+//Converts all text in class "date_to_local" to local time
+$(document).on('turbolinks:load', function () {
+    $('.date_to_local').each(function () {
+        var date = new Date($(this).text());
+        $(this).text(date.toLocaleString())
+    })
+});

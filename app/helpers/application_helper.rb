@@ -13,4 +13,10 @@ module ApplicationHelper
       page_title + ' | ' + base_title
     end
   end
+
+  #Adds date_text class to date, so it could be converted via js
+  def date_to_local(date)
+    converted_date = date.to_s(:iso8601)
+    html_string = "<div class=\"date_to_local\">#{converted_date}</div>".html_safe
+  end
 end
