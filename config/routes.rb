@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+  get 'search' => 'search#search_result'
+  post '*search' => 'search#submit_search'
+
   #Concerns
   concern :group_result do
     resources :result_of_tests, only: [:index], path: 'results', param: :result_id
@@ -68,8 +71,6 @@ Rails.application.routes.draw do
     end 
     resources :result_of_tests, except: [:new,:create,:index], path: 'results', param: :result_id
     get 'update_tutors' => 'students#update_tutors', on: :new
-    #TODO Graphs pages
-    get 'statistics/student_overall'
   end
 
   #Tests pages
