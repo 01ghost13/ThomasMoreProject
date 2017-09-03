@@ -62,5 +62,37 @@ class Student < ActiveRecord::Base
     self.is_active = !self.is_active
     self.save
   end
+
+  def get_student_interests(test_id = nil)
+    table = execute_sql_statement(
+        "SELECT interests.name, was_checked, earned_points, start, end, q.number, is_tutorial
+        FROM picture_interests as p_i, question_results as q_res, questions as q, result_of_tests as res
+        LEFT JOIN interests on interests.id = p_i.interest_id
+        WHERE p_i.picture_id = q.picture_id AND
+              q_res.question_id = q.id AND
+              res.id = q_res.result_of_test_id AND
+              res.student_id = #{self.id}#{test_id.nil? ? '':'AND'+test_id.to_s};").to_a
+    points_interests = Hash.new
+    avg_answer_time = Hash.new
+    table.each do |i|
+      interest = i['name']
+      points_interests[interest] = avg_answer_time[interest] = 0 if points_interests[interest].nil?
+      points_interests[interest] += i['earned_points'] if i['was_checked'] == 3
+      avg_answer_time[interest] += i['end'].to_datetime.to_f - i['start'].to_datetime.to_f
+    end
+    avg_answer_time.each_key do |key|
+      avg_answer_time[key] = avg_answer_time[key] / avg_answer_time.count
+    end
+    {points_interests: points_interests, avg_answer_time: avg_answer_time}
+  end
+
+  def execute_sql_statement(sql)
+    results = ActiveRecord::Base.connection.exec_query(sql)
+    if results.present?
+      results
+    else
+      nil
+    end
+  end
   private :setup_fields
 end

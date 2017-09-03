@@ -84,6 +84,7 @@ class ResultOfTestsController < ApplicationController
 
   #List of results
   def index
+    #Loading test results
     results = ResultOfTest.where(student_id: params[:student_id]).order(:created_at).reverse_order
     student = Student.find(params[:student_id])
     @code_name = student.code_name
@@ -92,6 +93,9 @@ class ResultOfTestsController < ApplicationController
       @results << result.show_short
     end
     @results = Kaminari.paginate_array(@results).page(params[:page]).per(5)
+    #Preparing graphs
+    @interest_points = student.get_student_interests[:points_interests]
+    @avg_time = student.get_student_interests[:avg_answer_time]
   end
 
   #Action for deleting results
