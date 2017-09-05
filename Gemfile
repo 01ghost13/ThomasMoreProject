@@ -48,6 +48,10 @@ gem 'recaptcha', :require => 'recaptcha/rails'
 # https://github.com/ankane/chartkick
 gem 'chartkick'
 
+# Search engine
+# https://github.com/activerecord-hackery/ransack
+gem 'ransack', github: 'activerecord-hackery/ransack'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'

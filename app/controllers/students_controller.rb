@@ -99,23 +99,15 @@ class StudentsController < ApplicationController
     end
     @is_super_adm = is_super?
     @students = []
-    students = []
     if @is_super_adm
-      students = Student.order(:code_name).all
+      @q = Student.all_students.ransack(params[:q])
     elsif session[:user_type] == 'tutor'
-      students = Student.order(:code_name).where(tutor_id: session[:type_id], is_active: true)
+      @q = Student.students_of_tutor(session[:type_id]).ransack(params[:q])
     elsif session[:user_type] == 'administrator'
-      tutors = Tutor.where(administrator_id: session[:type_id])
-      tutors.each do |tutor|
-        Student.order(:code_name).where(tutor_id: tutor.id, is_active: true).each do |student|
-          students << student
-        end
-      end
+      @q = Student.students_of_admin(session[:type_id]).ransack(params[:q])
     end
-    students.each do |student|
-      @students << student.show_short
-    end
-    @students = Kaminari.paginate_array(@students).page(params[:page]).per(5)
+    @students = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
+    @students = @students.page(params[:page]).per(5)
   end
   ##########################################################
   #Private methods
@@ -210,6 +202,7 @@ class StudentsController < ApplicationController
 
   #Callback for checking deactivated students
   def check_deactivated
+    #TODO BUG WITH @User = nil
     if !is_super? && @user.date_off != nil
       flash[:warning] = "You can't edit deactivated student!"
       redirect_back fallback_location: current_user

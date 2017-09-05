@@ -15,6 +15,8 @@ class Student < ActiveRecord::Base
   validates :is_active, :is_current_in_school, exclusion: { in: [nil] }
   validates :password, presence: true, allow_nil: true, length: {minimum: 4}
 
+  scope :all_students, ->() {all}
+
   #Setups default fields
   def setup_fields
     self.is_active = true
@@ -94,5 +96,32 @@ class Student < ActiveRecord::Base
       nil
     end
   end
+
+  def self.students_of_admin(admin_id)
+    all_students.where('admin_id = ?', admin_id)
+  end
+
+  def self.students_of_tutor(tutor_id)
+    all_students.where('tutor_id = ?', tutor_id)
+  end
+
+  def self.all_students
+    select(
+        'students.id as id, students.code_name as code_name, t.tutor_name as tutor_name,
+        t.tutor_last_name as tutor_last_name, a.admin_name as admin_name, a.admin_last_name as admin_last_name,
+        a.organisation as organisation, t.admin_id as administrator_id, tutor_id, is_active'
+    ).joins(
+        "JOIN (#{Tutor.select(
+            'infos.name as tutor_name, infos.last_name as tutor_last_name,
+            tutors.id as id, tutors.administrator_id as admin_id'
+        ).joins('JOIN infos on info_id = infos.id').to_sql}) as t on tutor_id = t.id"
+    ).joins(
+        "JOIN (#{Administrator.select(
+            'infos.name as admin_name, infos.last_name as admin_last_name,
+            administrators.id as a_id, administrators.organisation'
+        ).joins('JOIN infos on info_id = infos.id').to_sql}) as a on t.admin_id = a.a_id"
+    )
+  end
+
   private :setup_fields
 end

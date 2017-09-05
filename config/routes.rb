@@ -1,8 +1,5 @@
 Rails.application.routes.draw do
 
-  get 'search' => 'search#search_result'
-  post '*search' => 'search#submit_search'
-
   #Concerns
   concern :group_result do
     resources :result_of_tests, only: [:index], path: 'results', param: :result_id
