@@ -39,12 +39,9 @@ class AdministratorsController < ApplicationController
   
   #Page with list of admins
   def index
-    administrators = Administrator.where(is_super: false).order(:organisation)
-    @admins = []
-    administrators.each do |admin|
-      @admins << admin.show_short #Getting short info
-    end
-    @admins = Kaminari.paginate_array(@admins).page(params[:page]).per(5)
+    @q = Administrator.all_administrators.ransack(params[:q])
+    @admins = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
+    @admins = @admins.page(params[:page]).per(5)
   end
 
   #Edit profile page

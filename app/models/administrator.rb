@@ -52,4 +52,12 @@ class Administrator < ActiveRecord::Base
         |t| ['%{org}: %{lname} %{name}'%{org: t.organisation, lname: t.info.last_name, name: t.info.name},t.id]
     }
   end
+
+  def self.all_administrators
+    select(
+        'a.name as name, a.last_name as last_name, administrators.id as id,
+        organisation, organisation_address'
+    ).joins('JOIN infos as a on administrators.info_id = a.id').where(is_super: false)
+  end
+  ransack_alias :full_name, :info_last_name_or_info_name
 end
