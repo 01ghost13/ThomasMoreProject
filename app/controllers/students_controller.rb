@@ -98,7 +98,6 @@ class StudentsController < ApplicationController
       redirect_to current_user and return
     end
     @is_super_adm = is_super?
-    @students = []
     if @is_super_adm
       @q = Student.all_students.ransack(params[:q])
     elsif session[:user_type] == 'tutor'

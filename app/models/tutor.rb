@@ -46,4 +46,23 @@ class Tutor < ActiveRecord::Base
         |t| ['%{mail}: %{lname} %{name}'%{mail: t.info.mail, lname: t.info.last_name, name: t.info.name},t.id]
     }
   end
+
+  def self.all_tutors
+    select(
+        'tutors.id as tutors_id, t.last_name as last_name, t.name as name,
+        a.admin_name as admin_name, a.admin_last_name as admin_last_name,
+        a.organisation as organisation, administrator_id'
+    ).joins('JOIN infos as t on tutors.info_id = t.id').
+    joins("JOIN (#{Administrator.select(
+            'administrators.id, infos.name as admin_name,
+            infos.last_name as admin_last_name, administrators.organisation'
+        ).joins('JOIN infos on administrators.info_id = infos.id').to_sql}) as a on a.id = tutors.administrator_id"
+    )
+  end
+
+  def self.tutors_of_administrator(admin_id)
+    where(administrator_id: admin_id)
+  end
+
+  ransack_alias :full_name, :info_last_name_or_info_name
 end

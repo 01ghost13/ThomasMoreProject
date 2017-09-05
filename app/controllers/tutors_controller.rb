@@ -60,12 +60,13 @@ class TutorsController < ApplicationController
     end
     @is_super_adm = is_super?
     #Loading all tutors if super admin
-    tutors = @is_super_adm ? Tutor.all : Tutor.where(administrator_id: session[:type_id])
-    @tutors = []
-    tutors.order(:created_at).reverse_order.each do |tutor|
-      @tutors << tutor.show_short
+    if @is_super_adm
+        @q = Tutor.all_tutors.ransack(params[:q])
+      else
+        @q = Tutor.tutors_of_administrator(session[:type_id]).ransack(params[:q])
     end
-    @tutors = Kaminari.paginate_array(@tutors).page(params[:page]).per(5)
+    @tutors = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
+    @tutors = @tutors.page(params[:page]).per(5)
   end
 
   #Profile page
