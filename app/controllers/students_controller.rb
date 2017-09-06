@@ -201,7 +201,7 @@ class StudentsController < ApplicationController
 
   #Callback for checking deactivated students
   def check_deactivated
-    #TODO BUG WITH @User = nil
+    @user = Student.find(params[:id])
     if !is_super? && @user.date_off != nil
       flash[:warning] = "You can't edit deactivated student!"
       redirect_back fallback_location: current_user
