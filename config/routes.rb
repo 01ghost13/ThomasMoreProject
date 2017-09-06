@@ -5,11 +5,6 @@ Rails.application.routes.draw do
     resources :result_of_tests, only: [:index], path: 'results', param: :result_id
   end
 
-  #TODO Group results pages
-  concern :graph_pages do
-    get 'group_results' => 'statistics#group_results'
-  end
-
   #Routes
   #Login pages
   root 'sessions#new'
@@ -24,9 +19,11 @@ Rails.application.routes.draw do
   #Pages for working with emails
   get 'confirmation_email' => 'mail#confirmation_email'
   get 'send_confirmation_again' => 'mail#send_confirmation_again'
+
   #form for reset password
   get 'reset_password' => 'mail#reset_password'
   post 'reset_password' => 'mail#submit_reset_password'
+
   #form for sending reset-link to email
   get 'forgot_password' => 'mail#forgot_password'
   post 'forgot_password' => 'mail#submit_forgot_password'
