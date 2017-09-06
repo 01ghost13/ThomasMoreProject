@@ -29,10 +29,10 @@ class TestsController < ApplicationController
       q.is_tutorial = false
       @picture << Picture.find(q.picture_id)
     end
-    unless params[:questions_attributes]
+    unless params[:test][:questions_attributes]
       @test.errors.add(:questions, :invalid, message: "Test can't be empty")
     end
-    if params[:questions_attributes] && @test.save
+    if params[:test][:questions_attributes] && @test.save
       flash[:success] = 'Test created!'
       redirect_to tests_path
     else
@@ -56,14 +56,24 @@ class TestsController < ApplicationController
     @picture = [@dummy] if @picture.empty?
   end
 
+  def all_questions_destroy?(questions)
+    questions.each_key do |key|
+      if questions[key]['_destroy'] != '1'
+        return false
+      end
+    end
+    true
+  end
+
   #Action of editing tests
   def update
     @test = Test.find(params[:id])
-    if params[:questions_attributes] && @test.update(test_params)
+    empty_list = all_questions_destroy?(params[:test][:questions_attributes])
+    if !params[:test].nil? && !empty_list && @test.update(test_params)
       flash[:success] = 'Test updated!'
       redirect_to tests_path
     else
-      unless params[:questions_attributes]
+      if params[:test].nil? || empty_list
         @test.errors.add(:questions, :invalid, message: "Test can't be empty")
       end
       @picture = []
