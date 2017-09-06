@@ -16,24 +16,28 @@ class Administrator < ActiveRecord::Base
   accepts_nested_attributes_for :info
   accepts_nested_attributes_for :tutors
 
+  #returns list of admins for viewing
   def self.admins_list
-    admins = Administrator.where(is_super: false).order(:organisation).map { 
+    Administrator.where(is_super: false).order(:organisation).map {
       |t| ['%{org}: %{lname} %{name}'%{org: t.organisation, lname: t.info.last_name, name: t.info.name},t.id]
       }
   end
-  
+
+  #Setups default fields
   def setup_fields
     self.is_super = false
     true
   end
-  
+
+  #Full information about admin
   def show
     user_info = self.info.show
     user_info[:organisation] = self.organisation
     user_info[:organisation_address] = self.organisation_address
     user_info
   end
-  
+
+  #Short information about admin
   def show_short
     user_info = self.info.show_short
     user_info[:organisation] = self.organisation
@@ -42,9 +46,18 @@ class Administrator < ActiveRecord::Base
     user_info
   end
 
+  #Returns other administrators for viewing in option-html-tag
   def other_administrators
-    administrators = Administrator.where.not(['id = ? or is_super = ?',self.id, true]).order(:organisation).map {
+    Administrator.where.not(['id = ? or is_super = ?',self.id, true]).order(:organisation).map {
         |t| ['%{org}: %{lname} %{name}'%{org: t.organisation, lname: t.info.last_name, name: t.info.name},t.id]
     }
   end
+
+  def self.all_administrators
+    select(
+        'a.name as name, a.last_name as last_name, administrators.id as id,
+        organisation, organisation_address'
+    ).joins('JOIN infos as a on administrators.info_id = a.id').where(is_super: false)
+  end
+  ransack_alias :full_name, :info_last_name_or_info_name
 end

@@ -1,6 +1,19 @@
 // Place all the styles related to the Tests controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+@mixin add_hover($offset_x, $offset_y, $blur, $color)
+{
+  filter:
+          drop-shadow($offset_x $offset_y $blur $color)
+          drop-shadow(-1*$offset_x $offset_y $blur $color)
+          drop-shadow($offset_x -1*$offset_y $blur $color)
+          drop-shadow(-1*$offset_x -1*$offset_y $blur $color);
+  -webkit-filter:
+          drop-shadow($offset_x $offset_y $blur $color)
+          drop-shadow(-1*$offset_x $offset_y $blur $color)
+          drop-shadow($offset_x -1*$offset_y $blur $color)
+          drop-shadow(-1*$offset_x -1*$offset_y $blur $color);
+}
 body {
   padding-top: 0 !important;
 }
@@ -15,3 +28,18 @@ body {
   background-color: #99FFCC;
 }
 
+img#btn_exit:hover{
+  @include add_hover(1px, 1px, 1px, red);
+}
+img#btn_td:hover{
+  @include add_hover(2px, 2px, 3px, red);
+}
+img#btn_tu:hover {
+  @include add_hover(2px, 2px, 3px, green);
+}
+img#btn_qm:hover{
+  @include add_hover(2px, 2px, 3px, gray);
+}
+img#btn_back:hover{
+  @include add_hover(2px, 2px, 3px, gray);
+}

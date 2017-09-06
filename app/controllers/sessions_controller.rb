@@ -1,9 +1,12 @@
 class SessionsController < ApplicationController
+  #Home page
   def new
     if logged_in?
       redirect_to current_user
     end
   end
+
+  #Action for log in
   def create
     #Checking group of search
     if params[:session][:is_student] == '1'
@@ -13,11 +16,7 @@ class SessionsController < ApplicationController
     end
     #Checking log and pass
     if user && user.authenticate(params[:session][:password])
-      if params[:session][:is_student] == '0' &&  user.is_mail_confirmed == false
-        flash.now[:warning] = 'Your mail hasnt confirmed yet.'
-        render :new
-        return
-      end
+      #if Student was deactivated
       if params[:session][:is_student] == '1' && user.date_off != nil
         flash.now[:warning] = 'Your profile was deactivated!'
         render :new
@@ -37,7 +36,8 @@ class SessionsController < ApplicationController
       render :new
     end
   end
-  
+
+  #Action for log out
   def destroy
     log_out
     redirect_to root_url

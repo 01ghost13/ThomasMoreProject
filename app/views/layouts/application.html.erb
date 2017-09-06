@@ -16,6 +16,11 @@
     <nav>
     	<ul class="nav navbar-nav navbar-right">
     	<% if logged_in? %>
+        <% if session[:user_type] != 'student' %>
+          <% unless current_user.info.is_mail_confirmed %>
+            <li><%= link_to 'Send confirmation again', send_confirmation_again_path(id: session[:user_id]) %></li>
+          <% end %>
+        <% end %>
     		<%= render "#{session[:user_type].pluralize}/settings" %>
     	<% else %>
     		<li><%= link_to 'Log in', login_path %></li>
@@ -25,7 +30,7 @@
     		<%= link_to 'About', about_path %>
     	</li>
     	<li>
-    		<%= link_to 'Contacts', contacts_path %>
+    		<!--<%= link_to 'Contacts', contacts_path %>-->
     	</li>
     	</ul>
     </nav>

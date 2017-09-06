@@ -1,8 +1,9 @@
 class StaticPagesController < ApplicationController
+  #Log in page
   def log_in
-
   end
 
+  #Page about project
   def about
     added = %w(
     All\ pictures\ should\ have\ text\ description
@@ -17,13 +18,13 @@ class StaticPagesController < ApplicationController
     Table\ with\ results
     Switching\ off\ student\ accounts\ instead\ of\ deleting\ from\ DB
     Creation\ of\ tests,\ interests
+    Protection\ from\ spam-bots
+    Confirmation\ of\ registration\ via\ e-mail
+    Recovering\ of\ account\ via\ e-mail
+    Highlighting\ of\ buttons
     )
     will_be_added = %w(
     Graph\ with\ results
-    Protection\ from\ spam-bots
-    Highlighting\ of\ buttons
-    Confirmation\ of\ registration\ via\ e-mail
-    Recovering\ of\ account\ via\ e-mail
     Student\ and\ teacher\ search\ page
     Export\ to\ excel
     Sound\ description\ of\ images,\ for\ people\ with\ poor\ eyesight
@@ -37,7 +38,7 @@ class StaticPagesController < ApplicationController
     end
   end
 
+  #Page with contacts
   def contacts
-
   end
 end

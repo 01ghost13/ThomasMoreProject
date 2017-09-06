@@ -18,7 +18,7 @@
         <td>Description</td>
         <td>Count of questions</td>
         <% if params[:id].nil? %>
-            <td>Show</td>
+            <!--<td>Show</td>-->
             <td>Edit</td>
             <td>Delete</td>
         <% else %>
@@ -32,7 +32,7 @@
 				<td><h4><%= test[:description] %></h4></td>
 				<td><h4><%= test[:question_count] %></h4></td>
         <% if params[:id].nil? %>
-            <td><%= link_to('Show', test_path(test[:id]), class: 'btn btn-default') %></td>
+            <!--<td><%= link_to('Show', test_path(test[:id]), class: 'btn btn-default') %></td>-->
             <td><%= link_to('Edit', edit_test_path(test[:id]), class: 'btn btn-warning') %></td>
             <td><%= link_to('Delete', test_path(test[:id]), method: :delete,
                             data: { confirm: "Deleting will destroy all results of this test.\n Are you sure?" },

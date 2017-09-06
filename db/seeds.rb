@@ -1,14 +1,8 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
-##############################################################################################################################################
 #Creating of administrator
-admInfo = Info.create(name: 'Jan', last_name: 'Dekelver', password: '12345', phone: '89012345678', mail: 'test@mail.com', is_mail_confirmed: true)
-superAdm = Administrator.create(info_id: admInfo.id, organisation: 'Administrator', is_super: true, organisation_address: "Some address")
+admInfo = Info.create(name: 'Jan', last_name: 'Dekelver', password: '12345', phone: '89012345678', mail: 'test@mail.com')
+admInfo.is_mail_confirmed = true
+admInfo.save
+superAdm = Administrator.create(info_id: admInfo.id, organisation: 'Administrator', organisation_address: "Some address")
 superAdm.is_super = true
 superAdm.save
 #Creating of modes
@@ -70,9 +64,9 @@ if Rails.env.production?
   pictures = []
   (0..11).each do |i|
     (0..4).each do |j|
-      #puts "app/Pictures/#{picture_names[i]}/#{picture_names[i]} (#{j+1}).jpg"
+
       file = File.open("app/Pictures/#{picture_names[i]}/#{picture_names[i]}_#{j+1}.jpg")
-      #puts "#{interests[i].name} #{i} #{j} #{i*picture_names.count + j} #{titles[i*picture_names.count + j]}"
+
       pic = Picture.create!(description: titles[i*5 + j],
                             image: file)
       pictures << pic
@@ -87,10 +81,14 @@ else
   ##############################################
 #Creating of seed models...
 #LAdm
-  LadmInfo = Info.create(name: 'LocalAdm', last_name: 'TestLastNamr', password: '020695', phone: '89023853401', mail: 'another@mail.com', is_mail_confirmed: true)
+  LadmInfo = Info.create(name: 'LocalAdm', last_name: 'TestLastNamr', password: '020695', phone: '89023853401', mail: 'another@mail.com')
+  LadmInfo.is_mail_confirmed = true
+  LadmInfo.save
   lAdm = Administrator.create(info_id: LadmInfo.id, organisation: 'Some organisation', organisation_address: "Other address")
 #Tutors
-  tutorInfo = Info.create(name: 'Dmitry', last_name: 'Skvaznikov', password: '020695', phone: '89023853401', mail: 'some@mail.com', is_mail_confirmed: true)
+  tutorInfo = Info.create(name: 'Dmitry', last_name: 'Skvaznikov', password: '020695', phone: '89023853401', mail: 'some@mail.com')
+  tutorInfo.is_mail_confirmed = true
+  tutorInfo.save
   first_tutor = Tutor.create(administrator_id: lAdm.id, info_id: tutorInfo.id)
 
 #Students

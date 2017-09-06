@@ -1,13 +1,23 @@
 <% provide(:title,"Tutors List") %>
-<h1>All tutors</h1>
+<h1 class="col-sm-12">All tutors</h1>
+<div>
+  <%= search_form_for @q do |f|%>
+      <div class="form-group col-sm-4">
+        <%= f.label :full_name_cont, 'Search', class: 'sr-only' %>
+        <%= f.search_field :full_name_cont, {placeholder: 'Enter name or last name here...',
+                                             class: 'form-control'} %>
+      </div>
+      <%= f.submit 'Search', class: 'btn btn-primary col-sm-1' %>
+  <% end %>
+</div>
 <div class="col-sm-12">
 	<table class="table table-hover">
     <thead>
     <tr>
-      <td>Last name</td>
-      <td>Name</td>
-      <td>Organisation</td>
-      <td>Header</td>
+      <td><%= sort_link @q, :last_name, 'Last name'%></td>
+      <td><%= sort_link @q, :name, 'Name' %></td>
+      <td><%= sort_link @q, :organisation, 'Organisation' %></td>
+      <td><%= sort_link @q, :admin_name, 'Administrator' %></td>
       <td>Profile</td>
       <td>Edit</td>
       <td>Delete</td>
@@ -17,13 +27,13 @@
 			<tr>
 				<td><h4><%= tutor[:last_name].titleize %></h4></td>
         <td><h4><%= tutor[:name].titleize %></h4></td>
-				<td><h4><small><%= tutor[:administrator][:organisation].titleize %></small></h4></td>
+				<td><h4><small><%= tutor[:organisation].titleize %></small></h4></td>
 				<td><h4><small>
-          <%= link_to "#{tutor[:administrator][:last_name].titleize} #{tutor[:administrator][:name].titleize}",
-                      administrator_path(tutor[:administrator][:id]) %></small></h4></td>
-        <td><%= link_to('Profile', tutor_path(tutor[:id]), class: 'btn btn-default') %></td>
-        <td><%= link_to('Edit', edit_tutor_path(tutor[:id]), class: 'btn btn-warning') %></td>
-        <td><%= link_to('Delete', delete_tutor_path(tutor[:id]), class: 'btn btn-danger') %></td>
+          <%= link_to "#{tutor[:admin_last_name].titleize} #{tutor[:admin_name].titleize}",
+                      administrator_path(tutor[:administrator_id]) %></small></h4></td>
+        <td><%= link_to('Profile', tutor_path(tutor[:tutors_id]), class: 'btn btn-default') %></td>
+        <td><%= link_to('Edit', edit_tutor_path(tutor[:tutors_id]), class: 'btn btn-warning') %></td>
+        <td><%= link_to('Delete', delete_tutor_path(tutor[:tutors_id]), class: 'btn btn-danger') %></td>
 			</tr>
 		<% end %>
 	</table>

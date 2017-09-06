@@ -48,7 +48,8 @@
 			<div class="row col-sm-offset-2 form-group">
 				<%= label_tag :administrator_id, "Choose local administrator", class: "col-sm-2 control-label" %>
 				<div class="col-sm-4">
-					<%= select_tag :administrator_id, options_for_select(@admins,@admins_cur), {id: 'administrator_selection', class: 'form-control'}  %><br/>
+					<%= select_tag :administrator_id, options_for_select(@admins,@admins_cur),
+                         {id: 'administrator_selection', class: 'form-control'}  %><br/>
 				</div>
 			</div>
 		<% end %>
@@ -56,7 +57,8 @@
 		<div class="row col-sm-offset-2 form-group">
 			<%= student_form.label :tutor_id, "Choose Tutor", class: "col-sm-2 control-label" %>
 			<div class="col-sm-4">
-				<%= student_form.select :tutor_id, options_for_select(@tutors,@tutors_cur), {} , {id: 'tutor_selection', class: 'form-control'}%>
+				<%= student_form.select :tutor_id, options_for_select(@tutors,@tutors_cur), {} ,
+                                {id: 'tutor_selection', class: 'form-control'}%>
 			</div>
 		</div>
 	<% end %>

@@ -10,11 +10,13 @@ class ResultOfTest < ActiveRecord::Base
   validates :test,:schooling,:student, presence: true
   validates :was_in_school, exclusion: { in: [nil] }
 
+  #Setups default fields
   def setup_fields
     self.is_ended = false
     self.is_outdated = false
     true
   end
+
   #Returns the question after last answered
   def last_question
     questions = QuestionResult.order(:number).where(result_of_test_id: self.id)
@@ -43,4 +45,26 @@ class ResultOfTest < ActiveRecord::Base
     result_info[:is_outdated] = self.is_outdated
     result_info
   end
+
+  def show_time_to_answer
+    timeline = {}
+    results = QuestionResult.order(:number).where(result_of_test_id: self.id)
+    results.each do |r|
+      timeline[r.number] = r.end - r.start
+    end
+    timeline
+  end
+
+  def show_timeline
+    timeline = []
+    duration = 0
+    results = QuestionResult.order(:number).where(result_of_test_id: self.id)
+    results.each do |r|
+      timeline << [r.human_was_checked, duration, duration + (r.end - r.start)]
+      duration += r.end - r.start
+    end
+    timeline
+  end
+
+  private :setup_fields
 end

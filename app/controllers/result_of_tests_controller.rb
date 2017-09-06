@@ -1,19 +1,23 @@
 class ResultOfTestsController < ApplicationController
-  #TODO: Add group stats
-  before_action :check_login
+  before_action :result_exist_callback, only: [:edit, :update, :show, :destroy]
+  before_action :student_exist_callback
+  before_action :check_log_in
   before_action :check_rights, only: [:show, :index]
   before_action :check_admin_rights, except: [:show, :index]
 
+  #Edit results page
   def edit
     #Loading res info
     @result = ResultOfTest.find(params[:result_id])
     @user = @result
+    #Only finished results are editable
     unless @result.is_ended
 	    flash[:warning] = 'Test is not finished'
       redirect_back fallback_location: student_path(params[:student_id])
     end
   end
 
+  #Action for updating results
   def update
     #Loading res info
     @result = ResultOfTest.find(params[:result_id])
@@ -26,15 +30,20 @@ class ResultOfTestsController < ApplicationController
     end
   end
 
+  #Page of result
   def show
     #Loading result
     result = ResultOfTest.find(params[:result_id])
+
+    #If test was changed, results are outdated
     if result.is_outdated?
-      flash.now[:warning] = 'The test was edited. Points for interests are outdated!'
+      flash.now[:danger] = 'The test was edited. Points for interests are outdated!'
     end
-    #Loading q results
+
+    avg_time_per_interest = {}
+    #Loading question results
     q_res  = result.question_results
-    q_test = Question.where(test_id: result.test_id)
+    q_test = Question.where(test_id: result.test_id) #questions of test
     #Loading all interests
     interests = {}
     interests_max = {}
@@ -51,12 +60,17 @@ class ResultOfTestsController < ApplicationController
         if interests[interest].nil?
           interests_max[interest] = related_i[interest]
           interests[interest] = 0
+          avg_time_per_interest[interest] = r.end - r.start
           interests[interest] = related_i[interest] if r.was_checked == 3 #Was thumbs up
         else
           interests_max[interest] += related_i[interest]
           interests[interest] += related_i[interest] if r.was_checked == 3
+          avg_time_per_interest[interest] += r.end - r.start
         end
       end
+    end
+    avg_time_per_interest.each_key do |k|
+      avg_time_per_interest[k] /= interests.count
     end
     student = Student.find(result.student_id)
     #Sorting
@@ -64,10 +78,20 @@ class ResultOfTestsController < ApplicationController
     @list_timestamps = timestamps
     @list_interests_max = interests_max
     @student = student.code_name.titleize
-    @res = [result.schooling.name, result.was_in_school]
+    @res = [result.schooling.name, result.was_in_school, result.show_time_to_answer, avg_time_per_interest,
+    result.show_timeline]
+
+    respond_to do |format|
+      format.html
+      format.xlsx {
+        response.headers['Content-Disposition'] = "attachment; filename=\"result of #{@student}.xlsx\""
+      }
+    end
   end
-  
+
+  #List of results
   def index
+    #Loading test results
     results = ResultOfTest.where(student_id: params[:student_id]).order(:created_at).reverse_order
     student = Student.find(params[:student_id])
     @code_name = student.code_name
@@ -76,8 +100,12 @@ class ResultOfTestsController < ApplicationController
       @results << result.show_short
     end
     @results = Kaminari.paginate_array(@results).page(params[:page]).per(5)
+    #Preparing graphs
+    @interest_points = student.get_student_interests[:points_interests]
+    @avg_time = student.get_student_interests[:avg_answer_time]
   end
 
+  #Action for deleting results
   def destroy
     result = ResultOfTest.find(params[:result_id])
     if result.destroy
@@ -89,37 +117,42 @@ class ResultOfTestsController < ApplicationController
     end
   end
 
+  ##########################################################
+  #Private methods
   private
-    def result_params
-      params.require(:result_of_test).permit(question_results_attributes: [:was_checked,:id])
+  def result_params
+    params.require(:result_of_test).permit(question_results_attributes: [:was_checked,:id])
+  end
+  def check_rights
+    user = Student.find(params[:student_id])
+    is_super_adm = is_super?
+    is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
+    is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
+    @i_am_student = session[:user_type] == 'student'
+    is_i = @i_am_student && params[:student_id].to_i == session[:type_id]
+    unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
+      flash[:danger] = 'You have no access to this page.'
+      redirect_to current_user
     end
-    def check_login
-      unless logged_in?
-        flash[:warning] = 'Only registrated people can see this page.'
-        #Redirecting to home page
-        redirect_to :root 
-      end
+  end
+  def check_admin_rights
+    student = Student.find(params[:student_id])
+    is_super_adm = is_super?
+    is_my_student = session[:user_type] == 'tutor' && student.tutor_id == session[:type_id]
+    is_student_of_my_tutor = session[:user_type] == 'administrator' && student.tutor.administrator_id == session[:type_id]
+    unless is_super_adm || is_my_student || is_student_of_my_tutor
+      flash[:danger] = 'You have no access to this page.'
+      redirect_to current_user
     end
-    def check_rights
-      user = Student.find(params[:student_id])
-      is_super_adm = is_super?
-      is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
-      is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
-      @i_am_student = session[:user_type] == 'student'
-      is_i = @i_am_student && params[:student_id].to_i == session[:type_id]
-      unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
-        flash[:warning] = 'You have no access to this page.'
-        redirect_to current_user
-      end
+  end
+  def result_exist_callback
+    unless check_exist(params[:result_id], ResultOfTest)
+      redirect_to current_user
     end
-    def check_admin_rights
-      student = Student.find(params[:student_id])
-      is_super_adm = is_super?
-      is_my_student = session[:user_type] == 'tutor' && student.tutor_id == session[:type_id]
-      is_student_of_my_tutor = session[:user_type] == 'administrator' && student.tutor.administrator_id == session[:type_id]
-      unless is_super_adm || is_my_student || is_student_of_my_tutor
-        flash[:warning] = 'You have no access to this page.'
-        redirect_to current_user
-      end
+  end
+  def student_exist_callback
+    unless check_exist(params[:student_id], Student)
+      redirect_to current_user
     end
+  end
 end

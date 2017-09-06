@@ -12,6 +12,7 @@ class Question < ActiveRecord::Base
 
   private
     def on_destroy
+      #Changes number of questions
       Question.where(['test_id = ? and number > ?', self.test_id, self.number]).each do |question|
         question.number -= 1
         question.save

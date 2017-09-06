@@ -19,8 +19,9 @@ class Test < ActiveRecord::Base
     test_info
   end
   private
-    def set_outdated
-      #Setting results as outdated
-      ResultOfTest.where(test_id: self.id).update_all(is_outdated: true)
-    end
+  #Sets results outdated if Test was changed
+  def set_outdated
+    #Setting results as outdated
+    ResultOfTest.where(test_id: self.id).update_all(is_outdated: true)
+  end
 end

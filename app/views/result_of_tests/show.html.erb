@@ -1,4 +1,5 @@
 <% provide(:title,"Result") %>
+<%= javascript_include_tag 'https://www.gstatic.com/charts/loader.js' %>
 <div class= "row">
 	<h2>Results of <%= link_to @student, student_path(params[:student_id]) %></h2>
 </div>
@@ -9,12 +10,20 @@
 <div class= "row">
   <h3>Attending at the moment of testing: <%= t @res[1].class %></h3>
 </div>
-
+<!-- Add designed btn -->
 <div class="row">
+  <%= link_to student_result_of_test_path(params[:student_id], params[:result_id], format: :xlsx),
+              data: {turbolinks: false}, class: 'btn btn-default' do  %>
+    <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>&#8194;Download spreadsheet
+  <% end %>
+
+</div>
+<div class="row">
+  <!-- Table Questions -->
 	<div class="col-sm-6 row">
-		<h1>Questions</h1>
-		<table class="table table-hover">
+		  <table class="table table-hover">
       <thead>
+      <h1>Questions</h1>
         <tr>
           <td><h4>#</h4></td>
           <td><h4>Start</h4></td>
@@ -31,8 +40,8 @@
               <tr>
           <% end %>
 					<td class="col-sm-1"><h4><%= i+1 %></h4></td>
-					<td class="col-sm-3"><h4><small><%= element[:start].to_s(:short) %></small></h4></td>
-					<td class="col-sm-3"><h4><small><%= element[:end].to_s(:short) %></small></h4></td>
+					<td class="col-sm-3"><h4><small><%= date_to_local(element[:start]) %></small></h4></td>
+					<td class="col-sm-3"><h4><small><%= date_to_local(element[:end]) %></small></h4></td>
 					<td class="col-sm-2"><h4><small><%= '%0.2f s'%[element[:end] - element[:start]] %></small></h4></td>
 					<td class="col-sm-1"><h4><small><%= t element[:was_rewrited].class %></small></h4></td>
 					<td class="col-sm-3"><h4><small>
@@ -47,30 +56,78 @@
 				</tr>
 			<% end %>
 		</table>
-
-    <div class="cols-sm-4">
-      <% unless @i_am_student %>
-          <%= link_to("Edit results", edit_student_result_of_test_path(params[:student_id],params[:result_id]), class: "btn btn-warning") %>
-      <% else %>
-          <h4>If you want to edit the results, ask your tutor.</h4>
-      <% end %>
-    </div>
 	</div>
-	<div class="col-sm-offset-2 col-sm-4">
-		<h1>Interests points</h1>
-		<table class="table table-hover">
+  <!-- Interests points -->
+  <div class="col-sm-offset-1 col-sm-5">
+    <table class="table table-hover">
       <thead>
-        <tr>
-          <td><h4>Interest</h4></td>
-          <td><h4>Earned points</h4></td>
-        </tr>
+      <h1>Interests points</h1>
+      <tr>
+        <td><h4>Interest</h4></td>
+        <td><h4>Earned points</h4></td>
+      </tr>
       </thead>
-			<% @list_interests.each do |element|%>
-				<tr>
-					<td><h4><small><%= element[0].to_s.humanize %></small></h4></td>		
-					<td><h4><small><%= element[1] %> of <%= @list_interests_max[element[0]] %></small></h4></td>
-				</tr>
-			<% end %>
-		</table>
-	</div>
+      <% @list_interests.each do |element|%>
+          <tr>
+            <td><h4><small><%= element[0].to_s.humanize %></small></h4></td>
+            <td><h4><small><%= element[1] %> of <%= @list_interests_max[element[0]] %></small></h4></td>
+          </tr>
+      <% end %>
+    </table>
+  </div>
 </div>
+
+<!-- Edit btn -->
+<div class="row col-sm-4">
+  <% unless @i_am_student %>
+      <%= link_to("Edit results", edit_student_result_of_test_path(params[:student_id],params[:result_id]), class: "btn btn-warning") %>
+  <% else %>
+      <h4>If you want to edit the results, ask your tutor.</h4>
+  <% end %>
+</div>
+
+<!-- Graphs -->
+<div class="row">
+  <div class="col-sm-12">
+    <ul class="nav nav-tabs">
+      <li class="active">
+        <a href="#answer_time" data-toggle="tab">Time of answer</a>
+      </li>
+      <li>
+        <a href="#interests_points" data-toggle="tab">Interests points</a>
+      </li>
+      <li>
+        <a href="#avg_interests" data-toggle="tab">Average answer time to interest field</a>
+      </li>
+      <li>
+        <a href="#timeline"  data-toggle="tab">Timeline</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane fade in active" id="answer_time">
+        <%= column_chart @res[2], xtitle: 'Question number', ytitle: 'Time of answer(sec)', download: true %>
+      </div>
+      <div class="tab-pane fade" id="avg_interests">
+        <%= column_chart @res[3], id: 'avg_interests_chart', xtitle: 'Interest', ytitle: 'Avg time of answer(sec)',
+                         download: true, discrete: true %>
+      </div>
+      <div class="tab-pane fade" id="interests_points">
+        <%= pie_chart @list_interests, download: true %>
+      </div>
+      <div class="tab-pane fade" id="timeline">
+        <%= timeline @res[4], id: 'timeline_chart', download: true %>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Fix of bug with not showing titles of OX-->
+<script>
+    $('a[href="#avg_interests"]').on('shown.bs.tab', function() {
+        var chart = Chartkick.charts['avg_interests_chart'];
+        chart.redraw();
+    });
+    $('a[href="#timeline"]').on('shown.bs.tab', function() {
+        var chart = Chartkick.charts['timeline_chart'];
+        chart.redraw();
+    });
+</script>

@@ -1,5 +1,6 @@
 <% provide(:title,'Results of test') %>
 <h1>All results of <%= link_to @code_name, student_path(params[:student_id]) %></h1>
+<!-- Results index -->
 <div class="col-sm-12">
   <table class="table table-hover">
     <thead>
@@ -23,9 +24,9 @@
       <% end %>
         <td><h4><%= link_to "#{result[:name_of_test].titleize}",
                             test_path(result[:test_id]) %></h4></td>
-        <td><h4><%= result[:date_of_start] %></h4></td>
+        <td><h4><%= date_to_local result[:date_of_start] %></h4></td>
         <td><h4><%= t result[:is_ended].class %></h4></td>
-        <td><h4><%= result[:date_of_end] %></h4></td>
+        <td><h4><%= date_to_local result[:date_of_end] %></h4></td>
         <td><%= link_to('Result', student_result_of_test_path(params[:student_id], result[:id]),
                         class: 'btn btn-default') %></td>
         <% unless session[:user_type] == 'student' %>
@@ -42,3 +43,32 @@
 <div class="col-sm-12">
   <%= paginate @results %>
 </div>
+<!-- Graphs -->
+<div class="row">
+  <div class="col-sm-12">
+    <ul class="nav nav-tabs">
+      <li class="active">
+        <a href="#interests_points" data-toggle="tab">Interests points</a>
+      </li>
+      <li>
+        <a href="#avg_interests" data-toggle="tab">Average answer time to interest field</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane fade in active" id="interests_points">
+        <%= pie_chart @interest_points, download: true %>
+      </div>
+      <div class="tab-pane fade" id="avg_interests">
+        <%= column_chart @avg_time, id: 'avg_interests_chart', xtitle: 'Interest', ytitle: 'Avg time of answer(sec)',
+                         download: true, discrete: true %>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Fix of bug with not showing titles of OX-->
+<script>
+    $('a[href="#avg_interests"]').on('shown.bs.tab', function() {
+        var chart = Chartkick.charts['avg_interests_chart'];
+        chart.redraw();
+    });
+</script>
