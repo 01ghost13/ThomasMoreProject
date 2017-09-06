@@ -67,8 +67,9 @@ class Student < ActiveRecord::Base
 
   def get_student_interests(test_id = nil)
     table = execute_sql_statement(
-        "SELECT interests.name, was_checked, earned_points, start, end, q.number, is_tutorial
-        FROM picture_interests as p_i, question_results as q_res, questions as q, result_of_tests as res
+        "SELECT interests.name, was_checked, earned_points, q_res.start as \"start\",
+                q_res.end as \"end\", q.number, is_tutorial
+        FROM question_results as q_res, questions as q, result_of_tests as res, picture_interests as p_i
         LEFT JOIN interests on interests.id = p_i.interest_id
         WHERE p_i.picture_id = q.picture_id AND
               q_res.question_id = q.id AND
