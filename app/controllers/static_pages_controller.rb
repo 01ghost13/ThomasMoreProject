@@ -22,12 +22,11 @@ class StaticPagesController < ApplicationController
     Confirmation\ of\ registration\ via\ e-mail
     Recovering\ of\ account\ via\ e-mail
     Highlighting\ of\ buttons
+    Graph\ with\ results
+    Student,\ teacher,\ admin\ search\ page
+    Export\ to\ excel
     )
     will_be_added = %w(
-    Graph\ with\ results
-    Student\ and\ teacher\ search\ page
-    Export\ to\ excel
-    Sound\ description\ of\ images,\ for\ people\ with\ poor\ eyesight
     )
     @arr = {}
     added.each do |el|
