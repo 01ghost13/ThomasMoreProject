@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
     if class_ref.exists?(id)
       true
     else
-      flash[:danger] = 'User does not exist.'
+      flash[:danger] = "This #{class_ref.to_s.downcase} does not exist."
       false
     end
   end
