@@ -8,14 +8,14 @@ class Picture < ActiveRecord::Base
                     path: ':class/:style/:id_:hash.:extension',
                     url: '/:class/:style/:id_:hash.:extension',
                     hash_secret: 'TWILIGHT_IS_BEST_PONY',
-                    styles: {thumb: ['40%']},
+                    styles: {thumb: ['300x300>']},
                     storage: :cloudinary if Rails.env.production?
   #Settings for dev
   has_attached_file :image,
                     path: ':rails_root/public/system/:class/:style/:id_:hash.:extension',
                     url: '/system/:class/:style/:id_:hash.:extension',
                     hash_secret: 'TWILIGHT_IS_BEST_PONY',
-                    styles: {thumb: ['40%']} if Rails.env.development?
+                    styles: {thumb: ['300x300>']} if Rails.env.development?
 
 
   validates :description, presence: true, length: {in: 5..50}

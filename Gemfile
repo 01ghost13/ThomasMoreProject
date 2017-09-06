@@ -65,6 +65,8 @@ end
 group :production do
   gem 'pg'
   gem 'rails_12factor'
+  #gem for adding pictures
+  #https://github.com/GoGoCarl/paperclip-cloudinary
   gem 'paperclip-cloudinary'
 end
 
