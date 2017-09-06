@@ -80,6 +80,13 @@ class ResultOfTestsController < ApplicationController
     @student = student.code_name.titleize
     @res = [result.schooling.name, result.was_in_school, result.show_time_to_answer, avg_time_per_interest,
     result.show_timeline]
+
+    respond_to do |format|
+      format.html
+      format.xlsx {
+        response.headers['Content-Disposition'] = "attachment; filename=\"result of #{@student}.xlsx\""
+      }
+    end
   end
 
   #List of results
@@ -109,6 +116,7 @@ class ResultOfTestsController < ApplicationController
       render :index
     end
   end
+
   ##########################################################
   #Private methods
   private
