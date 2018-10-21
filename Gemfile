@@ -22,7 +22,7 @@ gem 'sass-rails', '>= 5.0.7'
 gem 'bootstrap-sass'
 
 # Use jquery as the JavaScript library
-gem 'jquery-rails'
+gem 'jquery-rails', '~> 4.3'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
@@ -76,6 +76,9 @@ gem 'ransack', github: 'activerecord-hackery/ransack'
 gem 'rubyzip', '~> 1.1.7'
 gem 'axlsx', '2.1.0.pre'
 gem 'axlsx_rails'
+
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', '>= 1.1.0', require: false
 
 group :production do
 # Use Uglifier as compressor for JavaScript assets
