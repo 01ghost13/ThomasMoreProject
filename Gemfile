@@ -9,6 +9,9 @@ gem 'rails', '~> 5.2.1'
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
 
+# Use Paperclip to saving images in FS
+gem 'paperclip', '~> 5.0.0'
+
 # Postgres
 gem 'pg'
 gem 'rails_12factor'
