@@ -3,7 +3,7 @@ class Picture < ActiveRecord::Base
   has_many :interests, :through => :picture_interests
   has_many :questions, dependent: :destroy
 
-  # has_one_attached :image
+  has_one_attached :image
   accepts_nested_attributes_for :picture_interests, reject_if: :all_blank, allow_destroy: true
 
   validates :description, presence: true, length: {in: 5..50}
