@@ -11,9 +11,14 @@ class Interest < ActiveRecord::Base
 
   #returns list of all interests
   def self.interests_list
-    interests = Interest.order(:name).map {
+    Interest.order(:name).map {
         |t| ["%{name}"%{name: t.name.titleize},t.id]
     }
-    interests
+  end
+
+  def self.interests_hash
+    Interest.order(:name).map do |t|
+      {name: t.name.titleize, id: t.id}
+    end
   end
 end

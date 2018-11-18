@@ -10,21 +10,22 @@ class PicturesController < ApplicationController
   #Create picture page
   def new
     @picture = Picture.new
-    picture_interests = [PictureInterest.new]
-    @picture.picture_interests << picture_interests
     @interests = Interest.interests_list
   end
 
   #Action for create
   def create
     @picture = Picture.new(picture_params)
-    @interests = Interest.interests_list
-    if @picture.save
-      flash[:success] = 'Picture created!'
-      redirect_to pictures_path
-    else
-      @user = @picture
-      render :new
+
+    respond_to do |types|
+      types.json do
+        if @picture.save
+          flash[:success] = 'Picture created!'
+          render json: { response: { type: :success, message: 'Picture created!' } }, status: :ok
+        else
+          render json: { response: { type: :error, errors: @picture.errors } }, status: :bad_request
+        end
+      end
     end
   end
 
@@ -37,13 +38,16 @@ class PicturesController < ApplicationController
   #Action for edit
   def update
     @picture = Picture.find(params[:id])
-    if @picture.update(picture_params)
-      flash[:success] = 'Picture updated!'
-      redirect_to pictures_path
-    else
-      @user = @picture
-      @interests = Interest.interests_list
-      render :edit
+
+    respond_to do |types|
+      types.json do
+        if @picture.update(picture_params)
+          flash[:success] = 'Picture updated!'
+          render json: { response: { type: :success } }, status: :ok
+        else
+          render json: { response: { type: :error, errors: @picture.errors } }, status: :bad_request
+        end
+      end
     end
   end
 
@@ -52,7 +56,7 @@ class PicturesController < ApplicationController
     picture = Picture.find(params[:id])
     if picture.destroy
       flash[:success] = 'Picture deleted!'
-      redirect_to pictures_path
+      redirect_to pictures_path, status: 200
     else
       @user = picture
       index
@@ -65,7 +69,14 @@ class PicturesController < ApplicationController
   #Attributes for forms
   def picture_params
     params.require(:picture).permit(
-        :description, :image, picture_interests_attributes: [
-        :interest_id, :earned_points, :_destroy, :id])
+      :description,
+      :image,
+      picture_interests_attributes: [
+        :interest_id,
+        :earned_points,
+        :_destroy,
+        :id
+      ]
+    )
   end
 end

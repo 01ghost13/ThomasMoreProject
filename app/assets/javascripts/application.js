@@ -14,9 +14,13 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap
-//= require cocoon
 //= require Chart.bundle
 //= require chartkick
+//= require react
+//= require react_ujs
+//= require activestorage
+//= require components
+//= require lodash
 
 //Converts all text in class "date_to_local" to local time
 $(document).on('turbolinks:load', function () {

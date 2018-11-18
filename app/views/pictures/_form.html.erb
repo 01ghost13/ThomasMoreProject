@@ -1,0 +1,5 @@
+<%= render 'shared/error_message' %>
+<%= react_component('PictureForm', render(partial: 'pictures/picture_data.json.jbuilder',
+                                          locals: { picture: @picture, form_type: form_type },
+                                          format: :json))
+%>
