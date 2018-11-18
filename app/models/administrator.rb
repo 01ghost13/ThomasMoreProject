@@ -6,7 +6,7 @@ class Administrator < ActiveRecord::Base
   
   validates :organisation, presence: true, length: { in: 5..30}
   validates :info_id, uniqueness: true
-  validates :is_super, uniqueness: true, if: 'is_super == true'
+  validates :is_super, uniqueness: true, if: ->{ is_super }
   validates :is_super, exclusion: { in: [nil] }
   validates :organisation_address, presence: true, uniqueness: true, length: { in: 5..100}
 
