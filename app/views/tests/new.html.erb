@@ -1,52 +1,5 @@
 <% provide(:title,'Create test') %>
-<%= render 'shared/error_message' %>
-<%= javascript_include_tag 'questions' %>
 
 <h1 class="row col-sm-offset-4">Create test</h1>
-<%= form_for @test, class: 'form-horizontal' do |test_form| %>
-    <!--Name-->
-    <div class="row col-sm-offset-2 form-group">
-      <%= test_form.label :name, class: 'col-sm-2 control-label'%>
-      <div class="col-sm-4">
-        <%= test_form.text_field :name, class: 'form-control', placeholder: 'Name' %>
-      </div>
-    </div>
 
-    <!--Version-->
-    <div class="row col-sm-offset-2 form-group">
-      <%= test_form.label :version, class: 'col-sm-2 control-label'%>
-      <div class="col-sm-4">
-        <%= test_form.text_field :version, class: 'form-control', placeholder: 'Version' %>
-      </div>
-    </div>
-
-    <!--Description-->
-    <div class="row col-sm-offset-2 form-group">
-      <%= test_form.label :description, class: 'col-sm-2 control-label'%>
-      <div class="col-sm-4">
-        <%= test_form.text_field :description, class: 'form-control', placeholder: 'Description' %>
-      </div>
-    </div>
-
-    <!--Questions-->
-    <div id="questions_form">
-      <%= test_form.fields_for :questions, class: 'form-horizontal' do |questions_form|%>
-          <%= render 'question_fields', questions_form: questions_form %>
-      <% end %>
-    </div>
-    <div class="row col-sm-offset-2 form-group">
-      <div class="row col-sm-offset-6 col-sm-2">
-        <%= link_to_add_association 'Add question', test_form, :questions,
-                                    form_name: 'questions_form',
-                                    'data-association-insertion-node' => '#questions_form',
-                                    'data-association-insertion-method' => 'append',
-                                    class: 'btn btn-primary' %>
-      </div>
-    </div>
-
-    <div class="row col-sm-offset-2 form-group">
-      <div class="col-sm-offset-2 col-sm-2">
-        <%= test_form.submit 'Confirm', class: 'btn btn-primary' %>
-      </div>
-    </div>
-<% end %>
+<%= render 'tests/form', form_type: 'new' %>

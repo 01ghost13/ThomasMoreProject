@@ -7,10 +7,7 @@ class TestsController < ApplicationController
   #Page of creation of Tests
   def new
     @test = Test.new
-    @test.questions << [Question.new]
     @pictures = Picture.pictures_list
-    @dummy = Picture.find(@pictures.first[1])
-    @picture = [@dummy] #Adding dummy picture
   end
 
   #Action for ajax
@@ -26,7 +23,6 @@ class TestsController < ApplicationController
     #Numering questions
     @test.questions.each_with_index do |q, i|
       q.number = i + 1
-      q.is_tutorial = false
       @picture << Picture.find(q.picture_id)
     end
     unless params[:test][:questions_attributes]
@@ -34,13 +30,13 @@ class TestsController < ApplicationController
     end
     if params[:test][:questions_attributes] && @test.save
       flash[:success] = 'Test created!'
-      redirect_to tests_path
+      render json: {}, status: :created
     else
       @user = @test
       @pictures = Picture.pictures_list
       @dummy = Picture.find(@pictures.first[1])
       @picture = [@dummy] if @picture.empty?
-      render :new
+      render json: { errors: @test.errors }, status: :unprocessable_entity
     end
   end
 
@@ -58,7 +54,7 @@ class TestsController < ApplicationController
 
   def all_questions_destroy?(questions)
     questions.each_key do |key|
-      if questions[key]['_destroy'] != '1'
+      if questions[key]['_destroy'] != 'true'
         return false
       end
     end
@@ -68,10 +64,10 @@ class TestsController < ApplicationController
   #Action of editing tests
   def update
     @test = Test.find(params[:id])
-    empty_list = all_questions_destroy?(params[:test][:questions_attributes])
+    empty_list = all_questions_destroy?(test_params[:questions_attributes].to_hash)
     if !params[:test].nil? && !empty_list && @test.update(test_params)
       flash[:success] = 'Test updated!'
-      redirect_to tests_path
+      render json: {}, status: :ok
     else
       if params[:test].nil? || empty_list
         @test.errors.add(:questions, :invalid, message: "Test can't be empty")
@@ -246,7 +242,7 @@ class TestsController < ApplicationController
     if params[:test][:questions_attributes]
       params[:test][:questions_attributes].each_pair do |key, _|
         params[:test][:questions_attributes][key][:number] = i
-        i+=1
+        i += 1
       end
     end
     params.require(:test).permit(

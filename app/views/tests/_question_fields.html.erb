@@ -1,6 +1,8 @@
 <div class="row col-sm-offset-2 form-group nested-fields">
   <div class="row col-sm-offset-3 form-group" id="image">
-    <%= image_tag @dummy.image.url :thumb, class: 'col-sm-2' %>
+    <% if @dummy.image.attachment.present? %>
+      <%= image_tag url_for(@dummy.image.try(:variant, resize: '150x150')) %>
+    <% end %>
   </div>
 
   <div class="row">
@@ -10,7 +12,7 @@
                                 {class: 'form-control question_selection'}) %>
     </div>
     <div class="col-sm-4">
-      <%= link_to_remove_association 'Remove question', questions_form, class: 'btn btn-warning' %>
+      <%#= link_to_remove_association 'Remove question', questions_form, class: 'btn btn-warning' %>
     </div>
   </div>
 
