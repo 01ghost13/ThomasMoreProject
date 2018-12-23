@@ -4,7 +4,7 @@ class PicturesController < ApplicationController
 
   #Page of list of pictures
   def index
-    @pictures = Picture.order(:created_at).reverse_order.page(params[:page]).per(5)
+    @pictures = Picture.with_attached_image.includes(:picture_interests).order(:created_at).reverse_order.page(params[:page]).per(5)
   end
 
   #Create picture page

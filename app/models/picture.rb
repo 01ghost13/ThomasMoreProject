@@ -21,9 +21,9 @@ class Picture < ActiveRecord::Base
 
   #Returns all pictures
   def self.pictures_list
-    Picture.order(:image_file_name).map {
-        |t| ["%{name}"%{name: t.image_file_name},t.id]
-    }
+    Picture.with_attached_image.order(:description).map do |t|
+      ["%{name}"%{name: t.description}, t.id]
+    end
   end
 end
 

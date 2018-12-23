@@ -3,7 +3,6 @@ class PictureForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {...props.picture};
-    console.log(this.state, this.props);
 
     //Bindings
     this.descriptionChanged = this.descriptionChanged.bind(this);
@@ -16,7 +15,7 @@ class PictureForm extends React.Component {
   defaultInterest() {
     return {
       id: undefined,
-      interest_id: this.props.interests_list[0].id,
+      interest_id: _.get(this.props.interests_list[0], 'id', ''),
       earned_points: 1
     };
   };
@@ -29,7 +28,6 @@ class PictureForm extends React.Component {
     let new_state = {...this.state};
     new_state.picture_interests_attributes[index].interest_id = parseInt(event.target.value);
     this.setState({...new_state});
-    console.log(new_state);
   }
 
   earnedPointsChanged(event, index) {
@@ -40,15 +38,15 @@ class PictureForm extends React.Component {
 
   request() {
     if (this.props.form_type === 'new') {
-      return { url:'/pictures', method: 'post'};
+      return { url:'/pictures', method: 'post' };
     }
     let url = '/pictures/:id/'.replace(':id', this.props.picture.id);
-    return { url: url, method: 'patch'};
+    return { url: url, method: 'patch' };
   }
 
   sendForm(event, index) {
     let req = this.request();
-    console.log(this.state);
+
     $.ajax({
       url: req.url,
       method: req.method,
@@ -72,8 +70,7 @@ class PictureForm extends React.Component {
   addInterest() {
     let new_state = {...this.state};
     new_state.picture_interests_attributes.push({...this.defaultInterest()});
-    this.setState({...new_state});
-    console.log(new_state);
+    this.setState(new_state);
   }
 
   removeInterest(index) {
@@ -135,9 +132,14 @@ class PictureForm extends React.Component {
   }
 
   renderInterests() {
+    let interest_list = _.map(
+      this.state.picture_interests_attributes,
+      (picture_interest, index) => this.renderInterest(picture_interest, index)
+    );
+
     return(
       <div id="interests_form">
-        {_.map(this.state.picture_interests_attributes, (picture_interest, index) => this.renderInterest(picture_interest, index))}
+        {interest_list}
         <div className="row col-sm-offset-2 form-group">
           <div className="row col-sm-offset-6 col-sm-2">
             <a className="btn btn-primary"
@@ -249,7 +251,7 @@ PictureForm.propTypes = {
   }),
   interests_list: React.PropTypes.array,
   picture_preview: React.PropTypes.string,
-  action_url: React.PropTypes.string
+  form_type: React.PropTypes.string
 };
 
 PictureForm.defaultProps = {
