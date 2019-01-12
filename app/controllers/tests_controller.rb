@@ -112,116 +112,92 @@ class TestsController < ApplicationController
     @tests = Kaminari.paginate_array(@tests).page(params[:page]).per(10)
   end
 
-  #Exits /testing process
-  def exit
-    session.delete(:cur_question)
-    session.delete(:result_of_test_id)
-    session.delete(:start_time)
-    session.delete(:next_rewrite)
-    nil
-  end
-
   #Updates picture in /testing process
   def update_picture
     #Finding our result of test
-    res = ResultOfTest.find(session[:result_of_test_id])
-    cur_question = session[:cur_question].to_i
+    res = ResultOfTest.where(student_id: params[:student_id], test_id: params[:test_id], is_ended: false).first
+    cur_question = params[:question][:number].to_i
 
-    if params[:value] == '0'
-      #Was pressed btn - go back
-      return if cur_question == 1 || session[:next_rewrite] == true #If was pressed on first question - returning
-      #Loading prev question
-      prev_q = Question.where('test_id = :test and number = :number',{test: res.test_id, number: cur_question-1}).take
-      #Loading info
-      ##hiding btn back
-      @show_btn_back = 'visibility:hidden'
-      session[:next_rewrite] = true #Flag to know, next click - to update
-      ##Changing progress bar
-      step = -100.0 / Question.where(test_id: res.test_id).count
-      pic = prev_q.picture
-      session[:cur_question] -= 1
+    #Loading next question and writing to db current
+    #Writing result
+    ##Checking - is it rewriting?
+    if params[:rewrite] == 'true'
+      #Updating cur question result
+      q_to_upd = QuestionResult.where(result_of_test_id: res.id, number: cur_question).first
+      q_to_upd.update(
+          start: params[:start_time],
+          end: DateTime.current,
+          was_checked: params[:answer],
+          was_rewrited: true
+      )
     else
-      #Loading next question and writing to db current
-      @show_btn_back = ''
-      #Writing result
-      ##Checking - is it rewriting?
-      if session[:next_rewrite]
-        session[:next_rewrite] = false
-        #Updating cur question result
-        q_to_upd = QuestionResult.where('result_of_test_id = :res and number = :number',
-                                        {res: res.id, number: cur_question}).take
-        q_to_upd.update({start: session[:start_time],:end => DateTime.current,
-                         was_checked: params[:value], was_rewrited: true})
-      else
-        cur_q = Question.find_by(test_id: res.test_id, number: cur_question)
-        res.question_results << QuestionResult.new(number: cur_question, start: session[:start_time],
-                                                   was_checked: params[:value], question_id: cur_q.id)
-      end
-      #Changing variables
-      ##Finding next pic name
-      next_q = Question.where('test_id = :test and number = :number',{test: res.test_id, number: cur_question+1}).take
-      ##if was last pic saving and redirecting to result
-      if next_q.nil?
-        #current q was the last, saving and redirecting to end
-        res.update(is_ended: true)
-        render js: %(window.location.pathname='#{student_result_of_test_path(res.student_id,res.id)}')
-        return
-      end
-      step = 100.0 / Question.where(test_id: res.test_id).count
-      pic = next_q.picture
-      session[:cur_question] += 1
+      cur_q = Question.where(test_id: res.test_id, number: cur_question).first
+      res.question_results << QuestionResult.new(
+          number: cur_question,
+          start: params[:start_time],
+          end: DateTime.current,
+          was_checked: params[:answer],
+          question_id: cur_q.id
+      )
     end
-    @progress_bar_value = params[:progress].to_f + step
+    #Changing variables
+    ##Finding next pic name
+    @question = Question.where(test_id: params[:test_id], number: cur_question + 1).first
+    ##if was last pic saving and redirecting to result
+    if @question.nil?
+      #current q was the last, saving and redirecting to result
+      res.update(is_ended: true)
+      render json: { result_url: student_result_of_test_path(params[:student_id], res.id) } and return
+    end
+
+    pic = @question.picture
     @description = pic.description
     @image = pic.image
-    session[:start_time] = DateTime.current
+
     respond_to do |format|
-       format.js {}
+       format.json do
+         render '/tests/update_picture.json.jbuilder'
+       end
     end
   end
   
   def testing
-    @progress_bar_value = 0
     #Loading test
-    test = Test.find(params[:test_id])
+    @test = Test.where(id: params[:test_id]).first
+
     #Loading student
-    student = Student.find(params[:id])
+    @student = Student.where(id: params[:id]).first
     
-    if test.nil? || student.nil?
+    if @test.blank? || @student.blank?
       #Cant find test or student
-      flash[:danger] = "Can't find student" if student.nil?
-      flash[:danger] = "Can't find test" if test.nil?
-      redirect_to current_user and return
+      flash[:danger] = "Can't find student" if @student.blank?
+      flash[:danger] = "Can't find test" if @test.blank?
+      redirect_back fallback_location: current_user and return
     end
 
     #Checking questions in test
-    if test.questions.empty?
-      flash[:danger] = 'Test is empty and probably not ready for testing! Please, contact with administrator.'
+    if @test.questions.blank?
+      flash[:danger] = 'Test is empty and probably not ready for testing! Please, contact administrator.'
       redirect_back fallback_location: current_user and return
     end
+
     #Checking continue or creating new result
-    res = ResultOfTest.where('student_id = :student and test_id = :test and is_ended = :is_ended',
-                             { student: student.id, test: test.id, is_ended: false }).take
-    if res.nil?
+    res = ResultOfTest.where(student_id: params[:id], test_id: params[:test_id], is_ended: false).first
+    if res.blank?
       #All tests were ended
       #Creating new result
-      res = ResultOfTest.create(test_id: test.id, was_in_school: student.is_current_in_school,
-                                schooling_id: student.schooling.id, student_id: student.id)
-    else
-      total_q = Question.where(test_id: res.test_id).count.to_f
-      done_q = res.question_results.count
-      
-      @progress_bar_value = done_q / total_q * 100.0
+      res = ResultOfTest.create(
+        test_id: params[:test_id],
+        was_in_school: @student.is_current_in_school,
+        schooling_id: @student.schooling.id,
+        student_id: params[:id]
+      )
     end
     #Filling first question
-    question = res.last_question
-    session[:result_of_test_id] = res.id
-    session[:cur_question] = question.number
-    @show_btn_back = (question.number == 1) ? 'visibility:hidden' : ''
-    session[:start_time] = DateTime.current
-    @description = question.picture.description
-    @image = question.picture.image
-    session[:next_rewrite] = false
+    @question = res.last_question
+    @previous_question = res.previous_question
+    @description = @question.picture.description
+    @image = @question.picture.image
   end
   ##########################################################
   #Private methods

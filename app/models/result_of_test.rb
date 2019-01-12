@@ -20,15 +20,14 @@ class ResultOfTest < ActiveRecord::Base
   #Returns the question after last answered
   def last_question
     questions = QuestionResult.order(:number).where(result_of_test_id: self.id)
-    Question.where("test_id = :test and number = :number",
-                   {test: self.test_id, number:(questions.count == 0)? 1 :questions.count+1}).take
+    Question.where(test_id: self.test_id, number: (questions.count == 0) ? 1 : questions.count + 1).first
   end
 
   #Returns question before current
   def previous_question
     questions = QuestionResult.order(:number).where(result_of_test_id: self.id)
-    Question.where("test_id = :test and number = :number",
-                   {test: self.test_id, number:(questions.count == 0)? 1 :questions.count-1}).take
+    previous_number = (questions.count <= 1) ? 1 : questions.count - 1
+    Question.where(test_id: self.test_id, number: previous_number).first
   end
 
   def show_short
