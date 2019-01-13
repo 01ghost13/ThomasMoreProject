@@ -26,3 +26,6 @@
 /public/system/pictures/*
 
 /storage/
+
+# ignore certs
+/config/certs/*
