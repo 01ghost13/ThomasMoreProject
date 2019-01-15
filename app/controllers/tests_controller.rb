@@ -137,7 +137,8 @@ class TestsController < ApplicationController
           start: params[:start_time],
           end: DateTime.current,
           was_checked: params[:answer],
-          question_id: cur_q.id
+          question_id: cur_q.id,
+          gaze_trace_result_attributes: params.require(:gaze_trace_result_attributes).permit(GazeTraceResult.attribute_names)
       )
     end
     #Changing variables
