@@ -13,17 +13,57 @@ class TestingComponent extends React.Component {
       ...props.testing,
       rewrite: false,
       start_time: props.start_time,
-      lock_buttons: false
+      lock_buttons: false,
+      gazeTrace: []
     };
 
     //Binds
     this.previousQuestion = this.previousQuestion.bind(this);
     this.nextQuestion = this.nextQuestion.bind(this);
+    this.initWebGazer = this.initWebGazer.bind(this);
+    this.gazeListener = this.gazeListener.bind(this);
+
+    //Callback initialisations
+    $(document).ready(this.initWebGazer);
+
   }
 
   student_url() {
     return this.props.student_url.replace(':id', this.props.student_id);
   }
+
+  //Callbacks
+
+  initWebGazer() {
+    if(this.props.webgazer) {
+      let gazeListener = this.gazeListener;
+      let checkIfReady =
+        function checkIfReady() {
+          if (window.webgazer !== undefined) {
+            webgazer
+              .setRegression('weightedRidge') /* currently must set regression and tracker */
+              .setTracker('clmtrackr')
+              .setGazeListener(gazeListener)
+              .begin()
+              .showPredictionPoints(true);
+          } else {
+            setTimeout(checkIfReady, 100);
+          }
+        };
+      setTimeout(checkIfReady,100);
+    }
+  }
+
+  gazeListener(data, clock) {
+    if(data === null || data === undefined) {
+      return;
+    }
+
+    this.setState({
+      gazeTrace: this.state.gazeTrace.concat({x: data.x, y: data.y})
+    });
+  }
+
 
   //Actions
 
@@ -32,10 +72,13 @@ class TestingComponent extends React.Component {
   }
 
   previousQuestion() {
-    let new_state = { ...this.state };
-    new_state.current_question = { ...this.state.previous_question };
-    new_state.previous_question = undefined;
-    new_state.rewrite = true;
+    let new_state = {
+      ...this.state,
+      current_question: { ...this.state.previous_question },
+      previous_question: undefined,
+      rewrite: true,
+      gazeTrace: []
+    };
 
     this.setState(new_state);
   }
@@ -55,7 +98,12 @@ class TestingComponent extends React.Component {
           student_id: this.props.student_id,
           test_id: this.props.test_id,
           rewrite: this.state.rewrite,
-          start_time: this.state.start_time
+          start_time: this.state.start_time,
+          gaze_trace_results_attributes: {
+            gaze_points: this.state.gazeTrace,
+            screen_width: screen.width,
+            screen_height: screen.height
+          }
         },
         beforeSend: () => {
           // lock buttons
@@ -86,7 +134,7 @@ class TestingComponent extends React.Component {
           this.setState(new_state);
         },
         complete: () => {
-          this.setState({lock_buttons: false})
+          this.setState({lock_buttons: false, gazeTrace: []})
         }
     });
   }
