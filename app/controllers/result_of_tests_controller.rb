@@ -33,7 +33,7 @@ class ResultOfTestsController < ApplicationController
   #Page of result
   def show
     #Loading result
-    result = ResultOfTest.find(params[:result_id])
+    result = ResultOfTest.result_page.find(params[:result_id])
 
     #If test was changed, results are outdated
     if result.is_outdated?

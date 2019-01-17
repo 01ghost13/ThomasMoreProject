@@ -7,6 +7,8 @@ class ResultOfTest < ActiveRecord::Base
   has_many :question_results, dependent: :destroy
   accepts_nested_attributes_for :question_results
 
+  scope :result_page, -> { includes(:question_results, question_results: [:question, question: [:picture]]) }
+
   validates :test,:schooling,:student, presence: true
   validates :was_in_school, exclusion: { in: [nil] }
 
