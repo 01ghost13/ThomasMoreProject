@@ -28,3 +28,8 @@ This application requires:
     5) Cloudinary requires imagemagic
     6) This app was tested only on linux systems
     6) For development app uses default passwords, logins for used gems
+
+
+JS Libs
+https://github.com/brownhci/WebGazer
+https://github.com/pa7/heatmap.js

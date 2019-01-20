@@ -138,7 +138,7 @@ class TestsController < ApplicationController
           end: DateTime.current,
           was_checked: params[:answer],
           question_id: cur_q.id,
-          gaze_trace_result_attributes: params.require(:gaze_trace_result_attributes).permit(GazeTraceResult.attribute_names)
+          gaze_trace_result_attributes: params.require(:gaze_trace_result_attributes).permit(GazeTraceResult.attribute_names, gaze_points: [:x, :y])
       )
     end
     #Changing variables
@@ -199,6 +199,7 @@ class TestsController < ApplicationController
     @previous_question = res.previous_question
     @description = @question.picture.description
     @image = @question.picture.image
+    render layout: 'testing_layout'
   end
   ##########################################################
   #Private methods

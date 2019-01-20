@@ -25,6 +25,14 @@ class ResultOfTest < ActiveRecord::Base
     Question.where(test_id: self.test_id, number: (questions.count == 0) ? 1 : questions.count + 1).first
   end
 
+  def get_question(number)
+    get_question_result(number).question
+  end
+
+  def get_question_result(number)
+    QuestionResult.includes(:question).where(result_of_test_id: self.id, number: number).first
+  end
+
   #Returns question before current
   def previous_question
     questions = QuestionResult.order(:number).where(result_of_test_id: self.id)

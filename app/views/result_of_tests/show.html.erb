@@ -17,6 +17,12 @@
     <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>&#8194;Download as xlsx
   <% end %>
 
+  <%= link_to_if @has_heatmap,
+                 'Show heatmap',
+                 student_heatmap_path(params[:student_id], params[:result_id]),
+                 class: 'btn btn-success'
+  %>
+
 </div>
 <div class="row">
   <!-- Table Questions -->
