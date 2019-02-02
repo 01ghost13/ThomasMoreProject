@@ -63,6 +63,7 @@ Rails.application.routes.draw do
       get 'edit/update_tutors' => 'students#update_tutors'
     end
     resources :result_of_tests, except: [:new, :create, :index], path: 'results', param: :result_id
+    get 'results/:result_id/heatmap'=> 'result_of_tests#show_heatmap', as: 'heatmap'
     get 'update_tutors' => 'students#update_tutors', on: :new
   end
 

@@ -5,10 +5,12 @@ json.testing do
     json.image_url url_for(image)
   end
 
-  json.previous_question do
-    json.extract! previous_question, *%i[id number]
-    json.description previous_question.picture.description
-    json.image_url url_for(previous_question.picture.image)
+  if previous_question.present?
+    json.previous_question do
+      json.extract! previous_question, *%i[id number]
+      json.description previous_question.picture.description
+      json.image_url url_for(previous_question.picture.image)
+    end
   end
 end
 
@@ -27,3 +29,7 @@ json.test_id test.id
 json.student_id student.id
 
 json.start_time DateTime.current
+
+json.webgazer mode == 'heatmap' ? false : true
+
+json.mode mode

@@ -82,6 +82,12 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # Lodash
 gem 'lodash-rails'
 
+# for next gem
+# gem 'wkhtmltoimage-binary'
+
+# Generating pics from html https://github.com/csquared/IMGKit
+# gem 'imgkit'
+
 group :production do
 # Use Uglifier as compressor for JavaScript assets
   gem 'uglifier', '>= 1.3.0'

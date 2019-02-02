@@ -61,4 +61,6 @@ Rails.application.configure do
 
   # Default url for mailing agent
   config.action_mailer.default_url_options = { host: ENV['HOST'] }
+
+  config.force_ssl = true
 end

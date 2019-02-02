@@ -33,7 +33,7 @@ class ResultOfTestsController < ApplicationController
   #Page of result
   def show
     #Loading result
-    result = ResultOfTest.find(params[:result_id])
+    result = ResultOfTest.result_page.find(params[:result_id])
 
     #If test was changed, results are outdated
     if result.is_outdated?
@@ -80,6 +80,7 @@ class ResultOfTestsController < ApplicationController
     @student = student.code_name.titleize
     @res = [result.schooling.name, result.was_in_school, result.show_time_to_answer, avg_time_per_interest,
     result.show_timeline]
+    @has_heatmap = true
 
     respond_to do |format|
       format.html
@@ -115,6 +116,35 @@ class ResultOfTestsController < ApplicationController
       @user = result
       render :index
     end
+  end
+
+  def show_heatmap
+    #Loading test
+    @result = ResultOfTest.result_page.find(params[:result_id])
+    @test = @result.test
+
+    #Loading student
+    @student = @result.student
+
+    if @test.blank? || @student.blank?
+      #Cant find test or student
+      flash[:danger] = "Can't find student" if @student.blank?
+      flash[:danger] = "Can't find test" if @test.blank?
+      redirect_back fallback_location: current_user and return
+    end
+
+    #Checking questions in test
+    if @test.questions.blank?
+      flash[:danger] = 'Test is empty!'
+      redirect_back fallback_location: current_user and return
+    end
+
+    #Filling first question
+    question_result = @result.get_question_result(params[:number] || 1)
+    @question = question_result.question
+    @description = @question.picture.description
+    @image = @question.picture.image
+    @heatmap = question_result.gaze_trace_result
   end
 
   ##########################################################

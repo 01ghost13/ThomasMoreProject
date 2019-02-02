@@ -21,6 +21,8 @@
 //= require activestorage
 //= require components
 //= require lodash
+//= require heatmap.js/heatmap.min
+//= require html2canvas/html2canvas.min
 
 //Converts all text in class "date_to_local" to local time
 $(document).on('turbolinks:load', function () {

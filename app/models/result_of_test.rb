@@ -7,6 +7,8 @@ class ResultOfTest < ActiveRecord::Base
   has_many :question_results, dependent: :destroy
   accepts_nested_attributes_for :question_results
 
+  scope :result_page, -> { includes(:question_results, question_results: [:question, question: [:picture]]) }
+
   validates :test,:schooling,:student, presence: true
   validates :was_in_school, exclusion: { in: [nil] }
 
@@ -21,6 +23,14 @@ class ResultOfTest < ActiveRecord::Base
   def last_question
     questions = QuestionResult.order(:number).where(result_of_test_id: self.id)
     Question.where(test_id: self.test_id, number: (questions.count == 0) ? 1 : questions.count + 1).first
+  end
+
+  def get_question(number)
+    get_question_result(number).question
+  end
+
+  def get_question_result(number)
+    QuestionResult.includes(:question).where(result_of_test_id: self.id, number: number).first
   end
 
   #Returns question before current

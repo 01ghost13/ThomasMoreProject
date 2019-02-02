@@ -1,5 +1,7 @@
 <% provide(:title, 'Testing') %>
 <%= stylesheet_link_tag 'tests' %>
+<%= javascript_include_tag 'webgazer/webgazer' %>
+
 <%= react_component('TestingComponent',
                     render(
                         partial: 'tests/testing_data.json.jbuilder',
@@ -10,8 +12,14 @@
                             previous_question: @previous_question,
                             description: @description,
                             image: @image,
-                            student: @student
+                            student: @student,
+                            mode: 'testing'
                         }
                     )
     )
 %>
+<script>
+  window.onbeforeunload = function() {
+    window.localStorage.clear();
+  }
+</script>
