@@ -30,6 +30,8 @@ json.student_id student.id
 
 json.start_time DateTime.current
 
-json.webgazer mode == 'heatmap' ? false : true
+json.webgazer mode == 'heatmap' ? false : student.gaze_trace
+
+json.emotion_tracking mode == 'heatmap' ? false : student.emotion_recognition
 
 json.mode mode

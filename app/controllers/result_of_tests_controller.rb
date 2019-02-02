@@ -80,7 +80,7 @@ class ResultOfTestsController < ApplicationController
     @student = student.code_name.titleize
     @res = [result.schooling.name, result.was_in_school, result.show_time_to_answer, avg_time_per_interest,
     result.show_timeline]
-    @has_heatmap = true
+    @has_heatmap = result.gaze_trace?
 
     respond_to do |format|
       format.html

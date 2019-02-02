@@ -97,22 +97,29 @@ class TestingComponent extends React.Component {
       return;
     }
 
+    let data = {
+      answer: TestingComponent.answerValue[answer],
+      question: this.state.current_question,
+      student_id: this.props.student_id,
+      test_id: this.props.test_id,
+      rewrite: this.state.rewrite,
+      start_time: this.state.start_time
+    };
+
+    if(this.props.webgazer) {
+      data['gaze_trace_result_attributes'] = {
+        gaze_points: this.state.gazeTrace,
+        screen_width: screen.width,
+        screen_height: screen.height
+      }
+    }
+
     $.ajax(
       'testing/update_picture', {
         type: 'POST',
         dataType: 'json',
         data: {
-          answer: TestingComponent.answerValue[answer],
-          question: this.state.current_question,
-          student_id: this.props.student_id,
-          test_id: this.props.test_id,
-          rewrite: this.state.rewrite,
-          start_time: this.state.start_time,
-          gaze_trace_result_attributes: {
-            gaze_points: this.state.gazeTrace,
-            screen_width: screen.width,
-            screen_height: screen.height
-          }
+          ...data
         },
         beforeSend: () => {
           // lock buttons
@@ -307,7 +314,11 @@ TestingComponent.propTypes = {
     btn_question_mark: React.PropTypes.string
   }),
   questions_count: React.PropTypes.number,
-  test_id: React.PropTypes.number
+  test_id: React.PropTypes.number,
+  student_id: React.PropTypes.number,
+  webgazer: React.PropTypes.bool,
+  emotion_tracking: React.PropTypes.bool,
+  mode: React.PropTypes.string
 };
 
 TestingComponent.defaultProps = {
@@ -335,5 +346,8 @@ TestingComponent.defaultProps = {
   questions_count: 1,
   test_id: 0,
   student_id: 0,
-  student_url: '/students/:id'
+  student_url: '/students/:id',
+  webgazer: false,
+  emotion_tracking: false,
+  mode: ''
 };

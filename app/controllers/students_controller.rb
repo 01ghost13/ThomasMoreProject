@@ -1,10 +1,10 @@
 class StudentsController < ApplicationController
-  before_action :check_exist_callback, only: [:destroy, :edit, :update, :show]
-  before_action :check_log_in, only: [:new, :create, :index, :update, :edit, :destroy, :show]
+  before_action :check_exist_callback, only: [:destroy, :edit, :update, :show, :mode_settings]
+  before_action :check_log_in, only: [:new, :create, :index, :update, :edit, :destroy, :show, :mode_settings]
   before_action :check_rights, only: [:new, :create, :index]
-  before_action :check_editing_rights, only: [:update, :edit, :destroy, :show]
+  before_action :check_editing_rights, only: [:update, :edit, :destroy, :show, :mode_settings]
   before_action :info_for_new_page, only: [:create, :new]
-  before_action :check_deactivated, only: [:edit, :update]
+  before_action :check_deactivated, only: [:edit, :update, :mode_settings]
 
   #New student page
   def new
@@ -108,6 +108,23 @@ class StudentsController < ApplicationController
     @students = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
     @students = @students.page(params[:page]).per(5)
   end
+
+  # Page for editing modes
+  def mode_settings
+    @user = Student.find(params[:id])
+  end
+
+  # Update edited modes
+  def update_mode_settings
+    @user = Student.find(params[:id])
+    if @user.update(mode_params)
+      flash[:success] = 'Update Complete'
+      redirect_to tests_student_path(params[:id])
+    else
+      render :mode_settings
+    end
+  end
+
   ##########################################################
   #Private methods
   private
@@ -115,6 +132,10 @@ class StudentsController < ApplicationController
   def student_params
     params.require(:student).permit(:code_name,:tutor_id,:gender,:schooling_id,
                                     :is_current_in_school,:password,:password_confirmation)
+  end
+
+  def mode_params
+    params.require(:student).permit(:gaze_trace, :emotion_recognition)
   end
 
   #Attributes for edit page

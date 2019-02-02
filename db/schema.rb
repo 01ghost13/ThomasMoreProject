@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_15_151402) do
+ActiveRecord::Schema.define(version: 2019_02_02_203425) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 2019_01_15_151402) do
   end
 
   create_table "gaze_trace_results", force: :cascade do |t|
-    t.json "gaze_points"
+    t.json "gaze_points", default: []
     t.integer "screen_width"
     t.integer "screen_height"
     t.datetime "created_at", null: false
@@ -133,6 +133,8 @@ ActiveRecord::Schema.define(version: 2019_01_15_151402) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_outdated", default: false
+    t.boolean "emotion_recognition", default: false
+    t.boolean "gaze_trace", default: false
   end
 
   create_table "schoolings", id: :serial, force: :cascade do |t|
@@ -155,6 +157,8 @@ ActiveRecord::Schema.define(version: 2019_01_15_151402) do
     t.integer "mode_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "emotion_recognition", default: false
+    t.boolean "gaze_trace", default: false
     t.index ["mode_id"], name: "index_students_on_mode_id"
     t.index ["schooling_id"], name: "index_students_on_schooling_id"
     t.index ["tutor_id"], name: "index_students_on_tutor_id"

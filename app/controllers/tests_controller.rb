@@ -132,14 +132,18 @@ class TestsController < ApplicationController
       )
     else
       cur_q = Question.where(test_id: res.test_id, number: cur_question).first
-      res.question_results << QuestionResult.new(
+      question_result_params = {
           number: cur_question,
           start: params[:start_time],
           end: DateTime.current,
           was_checked: params[:answer],
-          question_id: cur_q.id,
-          gaze_trace_result_attributes: params.require(:gaze_trace_result_attributes).permit(GazeTraceResult.attribute_names, gaze_points: [:x, :y])
-      )
+          question_id: cur_q.id
+      }
+        if res.gaze_trace?
+          question_result_params[:gaze_trace_result_attributes] =
+              params.require(:gaze_trace_result_attributes).permit(GazeTraceResult.attribute_names, gaze_points: [:x, :y])
+        end
+      res.question_results << QuestionResult.new(question_result_params)
     end
     #Changing variables
     ##Finding next pic name
@@ -191,7 +195,9 @@ class TestsController < ApplicationController
         test_id: params[:test_id],
         was_in_school: @student.is_current_in_school,
         schooling_id: @student.schooling.id,
-        student_id: params[:id]
+        student_id: params[:id],
+        gaze_trace: @student.gaze_trace,
+        emotion_recognition: @student.emotion_recognition
       )
     end
     #Filling first question
