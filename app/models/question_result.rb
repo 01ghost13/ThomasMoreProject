@@ -4,8 +4,10 @@ class QuestionResult < ActiveRecord::Base
   belongs_to :question
   belongs_to :result_of_test
   belongs_to :gaze_trace_result, optional: true
+  belongs_to :emotion_state_result, optional: true
 
   accepts_nested_attributes_for :gaze_trace_result
+  accepts_nested_attributes_for :emotion_state_result
 
   validates :number, presence: true, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validates :start, :end, :result_of_test, presence: true

@@ -7,6 +7,8 @@ class TestingComponent extends React.Component {
     };
   }
 
+  static get emotionScanInterval() { return 4000; }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -14,7 +16,8 @@ class TestingComponent extends React.Component {
       rewrite: false,
       start_time: props.start_time,
       lock_buttons: false,
-      gazeTrace: []
+      gazeTrace: [],
+      emotionStates: []
     };
 
     //Binds
@@ -22,11 +25,15 @@ class TestingComponent extends React.Component {
     this.nextQuestion = this.nextQuestion.bind(this);
     this.initWebGazer = this.initWebGazer.bind(this);
     this.gazeListener = this.gazeListener.bind(this);
+    this.emotionListener = this.emotionListener.bind(this);
 
     //Callback initialisations
 
-    if(this.props.webgazer && this.props.mode !== 'heatmap') {
-      $(document).ready(this.initWebGazer);
+    if(this.props.mode !== 'heatmap') {
+
+      if(this.props.webgazer || this.props.emotion_tracking) {
+        $(document).ready(this.initWebGazer);
+      }
     }
 
   }
@@ -39,20 +46,30 @@ class TestingComponent extends React.Component {
 
   initWebGazer() {
     let gazeListener = this.gazeListener;
+    let emotionListener = this.emotionListener;
+    let emotionTracking = this.props.emotion_tracking;
+    let gazeTracking = this.props.webgazer;
+
     let checkIfReady =
       function checkIfReady() {
         if (window.webgazer !== undefined) {
-          webgazer
-            .setRegression('weightedRidge') /* currently must set regression and tracker */
-            .setTracker('clmtrackr')
-            .setGazeListener(gazeListener)
-            .begin()
-            .showPredictionPoints(true);
+          let webTracker = webgazer.setRegression('weightedRidge')
+                                   .setTracker('clmtrackr');
+
+          if(gazeTracking) { webTracker.setGazeListener(gazeListener).showPredictionPoints(true); }
+
+          webTracker.begin();
+
+          if(emotionTracking) {
+            setTimeout(emotionListener, 1500); //Wait for load of video feed and grab emotion immediately
+            setInterval(emotionListener, TestingComponent.emotionScanInterval);
+          }
+
         } else {
           setTimeout(checkIfReady, 100);
         }
       };
-    setTimeout(checkIfReady,100);
+    setTimeout(checkIfReady, 100);
   }
 
   gazeListener(data, clock) {
@@ -65,6 +82,69 @@ class TestingComponent extends React.Component {
     });
   }
 
+  emotionListener() {
+    let params = {};
+
+    $.ajax({
+      url: this.props.emotion_recogniser_url,
+      contentType: 'application/octet-stream',
+      processData: false,
+      headers: {
+        'Ocp-Apim-Subscription-Key': this.props.emotion_azure_key
+      },
+      type: "POST",
+      data: this.makeScreenShotFromWebcam()
+    })
+    .done((data) => {
+      this.setState({
+        emotionStates: this.state.emotionStates.concat(_.get(data, ['0', 'faceAttributes', 'emotion'], {}))
+      });
+    })
+    .fail(function(err) {
+      console.log("Error: " + JSON.stringify(err));
+    });
+  }
+
+  makeScreenShotFromWebcam() {
+    let hidden_canvas = $('#picture_taker')[0],
+        video = $('#webgazerVideoFeed')[0],
+        width = video.videoWidth,
+        height = video.videoHeight,
+        // Context object for working with the canvas.
+        context = hidden_canvas.getContext('2d');
+
+    // Set the canvas to the same dimensions as the video.
+    hidden_canvas.width = width;
+    hidden_canvas.height = height;
+
+    // Draw a copy of the current frame from the video on the canvas.
+    context.drawImage(video, 0, 0, width, height);
+
+    // Get an image dataURL from the canvas.
+    return this.createBlob(hidden_canvas.toDataURL());
+  }
+
+  createBlob(dataURL) {
+    let BASE64_MARKER = ';base64,';
+    if (dataURL.indexOf(BASE64_MARKER) === -1) {
+      let parts = dataURL.split(',');
+      let contentType = parts[0].split(':')[1];
+      let raw = decodeURIComponent(parts[1]);
+      return new Blob([raw], { type: contentType });
+    }
+    let parts = dataURL.split(BASE64_MARKER);
+    let contentType = parts[0].split(':')[1];
+    let raw = window.atob(parts[1]);
+    let rawLength = raw.length;
+
+    let uInt8Array = new Uint8Array(rawLength);
+
+    for (var i = 0; i < rawLength; ++i) {
+      uInt8Array[i] = raw.charCodeAt(i);
+    }
+
+    return new Blob([uInt8Array], { type: contentType });
+  }
 
   //Actions
 
@@ -114,6 +194,12 @@ class TestingComponent extends React.Component {
       }
     }
 
+    if(this.props.emotion_tracking) {
+      data['emotion_state_result_attributes'] = {
+        states: this.state.emotionStates
+      }
+    }
+
     $.ajax(
       'testing/update_picture', {
         type: 'POST',
@@ -155,12 +241,12 @@ class TestingComponent extends React.Component {
     });
   }
 
-
   //Renders
 
   render () {
     return (
       <div id="testing_component">
+        {this.renderHiddenCanvas()}
         <div className="row">
           {this.renderInstructions()}
 
@@ -286,6 +372,18 @@ class TestingComponent extends React.Component {
              aria-valuemax="100"
              style={{width: progress_bar_value + '%'}}
         />
+      </div>
+    );
+  }
+
+  renderHiddenCanvas() {
+    if(!this.props.emotion_tracking) {
+      return;
+    }
+    return(
+      <div style={{display: 'none'}}>
+        <canvas id="picture_taker"
+        ></canvas>
       </div>
     );
   }

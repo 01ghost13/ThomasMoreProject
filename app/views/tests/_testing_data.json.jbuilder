@@ -30,8 +30,12 @@ json.student_id student.id
 
 json.start_time DateTime.current
 
-json.webgazer mode == 'heatmap' ? false : student.gaze_trace
+json.webgazer mode == 'heatmap' ? false : result_of_test.gaze_trace?
 
-json.emotion_tracking mode == 'heatmap' ? false : student.emotion_recognition
+json.emotion_tracking mode == 'heatmap' ? false : result_of_test.emotion_recognition?
+
+json.emotion_recogniser_url 'https://westeurope.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=false&returnFaceLandmarks=false&returnFaceAttributes=emotion'
+
+json.emotion_azure_key ENV['AZURE_KEY']
 
 json.mode mode
