@@ -75,5 +75,15 @@ class ResultOfTest < ActiveRecord::Base
     timeline
   end
 
+  def show_emotion_dynamic
+    list = {}
+    question_results.map(&:get_emotion_lists).each_with_index do |question_emotions, i|
+      list.merge!(question_emotions.transform_values { |emo_arr| emo_arr.map { |emo_v| [rand(i), emo_v] } }) do |_, a, b|
+        a + b
+      end
+    end
+    list
+  end
+
   private :setup_fields
 end
