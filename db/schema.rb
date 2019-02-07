@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_02_203425) do
+ActiveRecord::Schema.define(version: 2019_02_02_203426) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,12 @@ ActiveRecord::Schema.define(version: 2019_02_02_203425) do
     t.string "organisation_address"
     t.index ["info_id"], name: "index_administrators_on_info_id"
     t.index ["organisation_address"], name: "index_administrators_on_organisation_address", unique: true
+  end
+
+  create_table "emotion_state_results", force: :cascade do |t|
+    t.json "states", default: []
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "gaze_trace_results", force: :cascade do |t|
@@ -108,6 +114,8 @@ ActiveRecord::Schema.define(version: 2019_02_02_203425) do
     t.datetime "updated_at", null: false
     t.integer "question_id"
     t.bigint "gaze_trace_result_id"
+    t.bigint "emotion_state_result_id"
+    t.index ["emotion_state_result_id"], name: "index_question_results_on_emotion_state_result_id"
     t.index ["gaze_trace_result_id"], name: "index_question_results_on_gaze_trace_result_id"
     t.index ["question_id"], name: "index_question_results_on_question_id"
     t.index ["result_of_test_id"], name: "index_question_results_on_result_of_test_id"

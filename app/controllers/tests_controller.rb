@@ -139,10 +139,15 @@ class TestsController < ApplicationController
           was_checked: params[:answer],
           question_id: cur_q.id
       }
-        if res.gaze_trace?
-          question_result_params[:gaze_trace_result_attributes] =
-              params.require(:gaze_trace_result_attributes).permit(GazeTraceResult.attribute_names, gaze_points: [:x, :y])
-        end
+      if res.gaze_trace? && params[:gaze_trace_result_attributes].present?
+        question_result_params[:gaze_trace_result_attributes] =
+            params.require(:gaze_trace_result_attributes).permit(GazeTraceResult.attribute_names, gaze_points: [:x, :y])
+      end
+      if res.emotion_recognition? && params[:emotion_state_result_attributes].present?
+        question_result_params[:emotion_state_result_attributes] =
+            params.require(:emotion_state_result_attributes).permit!
+      end
+
       res.question_results << QuestionResult.new(question_result_params)
     end
     #Changing variables
@@ -205,6 +210,7 @@ class TestsController < ApplicationController
     @previous_question = res.previous_question
     @description = @question.picture.description
     @image = @question.picture.image
+    @res = res
     render layout: 'testing_layout'
   end
   ##########################################################

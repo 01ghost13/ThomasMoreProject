@@ -78,9 +78,16 @@ class ResultOfTestsController < ApplicationController
     @list_timestamps = timestamps
     @list_interests_max = interests_max
     @student = student.code_name.titleize
-    @res = [result.schooling.name, result.was_in_school, result.show_time_to_answer, avg_time_per_interest,
-    result.show_timeline]
+    @res = [
+      result.schooling.name,
+      result.was_in_school,
+      result.show_time_to_answer,
+      avg_time_per_interest,
+      result.show_timeline,
+      result.show_emotion_dynamic
+    ]
     @has_heatmap = result.gaze_trace?
+    @has_emotion_track = result.emotion_recognition?
 
     respond_to do |format|
       format.html
