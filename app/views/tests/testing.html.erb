@@ -1,7 +1,13 @@
 <% provide(:title, 'Testing') %>
 <%= stylesheet_link_tag 'tests' %>
 <%= javascript_include_tag 'webgazer/webgazer' %>
-
+<% unless params.has_key?(:debug) %>
+  <style>
+    #webgazerVideoFeed, #webgazerVideoCanvas, #webgazerFaceOverlay, #webgazerFaceFeedbackBox {
+      display: none !important;
+    }
+  </style>
+<% end %>
 <%= react_component('TestingComponent',
                     render(
                         partial: 'tests/testing_data.json.jbuilder',

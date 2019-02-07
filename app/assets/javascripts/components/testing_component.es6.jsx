@@ -42,6 +42,11 @@ class TestingComponent extends React.Component {
     return this.props.student_url.replace(':id', this.props.student_id);
   }
 
+  switchIndicator(){
+    let color = $('#webgazerFaceFeedbackBox').css('border-color');
+    $('#gaze_indicator').css('background-color', color);
+  }
+
   //Callbacks
 
   initWebGazer() {
@@ -49,14 +54,21 @@ class TestingComponent extends React.Component {
     let emotionListener = this.emotionListener;
     let emotionTracking = this.props.emotion_tracking;
     let gazeTracking = this.props.webgazer;
+    let debug_mode = new URL(location.href).searchParams.get("debug");
 
     let checkIfReady =
       function checkIfReady() {
         if (window.webgazer !== undefined) {
+          if(!webgazer.detectCompatibility()) {//Exit if wrong browser.
+            alert('Your browser cant run Gazetracking');
+            return;
+          }
           let webTracker = webgazer.setRegression('weightedRidge')
                                    .setTracker('clmtrackr');
 
-          if(gazeTracking) { webTracker.setGazeListener(gazeListener).showPredictionPoints(true); }
+          if(gazeTracking) { webTracker.setGazeListener(gazeListener); }
+
+          if(debug_mode) { webTracker.showPredictionPoints(true); }
 
           webTracker.begin();
 
@@ -73,6 +85,7 @@ class TestingComponent extends React.Component {
   }
 
   gazeListener(data, clock) {
+    this.switchIndicator();
     if(data === null || data === undefined) {
       return;
     }
@@ -246,6 +259,7 @@ class TestingComponent extends React.Component {
   render () {
     return (
       <div id="testing_component">
+        {this.renderGazeIndicator()}
         {this.renderHiddenCanvas()}
         <div className="row">
           {this.renderInstructions()}
@@ -302,6 +316,13 @@ class TestingComponent extends React.Component {
         <div className="row">
           {this.renderProgressBar()}
         </div>
+      </div>
+    );
+  }
+
+  renderGazeIndicator() {
+    return(
+      <div className="indicator" id="gaze_indicator">
       </div>
     );
   }
