@@ -36,7 +36,7 @@ class QuestionResult < ActiveRecord::Base
   end
 
   def get_emotion_lists
-    return [] if emotion_state_result.blank?
+    return {} if emotion_state_result.blank?
     emotion_state_result.emotion_lists
   end
 
