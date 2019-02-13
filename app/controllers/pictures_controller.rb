@@ -56,12 +56,11 @@ class PicturesController < ApplicationController
     picture = Picture.find(params[:id])
     if picture.destroy
       flash[:success] = 'Picture deleted!'
-      redirect_to pictures_path, status: 200
     else
       @user = picture
-      index
-      render :index
     end
+    index
+    render :index
   end
   ##########################################################
   #Private methods
