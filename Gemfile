@@ -88,6 +88,9 @@ gem 'lodash-rails'
 # Generating pics from html https://github.com/csquared/IMGKit
 # gem 'imgkit'
 
+# Sending emails in prod (https://github.com/stephenb/sendgrid)
+gem 'sendgrid'
+
 group :production do
 # Use Uglifier as compressor for JavaScript assets
   gem 'uglifier', '>= 1.3.0'

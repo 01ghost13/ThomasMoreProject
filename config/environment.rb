@@ -8,12 +8,11 @@ Rails.application.initialize!
 ActionMailer::Base.raise_delivery_errors = true
 unless Rails.env.development?
   ActionMailer::Base.smtp_settings = {
-      :address        => 'smtp.gmail.com',
-      :domain         => 'mail.google.com',
-      :port           => 587,
-      :user_name      => ENV['MAIL_USER'],
-      :password       => ENV['MAIL_PASSWORD'],
-      :authentication => :plain,
-      :enable_starttls_auto => true
+      address: "smtp.sendgrid.net",
+      port: 25,
+      domain: "aitscore.com",
+      authentication: :plain,
+      user_name: ENV['SENDGRID_USERNAME'],
+      password: ENV['SENDGRID_PASSWORD']
   }
 end
