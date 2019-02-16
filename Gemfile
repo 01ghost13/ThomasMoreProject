@@ -110,6 +110,9 @@ group :development, :test do
 
   # For seeds
   gem 'faker'
+
+  # For local mailing (https://github.com/sj26/mailcatcher#rails)
+  # gem 'mailcatcher'
 end
 
 group :development do
