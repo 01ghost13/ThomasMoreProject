@@ -91,13 +91,9 @@ gem 'lodash-rails'
 # Sending emails in prod (https://github.com/stephenb/sendgrid)
 gem 'sendgrid'
 
-group :production do
+group :production, :staging do
 # Use Uglifier as compressor for JavaScript assets
   gem 'uglifier', '>= 1.3.0'
-
-  gem 'pg'
-  gem 'rails_12factor'
-  #gem for adding pictures
 end
 
 group :staging do
