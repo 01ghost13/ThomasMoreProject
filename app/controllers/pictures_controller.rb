@@ -17,6 +17,8 @@ class PicturesController < ApplicationController
   def create
     @picture = Picture.new(picture_params)
 
+    @picture.image.attach(io: image_io, filename: image_name)
+
     respond_to do |types|
       types.json do
         if @picture.save
@@ -38,6 +40,8 @@ class PicturesController < ApplicationController
   #Action for edit
   def update
     @picture = Picture.find(params[:id])
+
+    @picture.image.attach(io: image_io, filename: image_name)
 
     respond_to do |types|
       types.json do
@@ -69,7 +73,6 @@ class PicturesController < ApplicationController
   def picture_params
     params.require(:picture).permit(
       :description,
-      :image,
       picture_interests_attributes: [
         :interest_id,
         :earned_points,
@@ -78,4 +81,11 @@ class PicturesController < ApplicationController
       ]
     )
   end
+    def image_io
+      decoded_image = Base64.decode64(params[:picture][:image].sub(/^data:.*,/, ''))
+      StringIO.new(decoded_image)
+    end
+    def image_name
+      params[:picture][:image_name]
+    end
 end

@@ -24,6 +24,16 @@ class PictureForm extends React.Component {
     this.setState({...this.state, description: event.target.value});
   }
 
+  imageChanged(event) {
+    let reader = new FileReader();
+    const files = Array.from(event.target.files);
+
+    reader.readAsDataURL(files[0]);
+    reader.onload = () => {
+      this.setState({...this.state, image: reader.result, image_name: files[0].name});
+    };
+  }
+
   selectChanged(event, index) {
     let new_state = {...this.state};
     new_state.picture_interests_attributes[index].interest_id = parseInt(event.target.value);
@@ -61,7 +71,7 @@ class PictureForm extends React.Component {
       },
       error: function (response, status, jqxhr) {
         alert('Errors appeared!');
-        console.log(response.responseJSON);
+        console.log(response);
       }
     });
 
@@ -109,7 +119,6 @@ class PictureForm extends React.Component {
                    className="form-control"
                    accept="image/*"
                    id="image_upload"
-                   data-direct-upload-url='/rails/active_storage/direct_uploads'
                    onChange={this.imageChanged}
             />
           </div>
@@ -220,27 +229,6 @@ class PictureForm extends React.Component {
         </div>
       </div>
     );
-  }
-
-  uploadImage(file) {
-    const input = document.querySelector('input[type=file]');
-    const url = input.dataset.directUploadUrl;
-    const upload = new ActiveStorage.DirectUpload(file, url);
-
-    upload.create( (error, blob) => {
-      if (error) {
-        console.log("Image Error:", error);
-      } else {
-        let new_state = {...this.state};
-        new_state.image = blob.signed_id;
-        this.setState(new_state);
-      }
-    });
-  }
-
-  imageChanged(event) {
-    const input = document.querySelector('input[type=file]');
-    _.each(_.map(input.files), file => this.uploadImage(file));
   }
 }
 
