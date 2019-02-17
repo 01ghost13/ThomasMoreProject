@@ -2,9 +2,8 @@ class HeatmapTestingComponent extends React.Component {
 
   static get heatmapConfig() {
     return {
-      // container: $('<div></div>')[0],
       container: $('#canvasRender')[0],
-      radius: 15
+      radius: 25
     };
   }
 

@@ -144,9 +144,9 @@
       </div>
       <% if @has_emotion_track %>
         <div class="tab-pane fade" id="emotion_dynamic">
-          <%= line_chart @res[5].map { |k, v| { name: k, data: v } },
+          <%= scatter_chart @res[5].map { |k, v| { name: k, data: v } },
                        id: 'emotion_dynamic_chart',
-                       xtitle: 'Time',
+                       xtitle: 'Question number',
                        ytitle: 'Emotion score',
                        download: true
           %>

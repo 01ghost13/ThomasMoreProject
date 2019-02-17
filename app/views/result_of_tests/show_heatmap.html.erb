@@ -11,26 +11,5 @@
     <%= react_component('HeatmapTestingComponent',
                         render(file: 'result_of_tests/show_heatmap.json.jbuilder', format: :json))
     %>
-    <%#= react_component('HeatmapTestingComponent', {
-        testing: JSON.parse(render(
-          partial: 'tests/testing_data.json.jbuilder',
-          format: :json,
-          locals: {
-            test: @test,
-            question: @question,
-            previous_question: nil,
-            description: @description,
-            image: @image,
-            student: @student,
-            mode: 'heatmap'
-          }
-        )),
-        screen_height: @heatmap.screen_height,
-        screen_width: @heatmap.screen_width,
-        heatmap_data: @heatmap.scale_heatmap(scale_ratio: scale),
-        scale: scale,
-        heatmap_url: student_heatmap_path(params[:student_id], params[:result_id])
-    })
-    %>
   </div>
 </div>
