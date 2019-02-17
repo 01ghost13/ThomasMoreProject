@@ -1,12 +1,26 @@
 <% provide(:title,'Pictures List') %>
 <h1>All pictures</h1>
-<%= link_to('Add picture', new_picture_path, class: 'btn btn-primary')%>
+<div class="row">
+  <%= search_form_for @q do |f|%>
+    <div class="form-group col-sm-4">
+      <%= f.label :description_cont, 'Search', class: 'sr-only' %>
+      <%= f.search_field :description_cont, {
+          placeholder: 'Enter description...',
+          class: 'form-control'
+      } %>
+    </div>
+    <%= f.submit 'Search', class: 'btn btn-primary col-sm-1' %>
+  <% end %>
+</div>
+<div class="row">
+  <%= link_to('Add picture', new_picture_path, class: 'btn btn-primary') %>
+</div>
 <div class="col-sm-12">
   <table class="table table-hover">
     <thead>
     <tr>
       <td>Picture</td>
-      <td>Description</td>
+      <td><%= sort_link @q, :description, 'Description' %></td>
       <td>Related interests</td>
       <td>Edit</td>
       <td>Delete</td>
