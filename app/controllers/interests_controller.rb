@@ -35,7 +35,11 @@ class InterestsController < ApplicationController
   end
 
   def index
-    @interests_list = Interest.order(:created_at).reverse_order.page(params[:page]).per(5)
+    interest_query = Interest.order(:created_at).reverse_order
+    @q = interest_query.ransack(params[:q])
+    @interests_list = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
+
+    @interests_list = @interests_list.page(params[:page]).per(5)
     @interest = Interest.new
   end
   ##########################################################

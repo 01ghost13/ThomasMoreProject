@@ -10,11 +10,22 @@
   <% end %>
 </div>
 <h1>All interests</h1>
+<div class="row">
+  <%= search_form_for @q do |f| %>
+    <div class="form-group col-sm-4">
+      <%= f.label :name_cont, 'Search', class: 'sr-only' %>
+      <%= f.search_field :name_cont, {
+          placeholder: 'Enter interest...',
+          class: 'form-control'
+      } %>
+    </div>
+    <%= f.submit 'Search', class: 'btn btn-primary col-sm-1' %>
+  <% end %>
+</div>
 <table class="table table-hover">
   <thead>
   <tr>
-    <td>Name</td>
-    <!--<td>Profile</td>-->
+    <td><%= sort_link @q, :name, 'Name' %></td>
     <td>Edit</td>
     <td>Delete</td>
   </tr>
