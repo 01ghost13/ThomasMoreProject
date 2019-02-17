@@ -20,7 +20,7 @@ class PicturesController < ApplicationController
   def create
     @picture = Picture.new(picture_params)
 
-    @picture.image.attach(io: image_io, filename: image_name)
+    @picture.image.attach(io: image_io, filename: image_name) if params[:picture][:image].is_a?(String)
 
     respond_to do |types|
       types.json do
@@ -28,7 +28,13 @@ class PicturesController < ApplicationController
           flash[:success] = 'Picture created!'
           render json: { response: { type: :success, message: 'Picture created!' } }, status: :ok
         else
-          render json: { response: { type: :error, errors: @picture.errors } }, status: :bad_request
+          render json: {
+              response: {
+                  type: :error,
+                  fields: @picture.errors.messages,
+                  full_messages: @picture.errors.full_messages
+              }
+          }, status: :unprocessable_entity
         end
       end
     end
@@ -44,7 +50,7 @@ class PicturesController < ApplicationController
   def update
     @picture = Picture.find(params[:id])
 
-    @picture.image.attach(io: image_io, filename: image_name)
+    @picture.image.attach(io: image_io, filename: image_name) if params[:picture][:image].is_a?(String)
 
     respond_to do |types|
       types.json do
@@ -52,7 +58,13 @@ class PicturesController < ApplicationController
           flash[:success] = 'Picture updated!'
           render json: { response: { type: :success } }, status: :ok
         else
-          render json: { response: { type: :error, errors: @picture.errors } }, status: :bad_request
+          render json: {
+              response: {
+                  type: :error,
+                  errors: @picture.errors.messages,
+                  full_messages: @picture.errors.full_messages
+              }
+          }, status: :unprocessable_entity
         end
       end
     end

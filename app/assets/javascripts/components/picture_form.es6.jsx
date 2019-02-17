@@ -2,7 +2,13 @@ class PictureForm extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {...props.picture};
+    this.state = {
+      ...props.picture,
+      errors: {
+        full_messages: [],
+        fields: []
+      }
+    };
 
     //Bindings
     this.descriptionChanged = this.descriptionChanged.bind(this);
@@ -69,9 +75,8 @@ class PictureForm extends React.Component {
       success: function (response, status, jqxhr) {
         window.location.replace("/pictures");
       },
-      error: function (response, status, jqxhr) {
-        alert('Errors appeared!');
-        console.log(response);
+      error: (response, status, jqxhr) => {
+        this.setState({errors: response.responseJSON.response});
       }
     });
 
@@ -212,6 +217,8 @@ class PictureForm extends React.Component {
   render() {
     return (
       <div id="form">
+        <ErrorsComponent errors={ this.state.errors.full_messages } />
+
         {this.renderDescription()}
 
         {this.renderPicture()}
@@ -246,7 +253,7 @@ PictureForm.defaultProps = {
   picture: {
     id: '',
     description: '',
-    image: undefined,
+    image: '',
     picture_interests_attributes: []
   },
   interests_list: [],

@@ -2,7 +2,13 @@ class TestForm extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {...props.test};
+    this.state = {
+      ...props.test,
+      errors: {
+        full_messages: [],
+        fields: []
+      }
+    };
 
     //Bindings
     this.sendForm = this.sendForm.bind(this);
@@ -105,9 +111,8 @@ class TestForm extends React.Component {
       success: function (response, status, jqxhr) {
         window.location.replace("/tests");
       },
-      error: function (response, status, jqxhr) {
-        console.log(response);
-        alert('Errors appeared!');
+      error: (response, status, jqxhr) => {
+        this.setState({errors: response.responseJSON.response});
       }
     });
   }
@@ -269,6 +274,7 @@ class TestForm extends React.Component {
   render() {
     return (
       <div id="form">
+        <ErrorsComponent errors={ this.state.errors.full_messages } />
         {this.renderName()}
 
         {this.renderVersion()}

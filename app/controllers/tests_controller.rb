@@ -36,7 +36,13 @@ class TestsController < ApplicationController
       @pictures = Picture.pictures_list
       @dummy = Picture.find(@pictures.first[1])
       @picture = [@dummy] if @picture.empty?
-      render json: { errors: @test.errors }, status: :unprocessable_entity
+      render json: {
+          response: {
+              type: :error,
+              fields: @test.errors.messages,
+              full_messages: @test.errors.full_messages
+          }
+      }, status: :unprocessable_entity
     end
   end
 
@@ -81,7 +87,13 @@ class TestsController < ApplicationController
       @pictures = Picture.pictures_list
       @dummy = Picture.find(@pictures.first[1])
       @picture = [@dummy] if @picture.empty?
-      render :edit
+      render json: {
+          response: {
+              type: :error,
+              fields: @test.errors.messages,
+              full_messages: @test.errors.full_messages
+          }
+      }, status: :unprocessable_entity
     end
   end
 
