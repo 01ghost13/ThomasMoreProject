@@ -1,63 +1,32 @@
 <% provide(:title, 'Testing') %>
 <%= stylesheet_link_tag 'tests' %>
-<%= javascript_include_tag 'tests' %>
-<%= javascript_include_tag 'exiting_page_script' %>
-<div class="row">
-  <!--Instructions-->
-  <div class="col-sm-offset-1 col-sm-10">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <p>Some instructions for user</p>
-      </div>
-    </div>
-  </div>
-  <!--Btn_exit-->
-  <div class="col-sm-1">
-    <%= image_tag 'btn_exit.png', id:'btn_exit',class: 'img-responsive', onclick: "window.location.href = '%s';"%student_path(params[:id]) %>
-  </div>
-</div>
-<div class="row">
-  <div class="col-sm-2">
-    <div class="row">
-      <!--Thumbs_up-->
-      <%= image_tag 'btn_tu.png', id:'btn_tu',class: 'img-responsive'%>
-    </div>
-    <div class="row">
-      <!--Btn_back-->
-      <%= image_tag 'btn_back.png', id:'btn_back', class: 'img-responsive', style: @show_btn_back %>
-    </div>
-  </div>
-
-  <!--Picture-->
-  <div class="col-sm-offset-1 col-sm-6">
-    <%= image_tag @image.url, id:'cur_image',class: 'img-responsive'%>
-  </div>
-  <div class="col-sm-offset-1 col-sm-2">
-
-    <div class="row">
-      <!--Thumbs_down-->
-      <%= image_tag 'btn_td.png', id:'btn_td',class: 'img-responsive'%>
-    </div>
-    <div class="row">
-      <!--Question mark-->
-      <%= image_tag 'btn_qm.png', id:'btn_qm',class: 'img-responsive'%>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <!--Description-->
-  <div class="col-sm-offset-2 col-sm-8">
-    <div class="panel panel-default">
-      <div class="panel-body" id="description_id">
-        <p><%=@description%></p>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <!--Progress bar-->
-  <div class="progress">
-    <div id ="bar_id" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow=<%=@progress_bar_value.to_s%> aria-valuemin="0" aria-valuemax="100" style="width:<%= @progress_bar_value.to_s %>%;"%>
-    </div>
-  </div>
-</div>
+<%= javascript_include_tag 'webgazer/webgazer' %>
+<% unless params.has_key?(:debug) %>
+  <style>
+    #webgazerVideoFeed, #webgazerVideoCanvas, #webgazerFaceOverlay, #webgazerFaceFeedbackBox {
+      display: none !important;
+    }
+  </style>
+<% end %>
+<%= react_component('TestingComponent',
+                    render(
+                        partial: 'tests/testing_data.json.jbuilder',
+                        format: :json,
+                        locals: {
+                            test: @test,
+                            question: @question,
+                            previous_question: @previous_question,
+                            description: @description,
+                            image: @image,
+                            student: @student,
+                            mode: 'testing',
+                            result_of_test: @res
+                        }
+                    )
+    )
+%>
+<script>
+  window.onbeforeunload = function() {
+    window.localStorage.clear();
+  }
+</script>

@@ -1,12 +1,26 @@
 <% provide(:title,'Pictures List') %>
 <h1>All pictures</h1>
-<%= link_to('Add picture', new_picture_path, class: 'btn btn-primary')%>
+<div class="row">
+  <%= search_form_for @q do |f|%>
+    <div class="form-group col-sm-4">
+      <%= f.label :description_cont, 'Search', class: 'sr-only' %>
+      <%= f.search_field :description_cont, {
+          placeholder: 'Enter description...',
+          class: 'form-control'
+      } %>
+    </div>
+    <%= f.submit 'Search', class: 'btn btn-primary col-sm-1' %>
+  <% end %>
+</div>
+<div class="row">
+  <%= link_to('Add picture', new_picture_path, class: 'btn btn-primary') %>
+</div>
 <div class="col-sm-12">
   <table class="table table-hover">
     <thead>
     <tr>
       <td>Picture</td>
-      <td>Description</td>
+      <td><%= sort_link @q, :description, 'Description' %></td>
       <td>Related interests</td>
       <td>Edit</td>
       <td>Delete</td>
@@ -14,7 +28,11 @@
     </thead>
     <% @pictures.each do |picture| %>
         <tr>
-          <td class="col-sm-4"><%= image_tag picture.image.url(:thumb) %></td>
+          <td class="col-sm-4">
+            <% if picture.image.attachment.present? %>
+              <%= image_tag url_for(picture.image.try(:variant, resize: '150x150')) %>
+            <% end %>
+          </td>
           <td class="col-sm-3"><h4><%= picture.description %></h4></td>
           <td class="col-sm-3"><h4><%= picture.related_interests.keys.join(', ') %></h4></td>
           <td class="col-sm-1"><%= link_to('Edit', edit_picture_path(picture.id), class: 'btn btn-warning') %></td>

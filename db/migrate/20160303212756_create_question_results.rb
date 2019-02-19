@@ -1,4 +1,4 @@
-class CreateQuestionResults < ActiveRecord::Migration
+class CreateQuestionResults < ActiveRecord::Migration[4.2]
   def change
     create_table :question_results do |t|
       t.integer :number #Number of Q

@@ -1,0 +1,4 @@
+<%= react_component('TestForm', render(partial: 'tests/test_data.json.jbuilder',
+                                       locals: { test: @test, form_type: form_type },
+                                       format: :json))
+%>

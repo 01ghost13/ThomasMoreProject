@@ -1,4 +1,4 @@
-class CreateResultOfTests < ActiveRecord::Migration
+class CreateResultOfTests < ActiveRecord::Migration[4.2]
   def change
     create_table :result_of_tests do |t|
       t.boolean :was_in_school #Boolean flag from student

@@ -16,6 +16,12 @@
               data: {turbolinks: false}, class: 'btn btn-success' do  %>
     <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>&#8194;Download as xlsx
   <% end %>
+  <% if @has_heatmap %>
+    <%= link_to 'Show heatmap',
+                student_heatmap_path(params[:student_id], params[:result_id]),
+                class: 'btn btn-success'
+    %>
+  <% end %>
 
 </div>
 <div class="row">
@@ -78,7 +84,7 @@
 </div>
 
 <!-- Edit btn -->
-<div class="row col-sm-4">
+<div class="row col-sm-4" style="margin-bottom: 15px;">
   <% unless @i_am_student %>
       <%= link_to("Edit results", edit_student_result_of_test_path(params[:student_id],params[:result_id]), class: "btn btn-warning") %>
   <% else %>
@@ -100,22 +106,51 @@
         <a href="#avg_interests" data-toggle="tab">Average answer time to interest field</a>
       </li>
       <li>
-        <a href="#timeline"  data-toggle="tab">Timeline</a>
+        <a href="#timeline" data-toggle="tab">Timeline</a>
       </li>
+      <% if @has_emotion_track %>
+        <li>
+          <a href="#emotion_dynamic" data-toggle="tab">Emotion dynamic</a>
+        </li>
+      <% end %>
     </ul>
     <div class="tab-content">
       <div class="tab-pane fade in active" id="answer_time">
-        <%= column_chart @res[2], xtitle: 'Question number', ytitle: 'Time of answer(sec)', download: true %>
+        <%= column_chart @res[2],
+                         xtitle: 'Question number',
+                         ytitle: 'Time of answer(sec)',
+                         download: true
+        %>
       </div>
       <div class="tab-pane fade" id="avg_interests">
-        <%= column_chart @res[3], id: 'avg_interests_chart', xtitle: 'Interest', ytitle: 'Avg time of answer(sec)',
-                         download: true, discrete: true %>
+        <%= column_chart @res[3],
+                         id: 'avg_interests_chart',
+                         xtitle: 'Interest',
+                         ytitle: 'Avg time of answer(sec)',
+                         download: true,
+                         discrete: true
+        %>
       </div>
       <div class="tab-pane fade" id="interests_points">
-        <%= pie_chart @list_interests, download: true %>
+        <%= pie_chart @list_interests,
+                      download: true
+        %>
       </div>
       <div class="tab-pane fade" id="timeline">
-        <%= timeline @res[4], id: 'timeline_chart', download: true %>
+        <%= timeline @res[4],
+                     id: 'timeline_chart',
+                     download: true
+        %>
+      </div>
+      <% if @has_emotion_track %>
+        <div class="tab-pane fade" id="emotion_dynamic">
+          <%= scatter_chart @res[5].map { |k, v| { name: k, data: v } },
+                       id: 'emotion_dynamic_chart',
+                       xtitle: 'Question number',
+                       ytitle: 'Emotion score',
+                       download: true
+          %>
+      <% end %>
       </div>
     </div>
   </div>

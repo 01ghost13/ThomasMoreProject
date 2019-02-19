@@ -7,6 +7,8 @@ class ResultOfTest < ActiveRecord::Base
   has_many :question_results, dependent: :destroy
   accepts_nested_attributes_for :question_results
 
+  scope :result_page, -> { includes(:question_results, question_results: [:question, question: [:picture]]) }
+
   validates :test,:schooling,:student, presence: true
   validates :was_in_school, exclusion: { in: [nil] }
 
@@ -20,15 +22,22 @@ class ResultOfTest < ActiveRecord::Base
   #Returns the question after last answered
   def last_question
     questions = QuestionResult.order(:number).where(result_of_test_id: self.id)
-    Question.where("test_id = :test and number = :number",
-                   {test: self.test_id, number:(questions.count == 0)? 1 :questions.count+1}).take
+    Question.where(test_id: self.test_id, number: (questions.count == 0) ? 1 : questions.count + 1).first
+  end
+
+  def get_question(number)
+    get_question_result(number).question
+  end
+
+  def get_question_result(number)
+    QuestionResult.includes(:question).where(result_of_test_id: self.id, number: number).first
   end
 
   #Returns question before current
   def previous_question
     questions = QuestionResult.order(:number).where(result_of_test_id: self.id)
-    Question.where("test_id = :test and number = :number",
-                   {test: self.test_id, number:(questions.count == 0)? 1 :questions.count-1}).take
+    previous_number = (questions.count <= 1) ? 1 : questions.count - 1
+    Question.where(test_id: self.test_id, number: previous_number).first
   end
 
   def show_short
@@ -64,6 +73,16 @@ class ResultOfTest < ActiveRecord::Base
       duration += r.end - r.start
     end
     timeline
+  end
+
+  def show_emotion_dynamic
+    list = {}
+    question_results.map(&:get_emotion_lists).each_with_index do |question_emotions, i|
+      list.merge!(question_emotions.transform_values { |emo_arr| emo_arr.map { |emo_v| [rand(i), emo_v] } }) do |_, a, b|
+        a + b
+      end
+    end
+    list
   end
 
   private :setup_fields

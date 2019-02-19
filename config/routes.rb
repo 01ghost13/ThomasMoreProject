@@ -59,11 +59,13 @@ Rails.application.routes.draw do
       #Adding testing pages
       get 'tests' => 'tests#index', as: 'tests'
       get 'tests/:test_id/testing' => 'tests#testing', as: 'testing'
-      get 'tests/:test_id/testing/update_picture' => 'tests#update_picture'
-      post 'tests/:test_id/testing/exit' => 'tests#exit'
+      post 'tests/:test_id/testing/update_picture' => 'tests#update_picture'
       get 'edit/update_tutors' => 'students#update_tutors'
+      get 'mode_settings' => 'students#mode_settings'
+      patch 'mode_settings' => 'students#update_mode_settings'
     end
-    resources :result_of_tests, except: [:new,:create,:index], path: 'results', param: :result_id
+    resources :result_of_tests, except: [:new, :create, :index], path: 'results', param: :result_id
+    get 'results/:result_id/heatmap'=> 'result_of_tests#show_heatmap', as: 'heatmap'
     get 'update_tutors' => 'students#update_tutors', on: :new
   end
 

@@ -1,0 +1,32 @@
+<% provide(:title,'Edit mode') %>
+<%= javascript_include_tag 'students' %>
+<h1 class="row col-sm-offset-4">Edit testing settings</h1>
+<%= render 'shared/error_message' %>
+
+<%= form_for @user, class: "form-horizontal", url: mode_settings_student_path(params[:id]) do |student_form| %>
+  <!-- Gaze tracer -->
+  <div class="row col-sm-offset-2 form-group">
+    <div class="col-sm-2">
+      <%= student_form.label :gaze_trace, "Gaze tracing" %>
+    </div>
+    <div class="col-sm-2">
+      <%= student_form.check_box(:gaze_trace) %>
+    </div>
+  </div>
+
+  <!-- Emotion recognition -->
+  <div class="row col-sm-offset-2 form-group">
+    <div class="col-sm-2">
+      <%= student_form.label :emotion_recognition, "Emotion recognition" %>
+    </div>
+    <div class="col-sm-2">
+      <%= student_form.check_box(:emotion_recognition) %>
+    </div>
+  </div>
+
+  <div class="row col-sm-offset-2 form-group">
+    <div class="col-sm-offset-2 col-sm-2">
+      <%= student_form.submit "Confirm", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>

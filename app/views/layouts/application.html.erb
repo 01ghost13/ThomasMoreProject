@@ -36,12 +36,12 @@
     </nav>
   </div>
 </header>
-<div class="container">
+<div class="container" style="margin-bottom: 60px">
 	<% flash.each do |message_type, message| %>
 		<div class="alert alert-<%= message_type %>"><%= message %></div>
 	<% end %>
 	<%= yield %>
-	<%= debug(params) if Rails.env.development? %>
+	<%= debug(params) if Rails.env.development? && params[:show_log] %>
 </div>
 </body>
 </html>

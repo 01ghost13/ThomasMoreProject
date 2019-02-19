@@ -11,8 +11,10 @@ class Info < ActiveRecord::Base
   validates :mail, presence: true, uniqueness: true, format: { with: /\S+?@.+?\.\S+/i}
   validates :is_mail_confirmed, exclusion: { in: [nil] }
   validates :password, presence: true, allow_nil: true, length: {minimum: 4}
-  validates :phone, length: {minimum: 6},
-            format: {with: /[-0-9)(+]/, message: 'only numbers, plus, minus signs, brackets'}, unless: 'phone.blank?'
+  validates :phone,
+            length: {minimum: 6},
+            format: {with: /[-0-9)(+]/, message: 'only numbers, plus, minus signs, brackets'},
+            unless: ->{ phone.blank? }
 
   #Setups default fields
   def setup_fields

@@ -1,4 +1,4 @@
-class CreateModes < ActiveRecord::Migration
+class CreateModes < ActiveRecord::Migration[4.2]
   def change
     create_table :modes do |t|
       t.string :name
