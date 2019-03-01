@@ -200,10 +200,22 @@ class TestingComponent extends React.Component {
     };
 
     if(this.props.webgazer) {
+      let cur_image = $('#cur_image');
+      let cur_image_offset = cur_image.offset();
       data['gaze_trace_result_attributes'] = {
         gaze_points: this.state.gazeTrace,
         screen_width: screen.width,
-        screen_height: screen.height
+        screen_height: screen.height,
+        picture_bounds: [
+          {
+            x: cur_image_offset.left,
+            y: cur_image.height() + cur_image_offset.top
+          }, // down left
+          {
+            x: cur_image.width() + cur_image_offset.left,
+            y: cur_image_offset.top
+          }  // top right
+        ]
       }
     }
 
