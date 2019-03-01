@@ -153,7 +153,10 @@ class TestsController < ApplicationController
       }
       if res.gaze_trace? && params[:gaze_trace_result_attributes].present?
         question_result_params[:gaze_trace_result_attributes] =
-            params.require(:gaze_trace_result_attributes).permit(GazeTraceResult.attribute_names, gaze_points: [:x, :y])
+            params.require(:gaze_trace_result_attributes)
+                  .permit(GazeTraceResult.attribute_names,
+                          gaze_points: [:x, :y],
+                          picture_bounds: [:x, :y])
       end
       if res.emotion_recognition? && params[:emotion_state_result_attributes].present?
         question_result_params[:emotion_state_result_attributes] =
