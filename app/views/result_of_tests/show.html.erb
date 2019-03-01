@@ -67,16 +67,39 @@
   <div class="col-sm-offset-1 col-sm-5">
     <table class="table table-hover">
       <thead>
-      <h1>Interests points</h1>
+      <h1>Earned interests points</h1>
       <tr>
         <td><h4>Interest</h4></td>
-        <td><h4>Earned points</h4></td>
+        <td><h4>Summary</h4></td>
+        <% if @has_heatmap %>
+          <td><h4>With gaze analysis</h4></td>
+        <% end %>
+        <% if @has_emotion_track %>
+          <td><h4>With emotion analysis</h4></td>
+        <% end %>
       </tr>
       </thead>
       <% @list_interests.each do |element|%>
           <tr>
             <td><h4><small><%= element[0].to_s.humanize %></small></h4></td>
             <td><h4><small><%= element[1] %> of <%= @list_interests_max[element[0]] %></small></h4></td>
+            <% if @has_heatmap %>
+              <td>
+                <h4>
+                  <small>
+                    <%= @list_interests_with_gaze[element[0]].round(2) %> of <%= @list_interests_max[element[0]] %>
+                  </small>
+                </h4>
+              </td>
+            <% end %>
+            <% if @has_emotion_track %>
+              <td>
+                <h4>
+                  <small>
+                  </small>
+                </h4>
+              </td>
+            <% end %>
           </tr>
       <% end %>
     </table>
