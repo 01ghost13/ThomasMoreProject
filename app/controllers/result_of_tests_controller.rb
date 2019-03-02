@@ -89,14 +89,14 @@ class ResultOfTestsController < ApplicationController
     @has_heatmap = result.gaze_trace?
     if @has_heatmap
       gaze_calculator = GazeMultiplierCalculator.new(q_res)
-      @list_interests_with_gaze = gaze_calculator.recount_results(@list_interests.to_h)
+      @list_interests_with_gaze = gaze_calculator.recount_results(@list_interests.to_h, @list_interests_max)
     end
 
     @has_emotion_track = result.emotion_recognition?
 
     if @has_emotion_track
       emotion_calculator = EmotionMultiplierCalculator.new(q_res)
-      @list_interests_with_emotions = emotion_calculator.recount_results(@list_interests.to_h)
+      @list_interests_with_emotions = emotion_calculator.recount_results(@list_interests.to_h, @list_interests_max)
     end
 
     respond_to do |format|

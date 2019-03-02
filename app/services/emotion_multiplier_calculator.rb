@@ -35,9 +35,10 @@ class EmotionMultiplierCalculator
     result
   end
 
-  def recount_results(interest_points)
-    interest_points.merge(@multipliers) do |_, interest_point, multiplier|
-      counter_function(interest_point, multiplier)
+  def recount_results(interest_points, interest_max)
+    interest_points.merge(@multipliers) do |interest_name, interest_point, multiplier|
+      normalized_point = interest_point.to_f / interest_max.fetch(interest_name, interest_point)
+      counter_function(normalized_point, multiplier) * interest_point.to_f
     end
   end
 
@@ -65,7 +66,7 @@ class EmotionMultiplierCalculator
           elsif old_point.between?(0.3, 0.6)
             0.5 * multiplier + 0.2
           else
-            5.0 / 7.0 * multiplier + 0.5
+            0.5 * multiplier + 0.5
           end
       old_point * new_multiplier
     end
