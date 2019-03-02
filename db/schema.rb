@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_01_064500) do
+ActiveRecord::Schema.define(version: 2019_03_02_121648) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 2019_03_01_064500) do
   end
 
   create_table "gaze_trace_results", force: :cascade do |t|
-    t.json "gaze_points", default: []
+    t.json "gaze_points", default: {}
     t.integer "screen_width"
     t.integer "screen_height"
     t.datetime "created_at", null: false

@@ -75,9 +75,6 @@ class ResultOfTestsController < ApplicationController
     student = Student.find(result.student_id)
     #Sorting
     @list_interests = interests.to_a.sort{ |x,y| y[1] - x[1]}
-    gaze_calculator = GazeMultiplierCalculator.new(q_res)
-    @list_interests_with_gaze = gaze_calculator.recount_results(@list_interests.to_h)
-    @list_multipliers_with_gaze = gaze_calculator.multipliers
     @list_timestamps = timestamps
     @list_interests_max = interests_max
     @student = student.code_name.titleize
@@ -90,7 +87,17 @@ class ResultOfTestsController < ApplicationController
       result.show_emotion_dynamic
     ]
     @has_heatmap = result.gaze_trace?
+    if @has_heatmap
+      gaze_calculator = GazeMultiplierCalculator.new(q_res)
+      @list_interests_with_gaze = gaze_calculator.recount_results(@list_interests.to_h, @list_interests_max)
+    end
+
     @has_emotion_track = result.emotion_recognition?
+
+    if @has_emotion_track
+      emotion_calculator = EmotionMultiplierCalculator.new(q_res)
+      @list_interests_with_emotions = emotion_calculator.recount_results(@list_interests.to_h, @list_interests_max)
+    end
 
     respond_to do |format|
       format.html
