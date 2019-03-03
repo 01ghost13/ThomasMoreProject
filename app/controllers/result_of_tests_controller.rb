@@ -42,7 +42,7 @@ class ResultOfTestsController < ApplicationController
 
     avg_time_per_interest = {}
     #Loading question results
-    q_res  = result.question_results
+    q_res  = result.question_results.order(:number)
     q_test = Question.where(test_id: result.test_id) #questions of test
     #Loading all interests
     interests = {}
