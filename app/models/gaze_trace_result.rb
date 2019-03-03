@@ -39,4 +39,24 @@ class GazeTraceResult < ActiveRecord::Base
     range_y = [top_right['y'].to_f, down_left['y'].to_f].sort
     point['x'].to_f.between?(*range_x) && point['y'].to_f.between?(*range_y)
   end
+
+  def inside_buttons_points
+    gaze_points.values.select { |gp| inside_buttons?(gp) }
+  end
+
+  def inside_buttons?(point)
+    top_left = { x: 98, y: 82 }.transform_keys(&:to_s)
+    down_right = { x: 293, y: 277 }.transform_keys(&:to_s)
+    range_x = [top_left['x'].to_f, down_right['x'].to_f].sort
+    range_y = [top_left['y'].to_f, down_right['y'].to_f].sort
+    inside_left = point['x'].to_f.between?(*range_x) && point['y'].to_f.between?(*range_y)
+
+    top_left = { x: 1073, y: 82 }.transform_keys(&:to_s)
+    down_right = { x: 1268, y: 277 }.transform_keys(&:to_s)
+    range_x = [top_left['x'].to_f, down_right['x'].to_f].sort
+    range_y = [top_left['y'].to_f, down_right['y'].to_f].sort
+    inside_right = point['x'].to_f.between?(*range_x) && point['y'].to_f.between?(*range_y)
+
+    inside_left || inside_right
+  end
 end
