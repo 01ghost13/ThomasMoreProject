@@ -85,5 +85,53 @@ class ResultOfTest < ActiveRecord::Base
     list
   end
 
+  def average_inside_picture
+    gaze_results = question_results.includes(:gaze_trace_result).map do |qr|
+      qr.gaze_trace_result
+    end
+    sum = gaze_results
+              .select { |gr| gr.gaze_points.present? }
+              .map { |gr| gr.inside_picture_points.count / gr.gaze_points.count.to_f }
+              .reduce(&:+)
+    total = gaze_results.count.to_f
+    sum / total
+  end
+
+  def average_inside_buttons
+    gaze_results = question_results.includes(:gaze_trace_result).map do |qr|
+      qr.gaze_trace_result
+    end
+    sum = gaze_results
+              .select { |gr| gr.gaze_points.present? }
+              .map { |gr| gr.inside_buttons_points.count / gr.gaze_points.count.to_f }
+              .reduce(&:+)
+    total = gaze_results.count.to_f
+    sum / total
+  end
+
+  def without_gazes
+    gaze_results = question_results.includes(:gaze_trace_result).map do |qr|
+      qr.gaze_trace_result
+    end
+    gaze_results.select { |gr| gr.gaze_points.blank? }.count
+  end
+
+  def without_emotions
+    emotion_states = question_results.includes(:emotion_state_result).map(&:emotion_state_result)
+    emotion_states.select { |es| es&.states.blank? }.count
+  end
+
+  def correlates_with_positive
+    EmotionMultiplierCalculator.new(question_results).correlates_with_positive_emotion.count / question_results.count.to_f
+  end
+
+  def correlates_with_negative
+    EmotionMultiplierCalculator.new(question_results).correlates_with_negative_emotion.count / question_results.count.to_f
+  end
+
+  def count_neutral
+    EmotionMultiplierCalculator.new(question_results).neutral_states.count / question_results.count.to_f
+  end
+
   private :setup_fields
 end

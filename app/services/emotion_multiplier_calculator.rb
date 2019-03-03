@@ -42,7 +42,36 @@ class EmotionMultiplierCalculator
     end
   end
 
+  def correlates_with_positive_emotion
+    @question_results.select { |qr| correlates_with_emotion?(qr, positive: true) if qr.emotion_state_result.present? }
+  end
+
+  def correlates_with_negative_emotion
+    @question_results.select { |qr| correlates_with_emotion?(qr, positive: false) if qr.emotion_state_result.present? }
+  end
+
+  def neutral_states
+    @question_results
+        .map(&:emotion_state_result)
+        .select { |emotion_state| emotion_state&.states.present? }
+        .flat_map { |emotion_state| emotion_state.states.values }
+        .select { |state| is_neutral_state(state) }
+  end
+
   private
+
+    def correlates_with_emotion?(question_result, positive: true)
+      answer = question_result.was_checked # 1 - negative, 3 - positive
+      emotions = question_result.emotion_state_result.states.values
+      if positive
+        positive_emotions = emotions.select { |state| is_positive_state(state) }
+        answer == 3 && positive_emotions.count > emotions.count / 2.0
+      else
+        negative_emotions = emotions.select { |state| !is_positive_state(state) }
+        answer == 1 && negative_emotions.count > emotions.count / 2.0
+      end
+    end
+
     def count_multipliers(results_by_interests)
       results_by_interests.transform_values do |emotion_result_array|
         emotion_states = emotion_result_array
@@ -76,5 +105,12 @@ class EmotionMultiplierCalculator
                                    .transform_values(&:to_f)
                                    .max_by { |_, probability| probability }
       POSITIVE_EMOTIONS.include?(most_plausible_emotion.first.to_sym)
+    end
+
+    def is_neutral_state(emotion_state)
+      most_plausible_emotion = emotion_state
+                                   .transform_values(&:to_f)
+                                   .max_by { |_, probability| probability }
+      most_plausible_emotion.first.to_sym == :neutral
     end
 end
