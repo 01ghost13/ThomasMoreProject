@@ -40,5 +40,10 @@ class QuestionResult < ActiveRecord::Base
     emotion_state_result.emotion_lists
   end
 
+  def get_plausible_emotion_states
+    return [] if emotion_state_result.blank?
+    emotion_state_result.plausible_emotion_states_list
+  end
+
   private :setup_fields
 end

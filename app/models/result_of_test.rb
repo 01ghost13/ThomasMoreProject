@@ -77,9 +77,25 @@ class ResultOfTest < ActiveRecord::Base
 
   def show_emotion_dynamic
     list = {}
+    r = Random.new
     question_results.map(&:get_emotion_lists).each_with_index do |question_emotions, i|
-      list.merge!(question_emotions.transform_values { |emo_arr| emo_arr.map { |emo_v| [rand(i), emo_v] } }) do |_, a, b|
+      list.merge!(question_emotions.transform_values { |emo_arr| emo_arr.map { |emo_v| [r.rand(i.to_f), emo_v] } }) do |_, a, b|
         a + b
+      end
+    end
+    list
+  end
+
+  def show_plausible_emotion_states_dynamic
+    list = {}
+    r = Random.new
+    question_results.map(&:get_plausible_emotion_states).each_with_index do |question_emotions, i|
+      step = 1.0 / question_emotions.count
+      question_emotions.each_with_index do |q_e, j|
+        list.merge!({q_e.first => [[i + 1 + step * j, q_e.second.to_f]]}) do |_, a, b|
+        # list.merge!({q_e.first => [[r.rand(i.to_f), q_e.second.to_f]]}) do |_, a, b|
+          a + b
+        end
       end
     end
     list
@@ -131,6 +147,18 @@ class ResultOfTest < ActiveRecord::Base
 
   def count_neutral
     EmotionMultiplierCalculator.new(question_results).neutral_states.count / question_results.count.to_f
+  end
+
+  def clear_dups_es
+    all_esr = question_results.map(&:emotion_state_result)
+    checked_states = []
+    all_esr.each do |esr|
+      emotion_states = esr.states.values
+      values_to_save = emotion_states.select { |emotion_state| checked_states.find_index(emotion_state).blank? }
+      checked_states += values_to_save
+      esr.states = values_to_save.map.with_index { |v, i| [i, v] }.to_h
+    end
+
   end
 
   private :setup_fields
