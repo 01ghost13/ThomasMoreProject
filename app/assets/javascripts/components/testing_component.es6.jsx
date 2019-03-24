@@ -261,7 +261,7 @@ class TestingComponent extends React.Component {
           this.setState(new_state);
         },
         complete: () => {
-          this.setState({lock_buttons: false, gazeTrace: []})
+          this.setState({lock_buttons: false, gazeTrace: [], emotionStates: []})
         }
     });
   }
