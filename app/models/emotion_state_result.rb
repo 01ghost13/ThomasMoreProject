@@ -7,4 +7,10 @@ class EmotionStateResult < ActiveRecord::Base
       sum_hash.merge(state_to_add) { |_, a, b| a + b }
     end
   end
+
+  def plausible_emotion_states_list
+    states.values.map do |emotion_state|
+      emotion_state.max_by { |emo_v_a| emo_v_a.second.to_f }
+    end
+  end
 end
