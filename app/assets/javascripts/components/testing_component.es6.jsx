@@ -358,7 +358,9 @@ class TestingComponent extends React.Component {
   renderInstructions() {
     return(
       <div className="col-sm-offset-1 col-sm-10">
-        <div className="panel panel-default">
+        <div className="panel panel-default"
+             style={{display: 'none'}}
+        >
           <div className="panel-body">
             <p>Some instructions for user</p>
           </div>
