@@ -18,7 +18,7 @@ class Info < ActiveRecord::Base
 
   #Setups default fields
   def setup_fields
-    self.is_mail_confirmed = false
+    self.is_mail_confirmed = !Rails.env.staging?
     true
   end
 

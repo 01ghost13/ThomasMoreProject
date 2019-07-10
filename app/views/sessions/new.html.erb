@@ -28,9 +28,11 @@
 		</div>
 	</div>
 <% end %>
-<div class="row col-sm-offset-2 col-sm-10">
-  Forgot your password? <%= link_to 'Restore here!', forgot_password_path %>
-</div>
+<% if Rails.env.staging? %>
+  <div class="row col-sm-offset-2 col-sm-10">
+    Forgot your password? <%= link_to 'Restore here!', forgot_password_path %>
+  </div>
+<% end %>
 <div class="row col-sm-offset-2 col-sm-10">
 	Want to join? <%= link_to 'Sign up, now!', new_administrator_path %>
 </div>

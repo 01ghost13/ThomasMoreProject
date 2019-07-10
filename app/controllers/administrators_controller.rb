@@ -25,10 +25,13 @@ class AdministratorsController < ApplicationController
   def create
     #Loading data
     @user = Administrator.new(administrator_params)
+    captcha = Rails.env.staging? ? verify_recaptcha(model: @user) : true
     #If data ok - creating
-    if verify_recaptcha(model: @user) && @user.save
+    if captcha && @user.save
       flash[:success] = 'Account created! Confirmation of account was sent to email.'
-      AitscoreMailer.registration_confirmation(@user.info).deliver
+      if Rails.env.staging?
+        AitscoreMailer.registration_confirmation(@user.info).deliver
+      end
       #Logging in as a new user if not logged
       log_in @user.info unless logged_in?
       redirect_to @user

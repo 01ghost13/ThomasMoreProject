@@ -70,11 +70,13 @@
 	</div>
 
   <!--Captcha-->
-  <div class="row col-sm-offset-2 form-group">
-    <div class="col-sm-offset-2 col-sm-2">
-      <%= recaptcha_tags %>
+  <% if Rails.env.staging? %>
+    <div class="row col-sm-offset-2 form-group">
+      <div class="col-sm-offset-2 col-sm-2">
+        <%= recaptcha_tags %>
+      </div>
     </div>
-  </div>
+  <% end %>
 
 	<!--Submit-->
   <div class="row col-sm-offset-2 form-group">
