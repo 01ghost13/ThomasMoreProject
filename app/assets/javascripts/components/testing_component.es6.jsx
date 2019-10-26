@@ -322,7 +322,7 @@ class TestingComponent extends React.Component {
             </div>
           </div>
         </div>
-        <div className="row">
+        <div className="row description-row">
           {this.renderDescription()}
         </div>
         <div className="row">
@@ -362,7 +362,7 @@ class TestingComponent extends React.Component {
              style={{display: 'none'}}
         >
           <div className="panel-body">
-            <p>Some instructions for user</p>
+            <h4>Some instructions for user</h4>
           </div>
         </div>
       </div>
@@ -384,10 +384,12 @@ class TestingComponent extends React.Component {
     return (
       <div className="col-sm-offset-2 col-sm-8">
         <div className="panel panel-default">
-          <div className="panel-body" id="description_id">
-            <p>
+          <div className="panel-body description-block"
+               id="description_id"
+          >
+            <div className="description-text">
               {this.state.current_question.description}
-            </p>
+            </div>
           </div>
         </div>
       </div>
