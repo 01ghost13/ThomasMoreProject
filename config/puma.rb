@@ -36,7 +36,7 @@ plugin :tmp_restart
 # https://arusso.io/Generating_a_SAN_Certificate_in_Ruby/
 # https://gist.github.com/tadast/9932075#gistcomment-2642851
 # https://medium.com/@alex9pro/добавление-ssl-сертификата-в-rails-приложение-5959b0da4da9
-if Rails.env.development?
+if Rails.env.development? && ENV['SSL'] == 'true'
 
   localhost_key = "#{Dir.pwd}/#{File.join('config', 'certs', 'localhost.key')}"
   localhost_cert = "#{Dir.pwd}/#{File.join('config', 'certs', 'localhost.crt')}"

@@ -54,7 +54,7 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  config.force_ssl = true
+  config.force_ssl = ENV['SSL'] == 'true'
 
   # Default url for mailing agent
   config.action_mailer.default_url_options = { host: '127.0.0.1:3000' }
