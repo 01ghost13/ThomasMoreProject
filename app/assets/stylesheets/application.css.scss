@@ -12,9 +12,13 @@
  */
 @import "bootstrap-sprockets";
 @import "bootstrap";
+@import "fonts";
+
 $state-danger-text: black;
+
 body {
   padding-top: 60px;
+  font-family: Calibri, Tahoma, Arial, Verdana, sans-serif;
 }
 @mixin box_sizing {
   -moz-box-sizing:    border-box;
