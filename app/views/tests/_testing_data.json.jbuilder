@@ -9,7 +9,7 @@ json.testing do
     json.previous_question do
       json.extract! previous_question, *%i[id number]
       json.description previous_question.picture.description
-      json.image_url url_for(previous_question.picture.image)
+      json.image_url url_for(previous_question.picture.middle_variant)
     end
   end
 end

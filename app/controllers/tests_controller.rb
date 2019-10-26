@@ -177,7 +177,7 @@ class TestsController < ApplicationController
 
     pic = @question.picture
     @description = pic.description
-    @image = pic.image
+    @image = pic.middle_variant
 
     respond_to do |format|
        format.json do
@@ -224,7 +224,7 @@ class TestsController < ApplicationController
     @question = res.last_question
     @previous_question = res.previous_question
     @description = @question.picture.description
-    @image = @question.picture.image
+    @image = @question.picture.middle_variant
     @res = res
     render layout: 'testing_layout'
   end

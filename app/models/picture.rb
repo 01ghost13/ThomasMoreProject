@@ -19,6 +19,14 @@ class Picture < ActiveRecord::Base
     result
   end
 
+  def small_variant
+    image.variant(quality: 40, resize: '150x150')
+  end
+
+  def middle_variant
+    image.variant(quality: 80, resize: '300x300')
+  end
+
   #Returns all pictures
   def self.pictures_list
     Picture.with_attached_image.order(:description).map do |t|

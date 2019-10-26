@@ -8,7 +8,7 @@ end
 json.picture_list do
   json.array! Picture.with_attached_image.order(:description) do |picture|
     json.id picture.id
-    json.preview url_for(picture.image.variant(resize: '150x150')) if picture.image.attachment.present?
+    json.preview url_for(picture.small_variant) if picture.image.attachment.present?
     json.name picture.description
   end
 end
