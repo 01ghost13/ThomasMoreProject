@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: tutors
+#
+#  id               :integer          not null, primary key
+#  info_id          :integer
+#  administrator_id :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+
 require 'test_helper'
 
 class TutorTest < ActiveSupport::TestCase

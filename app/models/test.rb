@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: tests
+#
+#  id          :integer          not null, primary key
+#  name        :string
+#  description :string
+#  version     :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
 class Test < ActiveRecord::Base
   after_save :set_outdated
 

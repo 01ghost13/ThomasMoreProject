@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: question_results
+#
+#  id                      :integer          not null, primary key
+#  number                  :integer
+#  start                   :datetime
+#  end                     :datetime
+#  was_rewrited            :boolean
+#  result_of_test_id       :integer
+#  was_checked             :integer
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  question_id             :integer
+#  gaze_trace_result_id    :bigint
+#  emotion_state_result_id :bigint
+#
+
 class QuestionResult < ActiveRecord::Base
   before_validation :setup_fields, on: :create
 

@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: picture_interests
+#
+#  id            :integer          not null, primary key
+#  earned_points :integer
+#  picture_id    :integer
+#  interest_id   :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+
 class PictureInterest < ActiveRecord::Base
   #Joins table Picture and Interest for many-to-many
   belongs_to :interest

@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: gaze_trace_results
+#
+#  id             :bigint           not null, primary key
+#  gaze_points    :json
+#  screen_width   :integer
+#  screen_height  :integer
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  picture_bounds :json
+#
+
 class GazeTraceResult < ActiveRecord::Base
   # gaze_points: [1: {x:1, y:2}]
 

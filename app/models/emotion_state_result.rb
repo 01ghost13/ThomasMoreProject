@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: emotion_state_results
+#
+#  id         :bigint           not null, primary key
+#  states     :json
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class EmotionStateResult < ActiveRecord::Base
 
   # Array of values for each emotion

@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: pictures
+#
+#  id          :integer          not null, primary key
+#  description :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
 class Picture < ActiveRecord::Base
   has_many :picture_interests, inverse_of: :picture, dependent: :destroy
   has_many :interests, :through => :picture_interests

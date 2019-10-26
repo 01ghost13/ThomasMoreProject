@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: tutors
+#
+#  id               :integer          not null, primary key
+#  info_id          :integer
+#  administrator_id :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+
 class Tutor < ActiveRecord::Base
   has_many :students, inverse_of: :tutor, dependent: :restrict_with_error
   belongs_to :info, inverse_of: :tutor, autosave: true, dependent: :destroy

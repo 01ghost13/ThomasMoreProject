@@ -1,3 +1,25 @@
+# == Schema Information
+#
+# Table name: students
+#
+#  id                   :integer          not null, primary key
+#  code_name            :string
+#  birth_date           :date
+#  date_off             :date
+#  gender               :integer
+#  adress               :string
+#  is_active            :boolean
+#  password_digest      :string
+#  is_current_in_school :boolean
+#  schooling_id         :integer
+#  tutor_id             :integer
+#  mode_id              :integer
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  emotion_recognition  :boolean          default(FALSE)
+#  gaze_trace           :boolean          default(FALSE)
+#
+
 class Student < ActiveRecord::Base
   before_validation :setup_fields, on: :create
 
@@ -68,7 +90,7 @@ class Student < ActiveRecord::Base
   def get_student_interests(test_id = nil)
     table = execute_sql_statement(
         "SELECT interests.name, was_checked, earned_points, q_res.start as \"start\",
-                q_res.end as \"end\", q.number, is_tutorial
+                q_res.end as \"end\", q.number
         FROM question_results as q_res, questions as q, result_of_tests as res, picture_interests as p_i
         LEFT JOIN interests on interests.id = p_i.interest_id
         WHERE p_i.picture_id = q.picture_id AND

@@ -252,7 +252,7 @@ class TestsController < ApplicationController
     end
     params.require(:test).permit(
         :description, :name, :version, questions_attributes: [
-        :picture_id, :_destroy, :id, :number, :is_tutorial])
+        :picture_id, :_destroy, :id, :number])
   end
   def check_exist_callback
     #edit - params[:id], other - params[:test_id]

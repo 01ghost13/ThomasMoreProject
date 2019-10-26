@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: result_of_tests
+#
+#  id                  :integer          not null, primary key
+#  was_in_school       :boolean
+#  is_ended            :boolean
+#  test_id             :integer
+#  schooling_id        :integer
+#  student_id          :integer
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  is_outdated         :boolean          default(FALSE)
+#  emotion_recognition :boolean          default(FALSE)
+#  gaze_trace          :boolean          default(FALSE)
+#
+
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 # This model initially had no columns defined.  If you add columns to the

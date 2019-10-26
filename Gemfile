@@ -135,4 +135,6 @@ group :development do
 
   # Better error page for Rails and other Rack apps (https://github.com/charliesome/better_errors)
   gem 'better_errors'
+
+  gem 'annotate'
 end

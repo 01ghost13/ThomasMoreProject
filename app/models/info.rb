@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: infos
+#
+#  id                :integer          not null, primary key
+#  name              :string
+#  last_name         :string
+#  mail              :string
+#  password_digest   :string
+#  phone             :string
+#  is_mail_confirmed :boolean
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  confirm_token     :string
+#  reset_token       :string
+#
+
 class Info < ActiveRecord::Base
   before_validation :setup_fields, on: :create
   before_create :generate_mail_token

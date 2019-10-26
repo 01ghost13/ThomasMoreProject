@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: administrators
+#
+#  id                   :integer          not null, primary key
+#  is_super             :boolean
+#  organisation         :string
+#  info_id              :integer
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  organisation_address :string
+#
+
 require 'test_helper'
 
 class AdministratorTest < ActiveSupport::TestCase

@@ -21,7 +21,7 @@ namespace :test do
                            filename: path.basename.to_s,
                            content_type: 'image/jpg'
           pic.save!
-          test.questions.build(is_tutorial: false, picture_id: pic.id, number: i)
+          test.questions.build(picture_id: pic.id, number: i)
 
           i += 1
         end

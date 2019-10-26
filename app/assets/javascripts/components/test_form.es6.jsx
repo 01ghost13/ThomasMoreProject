@@ -36,13 +36,6 @@ class TestForm extends React.Component {
     this.setState(new_state);
   }
 
-  flagChanged(event, index) {
-    let new_state = {...this.state};
-    console.log(event.target.checked);
-    new_state.questions_attributes[index].is_tutorial = event.target.checked;
-    this.setState(new_state);
-  }
-
   removePicture(index) {
     let new_state = {...this.state};
     if (new_state.questions_attributes[index].id) {
@@ -79,8 +72,7 @@ class TestForm extends React.Component {
     return {
       id: undefined,
       picture_id: _.get(this.props.picture_list[0], 'id', ''),
-      number: pictures.length + 1,
-      is_tutorial: false
+      number: pictures.length + 1
     };
   }
 
@@ -232,24 +224,6 @@ class TestForm extends React.Component {
             >
               Remove question
             </a>
-          </div>
-        </div>
-
-        <div className="row form-group">
-          <div className="col-sm-3">
-            <label className="control-label"
-                   htmlFor={"checkbox_" + index}
-            >
-              Is question tutorial?
-            </label>
-          </div>
-          <div className="col-sm-1">
-            <input type="checkbox"
-                   className="form-control"
-                   id={"checkbox_" + index}
-                   checked={question.is_tutorial}
-                   onChange={(e) => this.flagChanged(e, index)}
-            />
           </div>
         </div>
         <hr/>
