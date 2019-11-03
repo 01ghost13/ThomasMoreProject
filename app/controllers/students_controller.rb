@@ -130,7 +130,7 @@ class StudentsController < ApplicationController
   private
   #Attributes for creation page
   def student_params
-    params.require(:student).permit(:code_name,:tutor_id,:gender,:schooling_id,
+    params.require(:student).permit(:code_name,:tutor_id,:gender,
                                     :is_current_in_school,:password,:password_confirmation)
   end
 
@@ -142,10 +142,10 @@ class StudentsController < ApplicationController
   def student_update_params
     if session[:user_type] == 'administrator'
       params[:student][:tutor_id] ||= ''
-      params.require(:student).permit(:code_name,:tutor_id,:gender,:mode_id,:schooling_id,
+      params.require(:student).permit(:code_name,:tutor_id,:gender,:mode_id,
                                       :is_current_in_school,:password,:password_confirmation)
     else
-      params.require(:student).permit(:code_name,:gender,:mode_id,:schooling_id,
+      params.require(:student).permit(:code_name,:gender,:mode_id,
                                       :is_current_in_school,:password,:password_confirmation)
     end
   end

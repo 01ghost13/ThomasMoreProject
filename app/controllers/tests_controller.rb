@@ -214,7 +214,6 @@ class TestsController < ApplicationController
       res = ResultOfTest.create(
         test_id: params[:test_id],
         was_in_school: @student.is_current_in_school,
-        schooling_id: @student.schooling.id,
         student_id: params[:id],
         gaze_trace: @student.gaze_trace,
         emotion_recognition: @student.emotion_recognition

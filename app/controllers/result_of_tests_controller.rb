@@ -79,7 +79,6 @@ class ResultOfTestsController < ApplicationController
     @list_interests_max = interests_max
     @student = student.code_name.titleize
     @res = [
-      result.schooling.name,
       result.was_in_school,
       result.show_time_to_answer,
       avg_time_per_interest,

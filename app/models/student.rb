@@ -3,21 +3,20 @@
 # Table name: students
 #
 #  id                   :integer          not null, primary key
-#  code_name            :string
-#  birth_date           :date
-#  date_off             :date
-#  gender               :integer
 #  adress               :string
-#  is_active            :boolean
-#  password_digest      :string
-#  is_current_in_school :boolean
-#  schooling_id         :integer
-#  tutor_id             :integer
-#  mode_id              :integer
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
+#  birth_date           :date
+#  code_name            :string
+#  date_off             :date
 #  emotion_recognition  :boolean          default(FALSE)
 #  gaze_trace           :boolean          default(FALSE)
+#  gender               :integer
+#  is_active            :boolean
+#  is_current_in_school :boolean
+#  password_digest      :string
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  mode_id              :integer
+#  tutor_id             :integer
 #
 
 class Student < ActiveRecord::Base
@@ -26,14 +25,13 @@ class Student < ActiveRecord::Base
   has_secure_password
   has_many :result_of_tests, dependent: :destroy
   belongs_to :tutor, inverse_of: :students
-  belongs_to :schooling, inverse_of: :students
 
   validates :code_name, presence: true, uniqueness: true, length: { in: 6..20}
   validates :gender, presence: true, inclusion: { in: [1,2,3] }
   #1 – dunno
   #2 – Men
   #3 – Women
-  validates :tutor,:schooling,:mode_id, presence: true
+  validates :tutor,:mode_id, presence: true
   validates :is_active, :is_current_in_school, exclusion: { in: [nil] }
   validates :password, presence: true, allow_nil: true, length: {minimum: 4}
 
@@ -61,8 +59,6 @@ class Student < ActiveRecord::Base
     end
     tutor = Tutor.find(self.tutor_id)
     user_info[:Tutor] = tutor.info.last_name+' '+tutor.info.name
-    schooling = Schooling.find(self.schooling_id)
-    user_info[:Schooling] = schooling.name
     user_info[:Current_in_school] = self.is_current_in_school ? 'Yes' : 'No'
     user_info
   end

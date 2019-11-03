@@ -5,10 +5,7 @@
 </div>
 
 <div class= "row">
-  <h3>Education of student at the moment of testing: <%= @res[0].titleize %></h3>
-</div>
-<div class= "row">
-  <h3>Attending at the moment of testing: <%= t @res[1].class %></h3>
+  <h3>Attending at the moment of testing: <%= t @res[0].class %></h3>
 </div>
 <!-- Add designed btn -->
 <div class="row">
@@ -140,14 +137,14 @@
     </ul>
     <div class="tab-content">
       <div class="tab-pane fade in active" id="answer_time">
-        <%= column_chart @res[2],
+        <%= column_chart @res[1],
                          xtitle: 'Question number',
                          ytitle: 'Time of answer(sec)',
                          download: true
         %>
       </div>
       <div class="tab-pane fade" id="avg_interests">
-        <%= column_chart @res[3],
+        <%= column_chart @res[2],
                          id: 'avg_interests_chart',
                          xtitle: 'Interest',
                          ytitle: 'Avg time of answer(sec)',
@@ -161,14 +158,14 @@
         %>
       </div>
       <div class="tab-pane fade" id="timeline">
-        <%= timeline @res[4],
+        <%= timeline @res[3],
                      id: 'timeline_chart',
                      download: true
         %>
       </div>
       <% if @has_emotion_track %>
         <div class="tab-pane fade" id="emotion_dynamic">
-          <%= scatter_chart @res[5].map { |k, v| { name: k, data: v } },
+          <%= scatter_chart @res[4].map { |k, v| { name: k, data: v } },
                             id: 'emotion_dynamic_chart',
                             xtitle: 'Question number',
                             ytitle: 'Emotion score',

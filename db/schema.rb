@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_26_134209) do
+ActiveRecord::Schema.define(version: 2019_11_04_075248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -136,19 +136,12 @@ ActiveRecord::Schema.define(version: 2019_10_26_134209) do
     t.boolean "was_in_school"
     t.boolean "is_ended"
     t.integer "test_id"
-    t.integer "schooling_id"
     t.integer "student_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_outdated", default: false
     t.boolean "emotion_recognition", default: false
     t.boolean "gaze_trace", default: false
-  end
-
-  create_table "schoolings", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "students", id: :serial, force: :cascade do |t|
@@ -160,7 +153,6 @@ ActiveRecord::Schema.define(version: 2019_10_26_134209) do
     t.boolean "is_active"
     t.string "password_digest"
     t.boolean "is_current_in_school"
-    t.integer "schooling_id"
     t.integer "tutor_id"
     t.integer "mode_id"
     t.datetime "created_at", null: false
@@ -168,7 +160,6 @@ ActiveRecord::Schema.define(version: 2019_10_26_134209) do
     t.boolean "emotion_recognition", default: false
     t.boolean "gaze_trace", default: false
     t.index ["mode_id"], name: "index_students_on_mode_id"
-    t.index ["schooling_id"], name: "index_students_on_schooling_id"
     t.index ["tutor_id"], name: "index_students_on_tutor_id"
   end
 
@@ -197,7 +188,6 @@ ActiveRecord::Schema.define(version: 2019_10_26_134209) do
   add_foreign_key "questions", "pictures"
   add_foreign_key "questions", "tests"
   add_foreign_key "students", "modes"
-  add_foreign_key "students", "schoolings"
   add_foreign_key "students", "tutors"
   add_foreign_key "tutors", "administrators"
   add_foreign_key "tutors", "infos"

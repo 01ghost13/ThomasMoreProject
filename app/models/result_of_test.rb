@@ -3,30 +3,28 @@
 # Table name: result_of_tests
 #
 #  id                  :integer          not null, primary key
-#  was_in_school       :boolean
-#  is_ended            :boolean
-#  test_id             :integer
-#  schooling_id        :integer
-#  student_id          :integer
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  is_outdated         :boolean          default(FALSE)
 #  emotion_recognition :boolean          default(FALSE)
 #  gaze_trace          :boolean          default(FALSE)
+#  is_ended            :boolean
+#  is_outdated         :boolean          default(FALSE)
+#  was_in_school       :boolean
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  student_id          :integer
+#  test_id             :integer
 #
 
 class ResultOfTest < ActiveRecord::Base
   before_validation :setup_fields, on: :create
 
   belongs_to :test
-  belongs_to :schooling
   belongs_to :student
   has_many :question_results, dependent: :destroy
   accepts_nested_attributes_for :question_results
 
   scope :result_page, -> { includes(:question_results, question_results: [:question, question: [:picture]]) }
 
-  validates :test,:schooling,:student, presence: true
+  validates :test,:student, presence: true
   validates :was_in_school, exclusion: { in: [nil] }
 
   #Setups default fields

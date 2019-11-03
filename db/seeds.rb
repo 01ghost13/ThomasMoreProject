@@ -8,9 +8,6 @@ superAdm.save
 #Creating of modes
 blind_mode = Mode.create(name: 'Blind')
 one_click_mode = Mode.create(name: 'One click mode')
-#Schooling
-example_of_schooling = Schooling.create(name: 'School')
-another_example_of_schooling = Schooling.create(name: 'University')
 
 # if Rails.env.production?
 #   ##############################################
@@ -92,7 +89,7 @@ another_example_of_schooling = Schooling.create(name: 'University')
 #   first_tutor = Tutor.create(administrator_id: lAdm.id, info_id: tutorInfo.id)
 #
 # #Students
-#   first_student = Student.create(tutor_id: first_tutor.id, code_name: '01ghost13', gender: 2, is_active: true, password: '020695', schooling_id: example_of_schooling.id, is_current_in_school: true)
+#   first_student = Student.create(tutor_id: first_tutor.id, code_name: '01ghost13', gender: 2, is_active: true, password: '020695', is_current_in_school: true)
 #
 #
 # #Interests

@@ -25,13 +25,6 @@
 		 </div>
 	</div>
 
-	<!--Schooling-->
-	<div class="row col-sm-offset-2 form-group">
-		<%= student_form.label :schooling_id, "Schooling", class: "col-sm-2 control-label" %>
-		<div class="col-sm-4">
-			<%= student_form.collection_select(:schooling_id, Schooling.all, :id, :name,{}, {class: 'form-control'}) %>
-		</div>
-	</div>
 	<!--Is current in school?-->
 	<div class="row col-sm-offset-2 form-group">
 		<div class="col-sm-2">
