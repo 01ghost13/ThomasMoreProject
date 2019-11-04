@@ -46,11 +46,11 @@ Rails.application.routes.draw do
       delete 'delete' => 'administrators#delete'
     end
   end
-  #...Tutors
-  resources :tutors, concerns: :group_result do
+  #...Mentors
+  resources :mentors, concerns: :group_result do
     member do
-      get 'delete' => 'tutors#delegate'
-      delete 'delete' => 'tutors#delete'
+      get 'delete' => 'mentors#delegate'
+      delete 'delete' => 'mentors#delete'
     end
   end
   #...Clients
@@ -60,13 +60,13 @@ Rails.application.routes.draw do
       get 'tests' => 'tests#index', as: 'tests'
       get 'tests/:test_id/testing' => 'tests#testing', as: 'testing'
       post 'tests/:test_id/testing/update_picture' => 'tests#update_picture'
-      get 'edit/update_tutors' => 'clients#update_tutors'
+      get 'edit/update_mentors' => 'clients#update_mentors'
       get 'mode_settings' => 'clients#mode_settings'
       patch 'mode_settings' => 'clients#update_mode_settings'
     end
     resources :result_of_tests, except: [:new, :create, :index], path: 'results', param: :result_id
     get 'results/:result_id/heatmap'=> 'result_of_tests#show_heatmap', as: 'heatmap'
-    get 'update_tutors' => 'clients#update_tutors', on: :new
+    get 'update_mentors' => 'clients#update_mentors', on: :new
   end
 
   #Tests pages

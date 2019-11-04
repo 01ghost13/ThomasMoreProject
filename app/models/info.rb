@@ -20,7 +20,7 @@ class Info < ActiveRecord::Base
   before_create :generate_mail_token
 
   has_one :administrator, inverse_of: :info
-  has_one :tutor, inverse_of: :info
+  has_one :mentor, inverse_of: :info
   
   has_secure_password
   validates :name, presence: true, length: { within: 3..20 }

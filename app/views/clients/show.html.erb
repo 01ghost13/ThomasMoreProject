@@ -9,7 +9,7 @@
         <td>Start date</td>
         <td>Ended</td>
         <td>Result</td>
-        <% if @is_super_adm || @is_my_client || @is_client_of_my_tutor %>
+        <% if @is_super_adm || @is_my_client || @is_client_of_my_mentor %>
             <td>Edit</td>
         <% end %>
       </tr>
@@ -21,7 +21,7 @@
 				<td><h4><small>Is ended? <%= res[:is_ended] %></small></h4></td>
         <td><%= link_to('Result', client_result_of_test_path(res[:client_id], res[:id]),
                         class: 'btn btn-default') %></td>
-        <% if @is_super_adm || @is_my_client || @is_client_of_my_tutor %>
+        <% if @is_super_adm || @is_my_client || @is_client_of_my_mentor %>
 				  <td><%= link_to('Edit', edit_client_result_of_test_path(res[:client_id],res[:id]),
                         class: 'btn btn-warning') %></td>
         <% end %>
@@ -31,7 +31,7 @@
 	</div>
 </div>
 
-<% if @is_super_adm || @is_my_client || @is_client_of_my_tutor %>
+<% if @is_super_adm || @is_my_client || @is_client_of_my_mentor %>
 	<div class='row'>
 		<div class='btn-group col-sm-4' role='group' aria-label='...'>
 			<%= link_to('Edit', edit_client_path(params[:id]), class: 'btn btn-warning col-sm-4') %>

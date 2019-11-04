@@ -75,7 +75,7 @@ class AdministratorsController < ApplicationController
   def delegate
     @administrator = load_admin_for_deletion
 
-    #Loading information about tutors and admins for page
+    #Loading information about mentors and admins for page
     @admins = @administrator.other_administrators
   end
 
@@ -83,8 +83,8 @@ class AdministratorsController < ApplicationController
   def delete
     @administrator = load_admin_for_deletion
 
-    #Admin can be deleted only if hasn't tutors
-    if @administrator.tutors.empty? || @administrator.update(delete_administrator_params)
+    #Admin can be deleted only if hasn't mentors
+    if @administrator.mentors.empty? || @administrator.update(delete_administrator_params)
       if @administrator.reload.destroy
         flash[:success] = 'Administrator was deleted!'
         redirect_to administrators_path and return
@@ -117,7 +117,7 @@ class AdministratorsController < ApplicationController
 
   #Attributes for delete forms
   def delete_administrator_params
-    params.require(:administrator).permit(tutors_attributes: [:administrator_id, :id])
+    params.require(:administrator).permit(mentors_attributes: [:administrator_id, :id])
   end
 
   #Callback for checking rights

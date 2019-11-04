@@ -1,0 +1,21 @@
+<% provide(:title,'Delete mentor') %>
+<h1 class="row col-sm-offset-4">Delete mentor</h1>
+<h3 class="row col-sm-offset-2">For deletion you must choose new Mentor for associated clients.</h3>
+<%= render 'shared/error_message' %>
+
+<%= form_for @mentor, url: delete_mentor_path(params[:id]), method: :delete, html: { class: 'form-horizontal'} do |ff| %>
+      <%= ff.fields_for :clients do |f| %>
+        <!-- Choosing new mentor-->
+        <div class="row col-sm-offset-2 form-group">
+          <%= f.label :mentor_id, "Choose Mentor for #{f.object.code_name}", class: 'col-sm-4 control-label' %>
+          <div class="col-sm-4">
+            <%= f.select :mentor_id, options_for_select(@mentors),{}, {class: 'form-control'} %>
+          </div>
+        </div>
+      <% end %>
+    <div class="row col-sm-offset-2 form-group">
+      <div class="col-sm-offset-2 col-sm-2">
+        <%= ff.submit 'Delete mentor', data: {confirm: 'Are you sure?'}, class: 'btn btn-danger' %>
+      </div>
+    </div>
+<% end %>

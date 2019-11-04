@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_04_105958) do
+ActiveRecord::Schema.define(version: 2019_11_04_132324) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,14 +56,14 @@ ActiveRecord::Schema.define(version: 2019_11_04_105958) do
     t.boolean "is_active"
     t.string "password_digest"
     t.boolean "is_current_in_school"
-    t.integer "tutor_id"
+    t.integer "mentor_id"
     t.integer "mode_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "emotion_recognition", default: false
     t.boolean "gaze_trace", default: false
+    t.index ["mentor_id"], name: "index_clients_on_mentor_id"
     t.index ["mode_id"], name: "index_clients_on_mode_id"
-    t.index ["tutor_id"], name: "index_clients_on_tutor_id"
   end
 
   create_table "emotion_state_results", force: :cascade do |t|
@@ -98,6 +98,15 @@ ActiveRecord::Schema.define(version: 2019_11_04_105958) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "mentors", id: :serial, force: :cascade do |t|
+    t.integer "info_id"
+    t.integer "administrator_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["administrator_id"], name: "index_mentors_on_administrator_id"
+    t.index ["info_id"], name: "index_mentors_on_info_id"
   end
 
   create_table "modes", id: :serial, force: :cascade do |t|
@@ -171,24 +180,15 @@ ActiveRecord::Schema.define(version: 2019_11_04_105958) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "tutors", id: :serial, force: :cascade do |t|
-    t.integer "info_id"
-    t.integer "administrator_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["administrator_id"], name: "index_tutors_on_administrator_id"
-    t.index ["info_id"], name: "index_tutors_on_info_id"
-  end
-
   add_foreign_key "administrators", "infos"
+  add_foreign_key "clients", "mentors"
   add_foreign_key "clients", "modes"
-  add_foreign_key "clients", "tutors"
+  add_foreign_key "mentors", "administrators"
+  add_foreign_key "mentors", "infos"
   add_foreign_key "picture_interests", "interests"
   add_foreign_key "picture_interests", "pictures"
   add_foreign_key "question_results", "questions"
   add_foreign_key "question_results", "result_of_tests"
   add_foreign_key "questions", "pictures"
   add_foreign_key "questions", "tests"
-  add_foreign_key "tutors", "administrators"
-  add_foreign_key "tutors", "infos"
 end

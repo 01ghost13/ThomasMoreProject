@@ -172,11 +172,11 @@ class ResultOfTestsController < ApplicationController
   def check_rights
     user = Client.find(params[:client_id])
     is_super_adm = is_super?
-    is_my_client = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
-    is_client_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
+    is_my_client = session[:user_type] == 'mentor' && user.mentor_id == session[:type_id]
+    is_client_of_my_mentor = session[:user_type] == 'administrator' && user.mentor.administrator_id == session[:type_id]
     @i_am_client = session[:user_type] == 'client'
     is_i = @i_am_client && params[:client_id].to_i == session[:type_id]
-    unless is_super_adm || is_my_client || is_client_of_my_tutor || is_i
+    unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
       flash[:danger] = 'You have no access to this page.'
       redirect_to current_user
     end
@@ -184,9 +184,9 @@ class ResultOfTestsController < ApplicationController
   def check_admin_rights
     client = Client.find(params[:client_id])
     is_super_adm = is_super?
-    is_my_client = session[:user_type] == 'tutor' && client.tutor_id == session[:type_id]
-    is_client_of_my_tutor = session[:user_type] == 'administrator' && client.tutor.administrator_id == session[:type_id]
-    unless is_super_adm || is_my_client || is_client_of_my_tutor
+    is_my_client = session[:user_type] == 'mentor' && client.mentor_id == session[:type_id]
+    is_client_of_my_mentor = session[:user_type] == 'administrator' && client.mentor.administrator_id == session[:type_id]
+    unless is_super_adm || is_my_client || is_client_of_my_mentor
       flash[:danger] = 'You have no access to this page.'
       redirect_to current_user
     end

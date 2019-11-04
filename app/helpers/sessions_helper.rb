@@ -10,17 +10,17 @@ module SessionsHelper
       session[:type_id] = user.id
       return user
     else
-      #Tutor/Administrator
+      #Mentor/Administrator
       adm = Administrator.find_by(info_id: session[:user_id])
-      tutor = Tutor.find_by(info_id: session[:user_id])
+      mentor = Mentor.find_by(info_id: session[:user_id])
       if adm
         session[:user_type] = 'administrator'
         session[:type_id] = adm.id
         return adm
-      elsif tutor        
-        session[:user_type] = 'tutor'
-        session[:type_id] = tutor.id
-        return tutor
+      elsif mentor
+        session[:user_type] = 'mentor'
+        session[:type_id] = mentor.id
+        return mentor
       else
         #Something get wrong
       end
@@ -35,7 +35,7 @@ module SessionsHelper
     if session[:user_type] == 'client'
       @current_user ||= Client.find_by(id: session[:user_id])
     else
-      @current_user = Administrator.find_by(info_id: session[:user_id]) || Tutor.find_by(info_id: session[:user_id])
+      @current_user = Administrator.find_by(info_id: session[:user_id]) || Mentor.find_by(info_id: session[:user_id])
     end
   end
   

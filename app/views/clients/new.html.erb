@@ -46,12 +46,12 @@
 				</div>
 			</div>
 		<% end %>
-		<!-- Choosing tutor-->
+		<!-- Choosing mentor-->
 		<div class="row col-sm-offset-2 form-group">
-			<%= client_form.label :tutor_id, "Choose Tutor", class: "col-sm-2 control-label" %>
+			<%= client_form.label :mentor_id, "Choose Mentor", class: "col-sm-2 control-label" %>
 			<div class="col-sm-4">
-				<%= client_form.select :tutor_id, options_for_select(@tutors), {} ,
-                                {id: 'tutor_selection', class: 'form-control'}%>
+				<%= client_form.select :mentor_id, options_for_select(@mentors), {} ,
+                                {id: 'mentor_selection', class: 'form-control'}%>
 			</div>
 		</div>
 	<% end %>

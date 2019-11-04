@@ -15,7 +15,7 @@ class ClientsController < ApplicationController
   def create
     #Creating client
     @user = Client.new(client_params)
-    @user.tutor_id = session[:type_id] if session[:user_type] == 'tutor'
+    @user.mentor_id = session[:type_id] if session[:user_type] == 'mentor'
     
     #trying to save
     if @user.save
@@ -68,8 +68,8 @@ class ClientsController < ApplicationController
   def show
     @user = Client.find(params[:id])
     @is_super_adm = is_super?
-    @is_my_client = session[:user_type] == 'tutor' && @user.tutor_id == session[:type_id]
-    @is_client_of_my_tutor = session[:user_type] == 'administrator' && @user.tutor.administrator_id == session[:type_id]
+    @is_my_client = session[:user_type] == 'mentor' && @user.mentor_id == session[:type_id]
+    @is_client_of_my_mentor = session[:user_type] == 'administrator' && @user.mentor.administrator_id == session[:type_id]
     unless @user.is_active
       #Client is inactive
       flash[:warning] = 'Client was deactivated in: ' + @user.date_off.to_s
@@ -84,8 +84,8 @@ class ClientsController < ApplicationController
   end
   
   #Function for ajax updating
-  def update_tutors
-    @tutors = Tutor.tutors_list(params[:administrator_id])
+  def update_mentors
+    @mentors = Mentor.mentors_list(params[:administrator_id])
     respond_to do |format|
        format.js {}
     end
@@ -100,8 +100,8 @@ class ClientsController < ApplicationController
     @is_super_adm = is_super?
     if @is_super_adm
       @q = Client.all_clients.ransack(params[:q])
-    elsif session[:user_type] == 'tutor'
-      @q = Client.clients_of_tutor(session[:type_id]).ransack(params[:q])
+    elsif session[:user_type] == 'mentor'
+      @q = Client.clients_of_mentor(session[:type_id]).ransack(params[:q])
     elsif session[:user_type] == 'administrator'
       @q = Client.clients_of_admin(session[:type_id]).ransack(params[:q])
     end
@@ -130,7 +130,7 @@ class ClientsController < ApplicationController
   private
   #Attributes for creation page
   def client_params
-    params.require(:client).permit(:code_name,:tutor_id,:gender,
+    params.require(:client).permit(:code_name,:mentor_id,:gender,
                                     :is_current_in_school,:password,:password_confirmation)
   end
 
@@ -141,8 +141,8 @@ class ClientsController < ApplicationController
   #Attributes for edit page
   def client_update_params
     if session[:user_type] == 'administrator'
-      params[:client][:tutor_id] ||= ''
-      params.require(:client).permit(:code_name,:tutor_id,:gender,:mode_id,
+      params[:client][:mentor_id] ||= ''
+      params.require(:client).permit(:code_name,:mentor_id,:gender,:mode_id,
                                       :is_current_in_school,:password,:password_confirmation)
     else
       params.require(:client).permit(:code_name,:gender,:mode_id,
@@ -152,8 +152,8 @@ class ClientsController < ApplicationController
 
   #Rights checking
   def check_rights
-    #Sa, admin, tutor
-    unless is_super? || session[:user_type] == 'administrator' || session[:user_type] == 'tutor'
+    #Sa, admin, mentor
+    unless is_super? || session[:user_type] == 'administrator' || session[:user_type] == 'mentor'
       flash[:danger] = 'You have no access to this page.'
       redirect_to current_user
     end
@@ -163,10 +163,10 @@ class ClientsController < ApplicationController
   def check_editing_rights
     user = Client.find(params[:id])
     is_super_adm = is_super?
-    is_my_client = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
-    is_client_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
+    is_my_client = session[:user_type] == 'mentor' && user.mentor_id == session[:type_id]
+    is_client_of_my_mentor = session[:user_type] == 'administrator' && user.mentor.administrator_id == session[:type_id]
     is_i = session[:user_type] == 'client' && user.id == session[:type_id]
-    unless is_super_adm || is_my_client || is_client_of_my_tutor || is_i
+    unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
       flash[:warning] = 'You have no access to this page.'
       redirect_to current_user
     end
@@ -179,12 +179,12 @@ class ClientsController < ApplicationController
       #Loading Choosing of adm
       @admins = Administrator.admins_list
       if @admins.empty?
-        @tutors = []
+        @mentors = []
       else
-        @tutors = Tutor.tutors_list(@admins.first[1])
+        @mentors = Mentor.mentors_list(@admins.first[1])
       end
     elsif session[:user_type] == 'administrator'
-      @tutors = Tutor.tutors_list(session[:type_id])
+      @mentors = Mentor.mentors_list(session[:type_id])
     end
   end
 
@@ -195,21 +195,21 @@ class ClientsController < ApplicationController
       #Loading Choosing of adm
       @admins = Administrator.admins_list
       if @admins.empty?
-        @tutors = []
+        @mentors = []
       else
-        if @user.tutor
-          @admins_cur = @user.tutor.administrator_id
-          @tutors = Tutor.tutors_list(@admins_cur)
-          @tutors_cur = @user.tutor_id
+        if @user.mentor
+          @admins_cur = @user.mentor.administrator_id
+          @mentors = Mentor.mentors_list(@admins_cur)
+          @mentors_cur = @user.mentor_id
         else
           @admins_cur = params[:administrator_id]
-          @tutors = Tutor.tutors_list(@admins_cur)
-          @tutors_cur = 0
+          @mentors = Mentor.mentors_list(@admins_cur)
+          @mentors_cur = 0
         end
       end
     elsif session[:user_type] == 'administrator'
-      @tutors = Tutor.tutors_list(session[:type_id])
-      @tutors_cur = @user.tutor_id
+      @mentors = Mentor.mentors_list(session[:type_id])
+      @mentors_cur = @user.mentor_id
     end
   end
 

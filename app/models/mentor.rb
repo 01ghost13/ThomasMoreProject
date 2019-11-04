@@ -1,17 +1,17 @@
 # == Schema Information
 #
-# Table name: tutors
+# Table name: mentors
 #
 #  id               :integer          not null, primary key
-#  info_id          :integer
-#  administrator_id :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  administrator_id :integer
+#  info_id          :integer
 #
 
-class Tutor < ActiveRecord::Base
-  has_many :clients, inverse_of: :tutor, dependent: :restrict_with_error
-  belongs_to :info, inverse_of: :tutor, autosave: true, dependent: :destroy
+class Mentor < ActiveRecord::Base
+  has_many :clients, inverse_of: :mentor, dependent: :restrict_with_error
+  belongs_to :info, inverse_of: :mentor, autosave: true, dependent: :destroy
   
   validates :administrator_id, presence: true
   validates :info_id, uniqueness: true
@@ -21,7 +21,7 @@ class Tutor < ActiveRecord::Base
   accepts_nested_attributes_for :info
   accepts_nested_attributes_for :clients
 
-  #Shows info of tutor as a map
+  #Shows info of mentor as a map
   def show
     user_info = self.info.show
     adm = Administrator.find(self.administrator_id)
@@ -34,7 +34,7 @@ class Tutor < ActiveRecord::Base
   def is_my_client? (client_id)
     client = client.find(client_id)
     return false if client.nil?
-    client.tutor_id == self.id
+    client.mentor_id == self.id
   end
 
   def show_short
@@ -45,33 +45,33 @@ class Tutor < ActiveRecord::Base
     user_info
   end
 
-  def self.tutors_list (administrator_id)
-    Tutor.where(administrator_id: administrator_id).order(:id).map {
+  def self.mentors_list (administrator_id)
+    Mentor.where(administrator_id: administrator_id).order(:id).map {
         |t| ['%{mail}: %{lname} %{name}'%{mail: t.info.mail, lname: t.info.last_name, name: t.info.name},t.id]
     }
   end
 
-  #List of tutors except current
-  def other_tutors
-    Tutor.where.not(id: self.id).order(:id).map {
+  #List of mentors except current
+  def other_mentors
+    Mentor.where.not(id: self.id).order(:id).map {
         |t| ['%{mail}: %{lname} %{name}'%{mail: t.info.mail, lname: t.info.last_name, name: t.info.name},t.id]
     }
   end
 
-  def self.all_tutors
+  def self.all_mentors
     select(
-        'tutors.id as tutors_id, t.last_name as last_name, t.name as name,
+        'mentors.id as mentors_id, t.last_name as last_name, t.name as name,
         a.admin_name as admin_name, a.admin_last_name as admin_last_name,
         a.organisation as organisation, administrator_id'
-    ).joins('JOIN infos as t on tutors.info_id = t.id').
+    ).joins('JOIN infos as t on mentors.info_id = t.id').
     joins("JOIN (#{Administrator.select(
             'administrators.id, infos.name as admin_name,
             infos.last_name as admin_last_name, administrators.organisation'
-        ).joins('JOIN infos on administrators.info_id = infos.id').to_sql}) as a on a.id = tutors.administrator_id"
+        ).joins('JOIN infos on administrators.info_id = infos.id').to_sql}) as a on a.id = mentors.administrator_id"
     )
   end
 
-  def self.tutors_of_administrator(admin_id)
+  def self.mentors_of_administrator(admin_id)
     where(administrator_id: admin_id)
   end
 

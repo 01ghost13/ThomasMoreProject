@@ -14,7 +14,7 @@
 class Administrator < ActiveRecord::Base
   before_validation :setup_fields, on: :create
   
-  has_many :tutors, dependent: :restrict_with_error
+  has_many :mentors, dependent: :restrict_with_error
   belongs_to :info, inverse_of: :administrator, autosave: true, dependent: :destroy
   
   validates :organisation, presence: true, length: { in: 5..30}
@@ -27,7 +27,7 @@ class Administrator < ActiveRecord::Base
   validates_associated :info, allow_blank: true
 
   accepts_nested_attributes_for :info
-  accepts_nested_attributes_for :tutors
+  accepts_nested_attributes_for :mentors
 
   #returns list of admins for viewing
   def self.admins_list

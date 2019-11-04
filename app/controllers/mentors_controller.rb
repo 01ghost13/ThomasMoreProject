@@ -1,4 +1,4 @@
-class TutorsController < ApplicationController
+class MentorsController < ApplicationController
 
   before_action :check_exist_callback, only: [:edit, :update, :show, :delete, :delegate]
   before_action :check_log_in, only: [:new,:create,:edit,:update,:show,:index,:delegate, :delete]
@@ -7,10 +7,10 @@ class TutorsController < ApplicationController
   before_action :check_mail_confirmation, except: [:show]
   before_action :info_for_forms, only: [:new, :create, :edit, :update]
 
-  #Create tutor page
+  #Create mentor page
   def new
-    #Creating tutor obj
-    @user = Tutor.new
+    #Creating mentor obj
+    @user = Mentor.new
     @user_info = Info.new
     @user.info = @user_info
   end
@@ -18,7 +18,7 @@ class TutorsController < ApplicationController
   #Action for create
   def create
     #Loading info
-    @user = Tutor.new(tutor_params)
+    @user = Mentor.new(mentor_params)
 
     @user.administrator_id = session[:type_id] unless @is_super_admin
     
@@ -35,15 +35,15 @@ class TutorsController < ApplicationController
   #Edit profile page
   def edit
     #Finding user
-    @user = Tutor.find(params[:id])
+    @user = Mentor.find(params[:id])
   end
   
   #Action for updating user
   def update
-    #Finding tutor
-    @user = Tutor.find(params[:id])
-    #If tutor exit and data - OK, changing
-    if @user.update(tutor_params)
+    #Finding mentor
+    @user = Mentor.find(params[:id])
+    #If mentor exit and data - OK, changing
+    if @user.update(mentor_params)
       flash[:success] = 'Update Complete'
       redirect_to @user
     else
@@ -52,47 +52,47 @@ class TutorsController < ApplicationController
     
   end
 
-  #All tutors page
+  #All mentors page
   def index
     unless session[:user_type] == 'administrator'
       flash[:danger] = 'You have no access to this page!'
       redirect_to current_user and return
     end
     @is_super_adm = is_super?
-    #Loading all tutors if super admin
+    #Loading all mentors if super admin
     if @is_super_adm
-        @q = Tutor.all_tutors.ransack(params[:q])
+        @q = Mentor.all_mentors.ransack(params[:q])
       else
-        @q = Tutor.tutors_of_administrator(session[:type_id]).ransack(params[:q])
+        @q = Mentor.mentors_of_administrator(session[:type_id]).ransack(params[:q])
     end
-    @tutors = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
-    @tutors = @tutors.page(params[:page]).per(5)
+    @mentors = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
+    @mentors = @mentors.page(params[:page]).per(5)
   end
 
   #Profile page
   def show
-    @user = Tutor.find(params[:id])
+    @user = Mentor.find(params[:id])
     @user_info = @user.show.to_a
   end
 
-  #Page of deletion of Tutor
+  #Page of deletion of Mentor
   def delegate
-    @tutor = Tutor.find(params[:id])
-    @tutors = @tutor.other_tutors
+    @mentor = Mentor.find(params[:id])
+    @mentors = @mentor.other_mentors
   end
 
-  #Action for deleting Tutor
+  #Action for deleting Mentor
   def delete
-    @tutor = Tutor.find(params[:id])
-    if @tutor.clients.empty? || @tutor.update(delete_tutor_params)
-      if @tutor.reload.destroy
-        flash[:success] = 'Tutor was deleted!'
-        redirect_to tutors_path and return
+    @mentor = Mentor.find(params[:id])
+    if @mentor.clients.empty? || @mentor.update(delete_mentor_params)
+      if @mentor.reload.destroy
+        flash[:success] = 'Mentor was deleted!'
+        redirect_to mentors_path and return
       end
     end
 
-    @tutors = @tutor.other_tutors
-    @user = @tutor
+    @mentors = @mentor.other_mentors
+    @user = @mentor
     render :delegate
   end
   ##########################################################
@@ -100,12 +100,12 @@ class TutorsController < ApplicationController
   private
   #Rights checking
   def check_rights
-    user = Tutor.find(params[:id])
+    user = Mentor.find(params[:id])
     #It is my page?
-    is_i = (session[:user_type] == 'tutor' && session[:type_id] == params[:id].to_i)
-    #It is my tutor?
-    is_my_tutor = (!user.nil? && session[:user_type] == 'administrator' && user.administrator_id == session[:type_id])
-    unless is_i || is_super? || is_my_tutor
+    is_i = (session[:user_type] == 'mentor' && session[:type_id] == params[:id].to_i)
+    #It is my mentor?
+    is_my_mentor = (!user.nil? && session[:user_type] == 'administrator' && user.administrator_id == session[:type_id])
+    unless is_i || is_super? || is_my_mentor
       flash[:danger] = 'You have no access to this page.'
       redirect_to current_user
     end
@@ -116,7 +116,7 @@ class TutorsController < ApplicationController
     is_my_adm = session[:user_type] == 'administrator'
     #Checking creation or showing
     unless params[:id].nil?
-      user = Tutor.find(params[:id])
+      user = Mentor.find(params[:id])
       is_my_adm = (!user.nil? && session[:user_type] == 'administrator' && user.administrator_id == session[:type_id])
     end
 
@@ -128,15 +128,15 @@ class TutorsController < ApplicationController
   end
 
   #Attributes for forms
-  def tutor_params
+  def mentor_params
     t_param = params
-    t_param[:tutor][:info_attributes][:id] = @user.info.id unless params[:id].nil?
-    t_param.require(:tutor).permit(:administrator_id,info_attributes: [:id,:name,:last_name,:mail,:phone,:password,:password_confirmation])
+    t_param[:mentor][:info_attributes][:id] = @user.info.id unless params[:id].nil?
+    t_param.require(:mentor).permit(:administrator_id,info_attributes: [:id,:name,:last_name,:mail,:phone,:password,:password_confirmation])
   end
 
   #Attributes for delete forms
-  def delete_tutor_params
-    params.require(:tutor).permit(clients_attributes: [:tutor_id, :id])
+  def delete_mentor_params
+    params.require(:mentor).permit(clients_attributes: [:mentor_id, :id])
   end
 
   #Loads info for creation/new pages
@@ -150,7 +150,7 @@ class TutorsController < ApplicationController
 
   #Callback for checking existence of record
   def check_exist_callback
-    unless check_exist(params[:id], Tutor)
+    unless check_exist(params[:id], Mentor)
       redirect_to current_user
     end
   end

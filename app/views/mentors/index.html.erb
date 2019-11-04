@@ -1,5 +1,5 @@
-<% provide(:title,"Tutors List") %>
-<h1 class="col-sm-12">All tutors</h1>
+<% provide(:title,"Mentors List") %>
+<h1 class="col-sm-12">All mentors</h1>
 <div>
   <%= search_form_for @q do |f|%>
       <div class="form-group col-sm-4">
@@ -23,21 +23,21 @@
       <td>Delete</td>
     </tr>
     </thead>
-		<% @tutors.each do |tutor| %>
+		<% @mentors.each do |mentor| %>
 			<tr>
-				<td><h4><%= tutor[:last_name].titleize %></h4></td>
-        <td><h4><%= tutor[:name].titleize %></h4></td>
-				<td><h4><small><%= tutor[:organisation].titleize %></small></h4></td>
+				<td><h4><%= mentor[:last_name].titleize %></h4></td>
+        <td><h4><%= mentor[:name].titleize %></h4></td>
+				<td><h4><small><%= mentor[:organisation].titleize %></small></h4></td>
 				<td><h4><small>
-          <%= link_to "#{tutor[:admin_last_name].titleize} #{tutor[:admin_name].titleize}",
-                      administrator_path(tutor[:administrator_id]) %></small></h4></td>
-        <td><%= link_to('Profile', tutor_path(tutor[:tutors_id]), class: 'btn btn-default') %></td>
-        <td><%= link_to('Edit', edit_tutor_path(tutor[:tutors_id]), class: 'btn btn-warning') %></td>
-        <td><%= link_to('Delete', delete_tutor_path(tutor[:tutors_id]), class: 'btn btn-danger') %></td>
+          <%= link_to "#{mentor[:admin_last_name].titleize} #{mentor[:admin_name].titleize}",
+                      administrator_path(mentor[:administrator_id]) %></small></h4></td>
+        <td><%= link_to('Profile', mentor_path(mentor[:mentors_id]), class: 'btn btn-default') %></td>
+        <td><%= link_to('Edit', edit_mentor_path(mentor[:mentors_id]), class: 'btn btn-warning') %></td>
+        <td><%= link_to('Delete', delete_mentor_path(mentor[:mentors_id]), class: 'btn btn-danger') %></td>
 			</tr>
 		<% end %>
 	</table>
 </div>
 <div class="col-sm-12">
-  <%= paginate @tutors %>
+  <%= paginate @mentors %>
 </div>

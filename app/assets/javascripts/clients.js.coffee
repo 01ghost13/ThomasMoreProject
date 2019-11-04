@@ -6,7 +6,7 @@ $ ->
     url = window.location.pathname
     url += '/edit' if /clients\/\d+\/?$/.test(url)
     url += '/new' if /clients\/?$/.test(url)
-    $.ajax url + '/update_tutors',
+    $.ajax url + '/update_mentors',
       type: 'GET'
       dataType: 'script'
       data: {
@@ -15,4 +15,4 @@ $ ->
       error: (jqXHR, textStatus, errorThrown) ->
         console.log("AJAX Error: #{textStatus}")
       success: (data, textStatus, jqXHR) ->
-        console.log("Dynamic tutors select OK!")
+        console.log("Dynamic mentors select OK!")

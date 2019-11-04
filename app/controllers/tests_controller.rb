@@ -233,10 +233,10 @@ class TestsController < ApplicationController
   def check_rights
     user = Client.find(params[:id])
     is_super_adm = is_super?
-    is_my_client = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
-    is_client_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
+    is_my_client = session[:user_type] == 'mentor' && user.mentor_id == session[:type_id]
+    is_client_of_my_mentor = session[:user_type] == 'administrator' && user.mentor.administrator_id == session[:type_id]
     is_i = session[:user_type] == 'client' && params[:id].to_i == session[:type_id]
-    unless is_super_adm || is_my_client || is_client_of_my_tutor || is_i
+    unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
       flash[:warning] = 'You have no access to this page.'
       redirect_to current_user
     end

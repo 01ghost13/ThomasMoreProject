@@ -15,8 +15,8 @@
 #  password_digest      :string
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  mentor_id            :integer
 #  mode_id              :integer
-#  tutor_id             :integer
 #
 
 class Client < ActiveRecord::Base
@@ -24,14 +24,14 @@ class Client < ActiveRecord::Base
 
   has_secure_password
   has_many :result_of_tests, dependent: :destroy
-  belongs_to :tutor, inverse_of: :clients
+  belongs_to :mentor, inverse_of: :clients
 
   validates :code_name, presence: true, uniqueness: true, length: { in: 6..20}
   validates :gender, presence: true, inclusion: { in: [1,2,3] }
   #1 – dunno
   #2 – Man
   #3 – Woman
-  validates :tutor,:mode_id, presence: true
+  validates :mentor,:mode_id, presence: true
   validates :is_active, :is_current_in_school, exclusion: { in: [nil] }
   validates :password, presence: true, allow_nil: true, length: {minimum: 4}
 
@@ -57,16 +57,16 @@ class Client < ActiveRecord::Base
       #women
       user_info[:Gender] = 'Woman'
     end
-    tutor = Tutor.find(self.tutor_id)
-    user_info[:Tutor] = tutor.info.last_name+' '+tutor.info.name
+    mentor = Mentor.find(self.mentor_id)
+    user_info[:Mentor] = mentor.info.last_name+' '+mentor.info.name
     user_info[:Current_in_school] = self.is_current_in_school ? 'Yes' : 'No'
     user_info
   end
 
   def show_short
     user_info = {code_name: self.code_name}
-    tutor = Tutor.find(self.tutor_id)
-    user_info[:tutor] = tutor.show_short
+    mentor = Mentor.find(self.mentor_id)
+    user_info[:mentor] = mentor.show_short
     user_info[:id] = self.id
     user_info[:is_active] = self.is_active
     user_info
@@ -120,20 +120,20 @@ class Client < ActiveRecord::Base
     all_clients.where('admin_id = ?', admin_id)
   end
 
-  def self.clients_of_tutor(tutor_id)
-    all_clients.where('tutor_id = ?', tutor_id)
+  def self.clients_of_mentor(mentor_id)
+    all_clients.where('mentor_id = ?', mentor_id)
   end
 
   def self.all_clients
     select(
-        'clients.id as id, clients.code_name as code_name, t.tutor_name as tutor_name,
-        t.tutor_last_name as tutor_last_name, a.admin_name as admin_name, a.admin_last_name as admin_last_name,
-        a.organisation as organisation, t.admin_id as administrator_id, tutor_id, is_active'
+        'clients.id as id, clients.code_name as code_name, t.mentor_name as mentor_name,
+        t.mentor_last_name as mentor_last_name, a.admin_name as admin_name, a.admin_last_name as admin_last_name,
+        a.organisation as organisation, t.admin_id as administrator_id, mentor_id, is_active'
     ).joins(
-        "JOIN (#{Tutor.select(
-            'infos.name as tutor_name, infos.last_name as tutor_last_name,
-            tutors.id as id, tutors.administrator_id as admin_id'
-        ).joins('JOIN infos on info_id = infos.id').to_sql}) as t on tutor_id = t.id"
+        "JOIN (#{Mentor.select(
+            'infos.name as mentor_name, infos.last_name as mentor_last_name,
+            mentors.id as id, mentors.administrator_id as admin_id'
+        ).joins('JOIN infos on info_id = infos.id').to_sql}) as t on mentor_id = t.id"
     ).joins(
         "JOIN (#{Administrator.select(
             'infos.name as admin_name, infos.last_name as admin_last_name,
