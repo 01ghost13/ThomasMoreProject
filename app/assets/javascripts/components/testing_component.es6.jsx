@@ -38,8 +38,8 @@ class TestingComponent extends React.Component {
 
   }
 
-  student_url() {
-    return this.props.student_url.replace(':id', this.props.student_id);
+  client_url() {
+    return this.props.client_url.replace(':id', this.props.client_id);
   }
 
   switchIndicator(){
@@ -161,7 +161,7 @@ class TestingComponent extends React.Component {
 
   //Actions
 
-  exitTesting(fallback_url = this.student_url()) {
+  exitTesting(fallback_url = this.client_url()) {
     if(this.props.mode === 'heatmap') {
       return;
     }
@@ -193,7 +193,7 @@ class TestingComponent extends React.Component {
     let data = {
       answer: TestingComponent.answerValue[answer],
       question: this.state.current_question,
-      student_id: this.props.student_id,
+      client_id: this.props.client_id,
       test_id: this.props.test_id,
       rewrite: this.state.rewrite,
       start_time: this.state.start_time
@@ -450,7 +450,7 @@ TestingComponent.propTypes = {
   }),
   questions_count: React.PropTypes.number,
   test_id: React.PropTypes.number,
-  student_id: React.PropTypes.number,
+  client_id: React.PropTypes.number,
   webgazer: React.PropTypes.bool,
   emotion_tracking: React.PropTypes.bool,
   mode: React.PropTypes.string
@@ -480,8 +480,8 @@ TestingComponent.defaultProps = {
   },
   questions_count: 1,
   test_id: 0,
-  student_id: 0,
-  student_url: '/students/:id',
+  client_id: 0,
+  client_url: '/clients/:id',
   webgazer: false,
   emotion_tracking: false,
   mode: ''

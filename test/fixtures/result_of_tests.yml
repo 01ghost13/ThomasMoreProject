@@ -10,7 +10,7 @@
 #  was_in_school       :boolean
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  student_id          :integer
+#  client_id           :integer
 #  test_id             :integer
 #
 

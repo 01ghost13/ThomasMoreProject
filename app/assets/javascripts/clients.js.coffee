@@ -4,8 +4,8 @@
 $ ->
   $(document).on 'change', '#administrator_selection', (evt) ->
     url = window.location.pathname
-    url += '/edit' if /students\/\d+\/?$/.test(url)
-    url += '/new' if /students\/?$/.test(url)
+    url += '/edit' if /clients\/\d+\/?$/.test(url)
+    url += '/new' if /clients\/?$/.test(url)
     $.ajax url + '/update_tutors',
       type: 'GET'
       dataType: 'script'

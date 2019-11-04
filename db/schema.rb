@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_04_075248) do
+ActiveRecord::Schema.define(version: 2019_11_04_105958) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,25 @@ ActiveRecord::Schema.define(version: 2019_11_04_075248) do
     t.string "organisation_address"
     t.index ["info_id"], name: "index_administrators_on_info_id"
     t.index ["organisation_address"], name: "index_administrators_on_organisation_address", unique: true
+  end
+
+  create_table "clients", id: :serial, force: :cascade do |t|
+    t.string "code_name"
+    t.date "birth_date"
+    t.date "date_off"
+    t.integer "gender"
+    t.string "address"
+    t.boolean "is_active"
+    t.string "password_digest"
+    t.boolean "is_current_in_school"
+    t.integer "tutor_id"
+    t.integer "mode_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "emotion_recognition", default: false
+    t.boolean "gaze_trace", default: false
+    t.index ["mode_id"], name: "index_clients_on_mode_id"
+    t.index ["tutor_id"], name: "index_clients_on_tutor_id"
   end
 
   create_table "emotion_state_results", force: :cascade do |t|
@@ -136,31 +155,12 @@ ActiveRecord::Schema.define(version: 2019_11_04_075248) do
     t.boolean "was_in_school"
     t.boolean "is_ended"
     t.integer "test_id"
-    t.integer "student_id"
+    t.integer "client_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_outdated", default: false
     t.boolean "emotion_recognition", default: false
     t.boolean "gaze_trace", default: false
-  end
-
-  create_table "students", id: :serial, force: :cascade do |t|
-    t.string "code_name"
-    t.date "birth_date"
-    t.date "date_off"
-    t.integer "gender"
-    t.string "adress"
-    t.boolean "is_active"
-    t.string "password_digest"
-    t.boolean "is_current_in_school"
-    t.integer "tutor_id"
-    t.integer "mode_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "emotion_recognition", default: false
-    t.boolean "gaze_trace", default: false
-    t.index ["mode_id"], name: "index_students_on_mode_id"
-    t.index ["tutor_id"], name: "index_students_on_tutor_id"
   end
 
   create_table "tests", id: :serial, force: :cascade do |t|
@@ -181,14 +181,14 @@ ActiveRecord::Schema.define(version: 2019_11_04_075248) do
   end
 
   add_foreign_key "administrators", "infos"
+  add_foreign_key "clients", "modes"
+  add_foreign_key "clients", "tutors"
   add_foreign_key "picture_interests", "interests"
   add_foreign_key "picture_interests", "pictures"
   add_foreign_key "question_results", "questions"
   add_foreign_key "question_results", "result_of_tests"
   add_foreign_key "questions", "pictures"
   add_foreign_key "questions", "tests"
-  add_foreign_key "students", "modes"
-  add_foreign_key "students", "tutors"
   add_foreign_key "tutors", "administrators"
   add_foreign_key "tutors", "infos"
 end

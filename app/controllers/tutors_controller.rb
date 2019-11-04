@@ -84,7 +84,7 @@ class TutorsController < ApplicationController
   #Action for deleting Tutor
   def delete
     @tutor = Tutor.find(params[:id])
-    if @tutor.students.empty? || @tutor.update(delete_tutor_params)
+    if @tutor.clients.empty? || @tutor.update(delete_tutor_params)
       if @tutor.reload.destroy
         flash[:success] = 'Tutor was deleted!'
         redirect_to tutors_path and return
@@ -136,7 +136,7 @@ class TutorsController < ApplicationController
 
   #Attributes for delete forms
   def delete_tutor_params
-    params.require(:tutor).permit(students_attributes: [:tutor_id, :id])
+    params.require(:tutor).permit(clients_attributes: [:tutor_id, :id])
   end
 
   #Loads info for creation/new pages

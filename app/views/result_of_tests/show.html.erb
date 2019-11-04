@@ -1,7 +1,7 @@
 <% provide(:title,"Result") %>
 <%= javascript_include_tag 'https://www.gstatic.com/charts/loader.js' %>
 <div class= "row">
-	<h2>Results of <%= link_to @student, student_path(params[:student_id]) %></h2>
+	<h2>Results of <%= link_to @client, client_path(params[:client_id]) %></h2>
 </div>
 
 <div class= "row">
@@ -9,13 +9,13 @@
 </div>
 <!-- Add designed btn -->
 <div class="row">
-  <%= link_to student_result_of_test_path(params[:student_id], params[:result_id], format: :xlsx),
+  <%= link_to client_result_of_test_path(params[:client_id], params[:result_id], format: :xlsx),
               data: {turbolinks: false}, class: 'btn btn-success' do  %>
     <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>&#8194;Download as xlsx
   <% end %>
   <% if @has_heatmap %>
     <%= link_to 'Show heatmap',
-                student_heatmap_path(params[:student_id], params[:result_id]),
+                client_heatmap_path(params[:client_id], params[:result_id]),
                 class: 'btn btn-success'
     %>
   <% end %>
@@ -106,8 +106,8 @@
 
 <!-- Edit btn -->
 <div class="row col-sm-4" style="margin-bottom: 15px;">
-  <% unless @i_am_student %>
-      <%= link_to("Edit results", edit_student_result_of_test_path(params[:student_id],params[:result_id]), class: "btn btn-warning") %>
+  <% unless @i_am_client %>
+      <%= link_to("Edit results", edit_client_result_of_test_path(params[:client_id],params[:result_id]), class: "btn btn-warning") %>
   <% else %>
       <h4>If you want to edit the results, ask your tutor.</h4>
   <% end %>

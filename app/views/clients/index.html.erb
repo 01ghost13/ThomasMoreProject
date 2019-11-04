@@ -1,5 +1,5 @@
-<% provide(:title,"Students List") %>
-<h1 class="col-sm-12">All Students</h1>
+<% provide(:title,"Clients List") %>
+<h1 class="col-sm-12">All Clients</h1>
 <div>
   <%= search_form_for @q do |f|%>
       <div class="form-group col-sm-4">
@@ -26,27 +26,27 @@
       <% end %>
     </tr>
     </thead>
-		<% @students.each do |student| %>
+		<% @clients.each do |client| %>
 			<tr>
-				<td><h4><%= student[:code_name] %></h4></td>
+				<td><h4><%= client[:code_name] %></h4></td>
 				<td><h4><small>
-          <%= student[:organisation] %></small></h4></td>
+          <%= client[:organisation] %></small></h4></td>
         <td><h4><small>
-          <%= link_to("#{student[:admin_name].titleize} #{student[:admin_last_name].titleize}",
-              administrator_path(student.administrator_id)) %></small></h4></td>
+          <%= link_to("#{client[:admin_name].titleize} #{client[:admin_last_name].titleize}",
+              administrator_path(client.administrator_id)) %></small></h4></td>
 				<td><h4><small>
-          <%= link_to("#{student[:tutor_name].titleize } #{student[:tutor_last_name].titleize }",
-                      tutor_path(student[:tutor_id])) %>
+          <%= link_to("#{client[:tutor_name].titleize } #{client[:tutor_last_name].titleize }",
+                      tutor_path(client[:tutor_id])) %>
         </small></h4></td>
-        <td><%= link_to('Profile', student_path(student[:id]), class: 'btn btn-default') %></td>
-        <td><%= link_to('Edit', edit_student_path(student[:id]), class: 'btn btn-warning') %></td>
-        <% if student[:is_active] %>
-          <td><%= link_to('Hide', student_path(student[:id], paranoic: true), method: :delete, class: 'btn btn-warning') %></td>
+        <td><%= link_to('Profile', client_path(client[:id]), class: 'btn btn-default') %></td>
+        <td><%= link_to('Edit', edit_client_path(client[:id]), class: 'btn btn-warning') %></td>
+        <% if client[:is_active] %>
+          <td><%= link_to('Hide', client_path(client[:id], paranoic: true), method: :delete, class: 'btn btn-warning') %></td>
         <% else %>
-          <td><%= link_to('Recover', student_path(student[:id], paranoic: true), method: :delete, class: 'btn btn-primary') %></td>
+          <td><%= link_to('Recover', client_path(client[:id], paranoic: true), method: :delete, class: 'btn btn-primary') %></td>
         <% end %>
         <% if @is_super_adm %>
-          <td><%= link_to('Delete', student_path(student[:id], paranoic: false),
+          <td><%= link_to('Delete', client_path(client[:id], paranoic: false),
                         method: :delete, data: { confirm: "Deleting will also delete all results.\n Are you sure?" },
                           class: 'btn btn-danger') %></td>
         <% end %>
@@ -55,5 +55,5 @@
 	</table>
 </div>
 <div class="col-sm-12">
-  <%= paginate @students %>
+  <%= paginate @clients %>
 </div>

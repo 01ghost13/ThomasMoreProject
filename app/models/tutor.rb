@@ -10,7 +10,7 @@
 #
 
 class Tutor < ActiveRecord::Base
-  has_many :students, inverse_of: :tutor, dependent: :restrict_with_error
+  has_many :clients, inverse_of: :tutor, dependent: :restrict_with_error
   belongs_to :info, inverse_of: :tutor, autosave: true, dependent: :destroy
   
   validates :administrator_id, presence: true
@@ -19,7 +19,7 @@ class Tutor < ActiveRecord::Base
   validates_presence_of :info
   validates_associated :info, allow_blank: true
   accepts_nested_attributes_for :info
-  accepts_nested_attributes_for :students
+  accepts_nested_attributes_for :clients
 
   #Shows info of tutor as a map
   def show
@@ -31,10 +31,10 @@ class Tutor < ActiveRecord::Base
     user_info
   end
 
-  def is_my_student? (student_id)
-    student = Student.find(student_id)
-    return false if student.nil?
-    student.tutor_id == self.id
+  def is_my_client? (client_id)
+    client = client.find(client_id)
+    return false if client.nil?
+    client.tutor_id == self.id
   end
 
   def show_short

@@ -5,8 +5,12 @@
     <% if params[:id].nil? %>
       <%= link_to('Create Test', new_test_path, class: 'btn btn-primary') %>
     <% else %>
-        <%= link_to('Back to profile', student_path(params[:id]), class: 'btn btn-primary') %>
-        <%= link_to('Edit mode settings', mode_settings_student_path(params[:id]), class: 'btn btn-default') %>
+        <%= link_to('Back to profile', client_path(params[:id]), class: 'btn btn-primary') %>
+
+      <% unless current_user.is_a?(Client) %>
+          <%= link_to('Edit mode settings', mode_settings_client_path(params[:id]), class: 'btn btn-default') %>
+      <% end %>
+
     <% end %>
   </div>
 </div>
@@ -39,7 +43,7 @@
                             data: { confirm: "Deleting will destroy all results of this test.\n Are you sure?" },
                             class: 'btn btn-danger') %></td>
         <% else %>
-          <td><%= link_to('Start', testing_student_path(params[:id],test[:id]), class: 'btn btn-success') %></td>
+          <td><%= link_to('Start', testing_client_path(params[:id],test[:id]), class: 'btn btn-success') %></td>
         <% end %>
 			</tr>
 		<% end %>

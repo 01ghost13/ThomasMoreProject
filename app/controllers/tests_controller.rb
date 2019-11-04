@@ -127,7 +127,7 @@ class TestsController < ApplicationController
   #Updates picture in /testing process
   def update_picture
     #Finding our result of test
-    res = ResultOfTest.where(student_id: params[:student_id], test_id: params[:test_id], is_ended: false).first
+    res = ResultOfTest.where(client_id: params[:client_id], test_id: params[:test_id], is_ended: false).first
     cur_question = params[:question][:number].to_i
 
     #Loading next question and writing to db current
@@ -172,7 +172,7 @@ class TestsController < ApplicationController
     if @question.nil?
       #current q was the last, saving and redirecting to result
       res.update(is_ended: true)
-      render json: { result_url: student_result_of_test_path(params[:student_id], res.id) } and return
+      render json: { result_url: client_result_of_test_path(params[:client_id], res.id) } and return
     end
 
     pic = @question.picture
@@ -190,12 +190,12 @@ class TestsController < ApplicationController
     #Loading test
     @test = Test.where(id: params[:test_id]).first
 
-    #Loading student
-    @student = Student.where(id: params[:id]).first
+    #Loading client
+    @client = Client.where(id: params[:id]).first
     
-    if @test.blank? || @student.blank?
-      #Cant find test or student
-      flash[:danger] = "Can't find student" if @student.blank?
+    if @test.blank? || @client.blank?
+      #Cant find test or client
+      flash[:danger] = "Can't find client" if @client.blank?
       flash[:danger] = "Can't find test" if @test.blank?
       redirect_back fallback_location: current_user and return
     end
@@ -207,16 +207,16 @@ class TestsController < ApplicationController
     end
 
     #Checking continue or creating new result
-    res = ResultOfTest.where(student_id: params[:id], test_id: params[:test_id], is_ended: false).first
+    res = ResultOfTest.where(client_id: params[:id], test_id: params[:test_id], is_ended: false).first
     if res.blank?
       #All tests were ended
       #Creating new result
       res = ResultOfTest.create(
         test_id: params[:test_id],
-        was_in_school: @student.is_current_in_school,
-        student_id: params[:id],
-        gaze_trace: @student.gaze_trace,
-        emotion_recognition: @student.emotion_recognition
+        was_in_school: @client.is_current_in_school,
+        client_id: params[:id],
+        gaze_trace: @client.gaze_trace,
+        emotion_recognition: @client.emotion_recognition
       )
     end
     #Filling first question
@@ -231,12 +231,12 @@ class TestsController < ApplicationController
   #Private methods
   private
   def check_rights
-    user = Student.find(params[:id])
+    user = Client.find(params[:id])
     is_super_adm = is_super?
-    is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
-    is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
-    is_i = session[:user_type] == 'student' && params[:id].to_i == session[:type_id]
-    unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
+    is_my_client = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
+    is_client_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
+    is_i = session[:user_type] == 'client' && params[:id].to_i == session[:type_id]
+    unless is_super_adm || is_my_client || is_client_of_my_tutor || is_i
       flash[:warning] = 'You have no access to this page.'
       redirect_to current_user
     end

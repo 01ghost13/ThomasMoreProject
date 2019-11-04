@@ -1,6 +1,6 @@
 class ResultOfTestsController < ApplicationController
   before_action :result_exist_callback, only: [:edit, :update, :show, :destroy]
-  before_action :student_exist_callback
+  before_action :client_exist_callback
   before_action :check_log_in
   before_action :check_rights, only: [:show, :index]
   before_action :check_admin_rights, except: [:show, :index]
@@ -13,7 +13,7 @@ class ResultOfTestsController < ApplicationController
     #Only finished results are editable
     unless @result.is_ended
 	    flash[:warning] = 'Test is not finished'
-      redirect_back fallback_location: student_path(params[:student_id])
+      redirect_back fallback_location: client_path(params[:client_id])
     end
   end
 
@@ -24,7 +24,7 @@ class ResultOfTestsController < ApplicationController
     @user = @result
     if @result.update(result_params)
       flash[:success] = 'Update Complete'
-      redirect_to(student_result_of_test_path(params[:student_id], params[:result_id]))
+      redirect_to(client_result_of_test_path(params[:client_id], params[:result_id]))
     else
       render :edit
     end
@@ -72,12 +72,12 @@ class ResultOfTestsController < ApplicationController
     avg_time_per_interest.each_key do |k|
       avg_time_per_interest[k] /= interests.count
     end
-    student = Student.find(result.student_id)
+    client = Client.find(result.client_id)
     #Sorting
     @list_interests = interests.to_a.sort{ |x,y| y[1] - x[1]}
     @list_timestamps = timestamps
     @list_interests_max = interests_max
-    @student = student.code_name.titleize
+    @client = client.code_name.titleize
     @res = [
       result.was_in_school,
       result.show_time_to_answer,
@@ -101,7 +101,7 @@ class ResultOfTestsController < ApplicationController
     respond_to do |format|
       format.html
       format.xlsx {
-        response.headers['Content-Disposition'] = "attachment; filename=\"result of #{@student}.xlsx\""
+        response.headers['Content-Disposition'] = "attachment; filename=\"result of #{@client}.xlsx\""
       }
     end
   end
@@ -109,17 +109,17 @@ class ResultOfTestsController < ApplicationController
   #List of results
   def index
     #Loading test results
-    results = ResultOfTest.where(student_id: params[:student_id]).order(:created_at).reverse_order
-    student = Student.find(params[:student_id])
-    @code_name = student.code_name
+    results = ResultOfTest.where(client_id: params[:client_id]).order(:created_at).reverse_order
+    client = Client.find(params[:client_id])
+    @code_name = client.code_name
     @results = []
     results.each do |result|
       @results << result.show_short
     end
     @results = Kaminari.paginate_array(@results).page(params[:page]).per(5)
     #Preparing graphs
-    @interest_points = student.get_student_interests[:points_interests]
-    @avg_time = student.get_student_interests[:avg_answer_time]
+    @interest_points = client.get_client_interests[:points_interests]
+    @avg_time = client.get_client_interests[:avg_answer_time]
   end
 
   #Action for deleting results
@@ -127,7 +127,7 @@ class ResultOfTestsController < ApplicationController
     result = ResultOfTest.find(params[:result_id])
     if result.destroy
       flash[:success] = 'Result deleted!'
-      redirect_to student_result_of_tests_path(params[:student_id])
+      redirect_to client_result_of_tests_path(params[:client_id])
     else
       @user = result
       render :index
@@ -139,12 +139,12 @@ class ResultOfTestsController < ApplicationController
     @result = ResultOfTest.result_page.find(params[:result_id])
     @test = @result.test
 
-    #Loading student
-    @student = @result.student
+    #Loading client
+    @client = @result.client
 
-    if @test.blank? || @student.blank?
-      #Cant find test or student
-      flash[:danger] = "Can't find student" if @student.blank?
+    if @test.blank? || @client.blank?
+      #Cant find test or client
+      flash[:danger] = "Can't find client" if @client.blank?
       flash[:danger] = "Can't find test" if @test.blank?
       redirect_back fallback_location: current_user and return
     end
@@ -170,23 +170,23 @@ class ResultOfTestsController < ApplicationController
     params.require(:result_of_test).permit(question_results_attributes: [:was_checked,:id])
   end
   def check_rights
-    user = Student.find(params[:student_id])
+    user = Client.find(params[:client_id])
     is_super_adm = is_super?
-    is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
-    is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
-    @i_am_student = session[:user_type] == 'student'
-    is_i = @i_am_student && params[:student_id].to_i == session[:type_id]
-    unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
+    is_my_client = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
+    is_client_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
+    @i_am_client = session[:user_type] == 'client'
+    is_i = @i_am_client && params[:client_id].to_i == session[:type_id]
+    unless is_super_adm || is_my_client || is_client_of_my_tutor || is_i
       flash[:danger] = 'You have no access to this page.'
       redirect_to current_user
     end
   end
   def check_admin_rights
-    student = Student.find(params[:student_id])
+    client = Client.find(params[:client_id])
     is_super_adm = is_super?
-    is_my_student = session[:user_type] == 'tutor' && student.tutor_id == session[:type_id]
-    is_student_of_my_tutor = session[:user_type] == 'administrator' && student.tutor.administrator_id == session[:type_id]
-    unless is_super_adm || is_my_student || is_student_of_my_tutor
+    is_my_client = session[:user_type] == 'tutor' && client.tutor_id == session[:type_id]
+    is_client_of_my_tutor = session[:user_type] == 'administrator' && client.tutor.administrator_id == session[:type_id]
+    unless is_super_adm || is_my_client || is_client_of_my_tutor
       flash[:danger] = 'You have no access to this page.'
       redirect_to current_user
     end
@@ -196,8 +196,8 @@ class ResultOfTestsController < ApplicationController
       redirect_to current_user
     end
   end
-  def student_exist_callback
-    unless check_exist(params[:student_id], Student)
+  def client_exist_callback
+    unless check_exist(params[:client_id], Client)
       redirect_to current_user
     end
   end

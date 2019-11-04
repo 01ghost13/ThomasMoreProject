@@ -1,5 +1,5 @@
 <% provide(:title,'Results of test') %>
-<h1>All results of <%= link_to @code_name, student_path(params[:student_id]) %></h1>
+<h1>All results of <%= link_to @code_name, client_path(params[:client_id]) %></h1>
 <!-- Results index -->
 <div class="col-sm-12">
   <table class="table table-hover">
@@ -10,7 +10,7 @@
       <td>Ended</td>
       <td>End date</td>
       <td>Result</td>
-      <% unless session[:user_type] == 'student' %>
+      <% unless session[:user_type] == 'client' %>
         <td>Edit</td>
         <td>Delete</td>
       <% end %>
@@ -27,12 +27,12 @@
         <td><h4><%= date_to_local result[:date_of_start] %></h4></td>
         <td><h4><%= t result[:is_ended].class %></h4></td>
         <td><h4><%= date_to_local result[:date_of_end] %></h4></td>
-        <td><%= link_to('Result', student_result_of_test_path(params[:student_id], result[:id]),
+        <td><%= link_to('Result', client_result_of_test_path(params[:client_id], result[:id]),
                         class: 'btn btn-default') %></td>
-        <% unless session[:user_type] == 'student' %>
-          <td><%= link_to('Edit', edit_student_result_of_test_path(params[:student_id], result[:id]),
+        <% unless session[:user_type] == 'client' %>
+          <td><%= link_to('Edit', edit_client_result_of_test_path(params[:client_id], result[:id]),
                         class: 'btn btn-warning') %></td>
-          <td><%= link_to('Delete', student_result_of_test_path(params[:student_id], result[:id]), method: :delete,
+          <td><%= link_to('Delete', client_result_of_test_path(params[:client_id], result[:id]), method: :delete,
                         data: { confirm: 'Are you sure?' },
                         class: 'btn btn-danger') %></td>
         <% end %>

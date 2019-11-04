@@ -11,5 +11,5 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
 # Rails.application.config.assets.precompile += %w( search.js )
-Rails.application.config.assets.precompile += %w(tests.css exiting_page_script.js tests.js students.js questions.js)
+Rails.application.config.assets.precompile += %w(tests.css exiting_page_script.js tests.js clients.js questions.js)
 Rails.application.config.assets.precompile += %w[webgazer/webgazer.js heatmap.js/heatmap.min.js]

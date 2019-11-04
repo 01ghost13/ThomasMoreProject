@@ -10,7 +10,7 @@
 #  was_in_school       :boolean
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  student_id          :integer
+#  client_id           :integer
 #  test_id             :integer
 #
 
@@ -25,7 +25,7 @@ class ResultOfTestTest < ActiveSupport::TestCase
     assert res.invalid?
     assert res.errors[:test_id].any?
     assert res.errors[:was_in_school].any?
-    assert res.errors[:student_id].any?
+    assert res.errors[:client_id].any?
     assert res.errors[:is_ended].any?
   end
 end

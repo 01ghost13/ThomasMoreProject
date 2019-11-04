@@ -16,8 +16,8 @@ class MailController < ApplicationController
 
   #Action for resending confirmation email
   def send_confirmation_again
-    #If not student and sending for himself
-    if session[:user_type] != 'student' && params[:id].to_i == session[:user_id]
+    #If not client and sending for himself
+    if session[:user_type] != 'client' && params[:id].to_i == session[:user_id]
       user_info = Info.find(params[:id])
       if user_info.is_mail_confirmed?
         redirect_back fallback_location: :root

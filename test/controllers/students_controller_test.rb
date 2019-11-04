@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class StudentsControllerTest < ActionController::TestCase
+class ClientsControllerTest < ActionController::TestCase
   test "should get new" do
     get :new
     assert_response :success

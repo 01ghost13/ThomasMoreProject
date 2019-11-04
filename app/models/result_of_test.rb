@@ -10,7 +10,7 @@
 #  was_in_school       :boolean
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  student_id          :integer
+#  client_id           :integer
 #  test_id             :integer
 #
 
@@ -18,13 +18,13 @@ class ResultOfTest < ActiveRecord::Base
   before_validation :setup_fields, on: :create
 
   belongs_to :test
-  belongs_to :student
+  belongs_to :client
   has_many :question_results, dependent: :destroy
   accepts_nested_attributes_for :question_results
 
   scope :result_page, -> { includes(:question_results, question_results: [:question, question: [:picture]]) }
 
-  validates :test,:student, presence: true
+  validates :test, :client, presence: true
   validates :was_in_school, exclusion: { in: [nil] }
 
   #Setups default fields
@@ -59,7 +59,7 @@ class ResultOfTest < ActiveRecord::Base
     result_info = {date_of_start: self.created_at}  
     result_info[:name_of_test] = Test.find(self.test_id).name
     result_info[:id] = self.id
-    result_info[:student_id] = self.student_id
+    result_info[:client_id] = self.client_id
     result_info[:is_ended] = self.is_ended
     result_info[:test_id] = self.test_id
     result_info[:date_of_end] = ''

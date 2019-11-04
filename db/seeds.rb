@@ -88,8 +88,8 @@ one_click_mode = Mode.create(name: 'One click mode')
 #   tutorInfo.save
 #   first_tutor = Tutor.create(administrator_id: lAdm.id, info_id: tutorInfo.id)
 #
-# #Students
-#   first_student = Student.create(tutor_id: first_tutor.id, code_name: '01ghost13', gender: 2, is_active: true, password: '020695', is_current_in_school: true)
+# #Clients
+#   first_student = Client.create(tutor_id: first_tutor.id, code_name: '01ghost13', gender: 2, is_active: true, password: '020695', is_current_in_school: true)
 #
 #
 # #Interests

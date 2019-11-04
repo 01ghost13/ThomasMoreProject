@@ -3,7 +3,7 @@
 # Table name: students
 #
 #  id                   :integer          not null, primary key
-#  adress               :string
+#  address              :string
 #  birth_date           :date
 #  code_name            :string
 #  date_off             :date
@@ -30,9 +30,9 @@ one: {}
 #
 two: {}
 #  column: value
-test_student:
+test_client:
   tutor_id: 1
-  code_name: 'SomeStudent'
+  code_name: 'SomeClient'
   gender: 2
   is_active: true
   password_digest: '020695'

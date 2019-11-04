@@ -26,7 +26,7 @@ json.questions_count test.questions.count
 
 json.test_id test.id
 
-json.student_id student.id
+json.client_id client.id
 
 json.start_time DateTime.current
 

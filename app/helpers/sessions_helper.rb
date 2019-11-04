@@ -3,10 +3,10 @@ module SessionsHelper
   def log_in(user)
     #User's info id
     session[:user_id] = user.id
-    #Is it student?
-    if user.class.name == 'Student'
-      #Student
-      session[:user_type] = 'student'
+    #Is it client?
+    if user.class.name == 'Client'
+      #client
+      session[:user_type] = 'client'
       session[:type_id] = user.id
       return user
     else
@@ -32,8 +32,8 @@ module SessionsHelper
     if session[:user_type].nil?
       return nil
     end
-    if session[:user_type] == 'student'
-      @current_user ||= Student.find_by(id: session[:user_id])
+    if session[:user_type] == 'client'
+      @current_user ||= Client.find_by(id: session[:user_id])
     else
       @current_user = Administrator.find_by(info_id: session[:user_id]) || Tutor.find_by(info_id: session[:user_id])
     end

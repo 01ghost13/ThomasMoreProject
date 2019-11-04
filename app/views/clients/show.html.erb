@@ -1,7 +1,7 @@
 <div class='row'>
 	<%= render 'shared/profile' %>
 	<div class='col-sm-offset-1 col-sm-7'>
-		<h1>Latest 5 results(<%= link_to('show all', student_result_of_tests_path(params[:id])) %>)</h1>
+		<h1>Latest 5 results(<%= link_to('show all', client_result_of_tests_path(params[:id])) %>)</h1>
 		<table class='table table-hover'>
       <thead>
       <tr>
@@ -9,7 +9,7 @@
         <td>Start date</td>
         <td>Ended</td>
         <td>Result</td>
-        <% if @is_super_adm || @is_my_student || @is_student_of_my_tutor %>
+        <% if @is_super_adm || @is_my_client || @is_client_of_my_tutor %>
             <td>Edit</td>
         <% end %>
       </tr>
@@ -19,10 +19,10 @@
 				<td><h4><%= res[:name_of_test] %></h4></td>
 				<td><h4><small><%= date_to_local res[:date_of_start] %></small></h4></td>
 				<td><h4><small>Is ended? <%= res[:is_ended] %></small></h4></td>
-        <td><%= link_to('Result', student_result_of_test_path(res[:student_id], res[:id]),
+        <td><%= link_to('Result', client_result_of_test_path(res[:client_id], res[:id]),
                         class: 'btn btn-default') %></td>
-        <% if @is_super_adm || @is_my_student || @is_student_of_my_tutor %>
-				  <td><%= link_to('Edit', edit_student_result_of_test_path(res[:student_id],res[:id]),
+        <% if @is_super_adm || @is_my_client || @is_client_of_my_tutor %>
+				  <td><%= link_to('Edit', edit_client_result_of_test_path(res[:client_id],res[:id]),
                         class: 'btn btn-warning') %></td>
         <% end %>
 			</tr>
@@ -31,22 +31,22 @@
 	</div>
 </div>
 
-<% if @is_super_adm || @is_my_student || @is_student_of_my_tutor %>
+<% if @is_super_adm || @is_my_client || @is_client_of_my_tutor %>
 	<div class='row'>
 		<div class='btn-group col-sm-4' role='group' aria-label='...'>
-			<%= link_to('Edit', edit_student_path(params[:id]), class: 'btn btn-warning col-sm-4') %>
+			<%= link_to('Edit', edit_client_path(params[:id]), class: 'btn btn-warning col-sm-4') %>
       <div class="col-sm-1"></div>
-      <%= link_to('Hide', student_path(params[:id], paranoic: true), method: :delete,
+      <%= link_to('Hide', client_path(params[:id], paranoic: true), method: :delete,
                   class: 'btn btn-warning col-sm-4') %>
 		</div>
 	</div>
 <% end %>
 <div class='row'>
 	<div class='btn-group col-sm-4' role='group' aria-label='...'>
-		<%= link_to('Choose test',tests_student_path(params[:id]), class: 'btn btn-primary col-sm-4') %>
+		<%= link_to('Choose test',tests_client_path(params[:id]), class: 'btn btn-primary col-sm-4') %>
     <% if @is_super_adm %>
         <div class="col-sm-1"></div>
-        <%= link_to('Delete', student_path(params[:id], paranoic: false), method: :delete,
+        <%= link_to('Delete', client_path(params[:id], paranoic: false), method: :delete,
                     data: { confirm: "Deleting will also delete all results.\n Are you sure?" },
                     class: 'btn btn-danger col-sm-4') %>
     <% end %>

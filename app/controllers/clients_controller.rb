@@ -1,4 +1,4 @@
-class StudentsController < ApplicationController
+class ClientsController < ApplicationController
   before_action :check_exist_callback, only: [:destroy, :edit, :update, :show, :mode_settings]
   before_action :check_log_in, only: [:new, :create, :index, :update, :edit, :destroy, :show, :mode_settings]
   before_action :check_rights, only: [:new, :create, :index]
@@ -6,15 +6,15 @@ class StudentsController < ApplicationController
   before_action :info_for_new_page, only: [:create, :new]
   before_action :check_deactivated, only: [:edit, :update, :mode_settings]
 
-  #New student page
+  #New client page
   def new
-    @user = Student.new
+    @user = Client.new
   end
   
-  #Action for create student
+  #Action for create client
   def create
-    #Creating student
-    @user = Student.new(student_params)
+    #Creating client
+    @user = Client.new(client_params)
     @user.tutor_id = session[:type_id] if session[:user_type] == 'tutor'
     
     #trying to save
@@ -26,36 +26,36 @@ class StudentsController < ApplicationController
     end
   end
 
-  #Action for hiding and deleting students
+  #Action for hiding and deleting clients
   def destroy
-    student = Student.find(params[:id])
+    client = Client.find(params[:id])
     if params[:paranoic] == 'true' || params[:paranoic] == nil
-      if student.hide
-        flash[:success] = 'Student was hided/recovered.'
+      if client.hide
+        flash[:success] = 'Client was hided/recovered.'
       else
-        flash[:warning] = "Can't hide/recover student"
+        flash[:warning] = "Can't hide/recover client"
       end
     elsif params[:paranoic] == 'false' && is_super?
       #True deleting
-      if student.destroy
-        flash[:success] = 'Student was deleted.'
+      if client.destroy
+        flash[:success] = 'Client was deleted.'
       else
-        flash[:danger] = "You can't delete this student"
+        flash[:danger] = "You can't delete this client"
       end
     end
     redirect_back fallback_location: current_user
   end
   
-  #Update student profile page
+  #Update client profile page
   def edit
-    @user = Student.find(params[:id])
+    @user = Client.find(params[:id])
     info_for_edit_page
   end
   
   #Action for updating
   def update
-    @user = Student.find(params[:id])
-    if @user.update(student_update_params)
+    @user = Client.find(params[:id])
+    if @user.update(client_update_params)
       flash[:success] = 'Update Complete'
       redirect_to @user
     else
@@ -66,19 +66,19 @@ class StudentsController < ApplicationController
   
   #Profile page
   def show
-    @user = Student.find(params[:id])
+    @user = Client.find(params[:id])
     @is_super_adm = is_super?
-    @is_my_student = session[:user_type] == 'tutor' && @user.tutor_id == session[:type_id]
-    @is_student_of_my_tutor = session[:user_type] == 'administrator' && @user.tutor.administrator_id == session[:type_id]
+    @is_my_client = session[:user_type] == 'tutor' && @user.tutor_id == session[:type_id]
+    @is_client_of_my_tutor = session[:user_type] == 'administrator' && @user.tutor.administrator_id == session[:type_id]
     unless @user.is_active
-      #Student is inactive
-      flash[:warning] = 'Student was deactivated in: ' + @user.date_off.to_s
+      #Client is inactive
+      flash[:warning] = 'Client was deactivated in: ' + @user.date_off.to_s
       redirect_back fallback_location: current_user and return
     end
     @user_info = @user.show_info.to_a
     #Loading all test results
     @test_results = []
-    ResultOfTest.order(:created_at).reverse_order.where(student_id: @user.id).limit(5).each do |res|
+    ResultOfTest.order(:created_at).reverse_order.where(client_id: @user.id).limit(5).each do |res|
       @test_results << res.show_short
     end
   end
@@ -91,35 +91,35 @@ class StudentsController < ApplicationController
     end
   end
 
-  #List of students
+  #List of clients
   def index
-    if session[:user_type] == 'student'
+    if session[:user_type] == 'client'
       flash[:danger] = 'You have no access to this page!'
       redirect_to current_user and return
     end
     @is_super_adm = is_super?
     if @is_super_adm
-      @q = Student.all_students.ransack(params[:q])
+      @q = Client.all_clients.ransack(params[:q])
     elsif session[:user_type] == 'tutor'
-      @q = Student.students_of_tutor(session[:type_id]).ransack(params[:q])
+      @q = Client.clients_of_tutor(session[:type_id]).ransack(params[:q])
     elsif session[:user_type] == 'administrator'
-      @q = Student.students_of_admin(session[:type_id]).ransack(params[:q])
+      @q = Client.clients_of_admin(session[:type_id]).ransack(params[:q])
     end
-    @students = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
-    @students = @students.page(params[:page]).per(5)
+    @clients = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
+    @clients = @clients.page(params[:page]).per(5)
   end
 
   # Page for editing modes
   def mode_settings
-    @user = Student.find(params[:id])
+    @user = Client.find(params[:id])
   end
 
   # Update edited modes
   def update_mode_settings
-    @user = Student.find(params[:id])
+    @user = Client.find(params[:id])
     if @user.update(mode_params)
       flash[:success] = 'Update Complete'
-      redirect_to tests_student_path(params[:id])
+      redirect_to tests_client_path(params[:id])
     else
       render :mode_settings
     end
@@ -129,23 +129,23 @@ class StudentsController < ApplicationController
   #Private methods
   private
   #Attributes for creation page
-  def student_params
-    params.require(:student).permit(:code_name,:tutor_id,:gender,
+  def client_params
+    params.require(:client).permit(:code_name,:tutor_id,:gender,
                                     :is_current_in_school,:password,:password_confirmation)
   end
 
   def mode_params
-    params.require(:student).permit(:gaze_trace, :emotion_recognition)
+    params.require(:client).permit(:gaze_trace, :emotion_recognition)
   end
 
   #Attributes for edit page
-  def student_update_params
+  def client_update_params
     if session[:user_type] == 'administrator'
-      params[:student][:tutor_id] ||= ''
-      params.require(:student).permit(:code_name,:tutor_id,:gender,:mode_id,
+      params[:client][:tutor_id] ||= ''
+      params.require(:client).permit(:code_name,:tutor_id,:gender,:mode_id,
                                       :is_current_in_school,:password,:password_confirmation)
     else
-      params.require(:student).permit(:code_name,:gender,:mode_id,
+      params.require(:client).permit(:code_name,:gender,:mode_id,
                                       :is_current_in_school,:password,:password_confirmation)
     end
   end
@@ -161,12 +161,12 @@ class StudentsController < ApplicationController
 
   #Rights of editing profile
   def check_editing_rights
-    user = Student.find(params[:id])
+    user = Client.find(params[:id])
     is_super_adm = is_super?
-    is_my_student = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
-    is_student_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
-    is_i = session[:user_type] == 'student' && user.id == session[:type_id]
-    unless is_super_adm || is_my_student || is_student_of_my_tutor || is_i
+    is_my_client = session[:user_type] == 'tutor' && user.tutor_id == session[:type_id]
+    is_client_of_my_tutor = session[:user_type] == 'administrator' && user.tutor.administrator_id == session[:type_id]
+    is_i = session[:user_type] == 'client' && user.id == session[:type_id]
+    unless is_super_adm || is_my_client || is_client_of_my_tutor || is_i
       flash[:warning] = 'You have no access to this page.'
       redirect_to current_user
     end
@@ -215,16 +215,16 @@ class StudentsController < ApplicationController
 
   #Callback for checking existence of record
   def check_exist_callback
-    unless check_exist(params[:id], Student)
+    unless check_exist(params[:id], Client)
       redirect_to current_user
     end
   end
 
-  #Callback for checking deactivated students
+  #Callback for checking deactivated clients
   def check_deactivated
-    @user = Student.find(params[:id])
+    @user = Client.find(params[:id])
     if !is_super? && @user.date_off != nil
-      flash[:warning] = "You can't edit deactivated student!"
+      flash[:warning] = "You can't edit deactivated client!"
       redirect_back fallback_location: current_user
     end
   end

@@ -1,0 +1,6 @@
+ru:
+  TrueClass: "Да"
+  FalseClass: "Нет"
+  common:
+    TrueClass: "Да"
+    FalseClass: "Нет"

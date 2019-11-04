@@ -16,7 +16,7 @@
     <nav>
     	<ul class="nav navbar-nav navbar-right">
     	<% if logged_in? %>
-        <% if session[:user_type] != 'student' %>
+        <% if session[:user_type] != 'client' %>
           <% unless current_user.info.is_mail_confirmed %>
             <li><%= link_to 'Send confirmation again', send_confirmation_again_path(id: session[:user_id]) %></li>
           <% end %>

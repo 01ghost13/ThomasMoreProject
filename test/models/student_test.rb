@@ -1,9 +1,9 @@
 # == Schema Information
 #
-# Table name: students
+# Table name: clients
 #
 #  id                   :integer          not null, primary key
-#  adress               :string
+#  address              :string
 #  birth_date           :date
 #  code_name            :string
 #  date_off             :date
@@ -21,13 +21,13 @@
 
 require 'test_helper'
 
-class StudentTest < ActiveSupport::TestCase
+class ClientTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
-  fixtures :students
+  fixtures :clients
   test "Empty fields" do
-    stu = Student.new
+    stu = Client.new
     assert stu.invalid?
     assert stu.errors[:tutor_id].any?
     assert stu.errors[:code_name].any?
@@ -39,9 +39,9 @@ class StudentTest < ActiveSupport::TestCase
     assert !stu.errors[:date_off].any?
   end
   test "Unique code name" do
-    stu = Student.new(
+    stu = Client.new(
     tutor_id: 1,
-    code_name: students(:test_student).code_name,
+    code_name: clients(:test_client).code_name,
     gender: 2,
     is_active: true,
     password_digest: '0206950',
@@ -51,7 +51,7 @@ class StudentTest < ActiveSupport::TestCase
     assert stu.errors[:code_name].any?, 'CodeName must be unique'
   end
   test "Another gender" do
-    stu = Student.new(
+    stu = Client.new(
     tutor_id: 1,
     code_name: 'nameOfStu',
     gender: -5,

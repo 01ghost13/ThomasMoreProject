@@ -1,10 +1,10 @@
 <% provide(:title, 'Heatmap') %>
 <%= stylesheet_link_tag 'tests' %>
 <div class= "row">
-  <h2>Heatmap of <%= link_to @student.code_name.titleize, student_path(params[:student_id]) %></h2>
+  <h2>Heatmap of <%= link_to @client.code_name.titleize, client_path(params[:client_id]) %></h2>
 </div>
 <div class= "row">
-  <h4><%= link_to 'Results', student_result_of_test_path(params[:student_id], params[:result_id]) %></h4>
+  <h4><%= link_to 'Results', client_result_of_test_path(params[:client_id], params[:result_id]) %></h4>
 </div>
 <div class="row">
   <div class="col-sm-12">

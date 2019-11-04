@@ -1,21 +1,22 @@
-<% provide(:title,'Edit profile') %>
-<%= javascript_include_tag 'students' %>
-<h1 class="row col-sm-offset-4">Edit profile</h1>
+<% provide(:title,'New client') %>
+<%= javascript_include_tag 'clients' %>
+<h1 class="row col-sm-offset-4">Create client</h1>
 <%= render 'shared/error_message' %>
 
-<%= form_for @user,class: "form-horizontal" do |student_form| %>
+<%= form_for @user,class: "form-horizontal" do |client_form| %>
  	<!--Code Name-->
 	<div class="row col-sm-offset-2 form-group">
-		<%= student_form.label :code_name, "Code name of student",class: "col-sm-2 control-label"%>
+		<%= client_form.label :code_name, "Code name of client",class: "col-sm-2 control-label"%>
 		<div class="col-sm-4">
-			<%= student_form.text_field :code_name, class: 'form-control', placeholder: "Codename" %>
+			<%= client_form.text_field :code_name, class: 'form-control', placeholder: "Codename" %>
 		</div>
 	</div>
+	
 	<!--Gender-->
 	<div class="row col-sm-offset-2 form-group">
-		<%= student_form.label :gender,class: "col-sm-2 control-label" %>
+		<%= client_form.label :gender,class: "col-sm-2 control-label" %>
 		<div class="col-sm-4">
-			<%= student_form.select(:gender, options_for_select(
+			<%= client_form.select(:gender, options_for_select(
 			  [
 			    ['Unknown', 1],
 			    ['Male', 2],
@@ -24,14 +25,13 @@
 			 %>
 		 </div>
 	</div>
-
 	<!--Is current in school?-->
 	<div class="row col-sm-offset-2 form-group">
 		<div class="col-sm-2">
-			<%= student_form.label :is_current_in_school, "Is current in school?" %>
+			<%= client_form.label :is_current_in_school, "Is current in school?" %>
 		</div>
-		<div class="col-sm-2">
-			<%= student_form.check_box(:is_current_in_school) %>
+		<div class="col-sm-1">
+			<%= client_form.check_box(:is_current_in_school) %>
 		</div>
 	</div>
 	<% if session[:user_type] == 'administrator' %>
@@ -41,41 +41,41 @@
 			<div class="row col-sm-offset-2 form-group">
 				<%= label_tag :administrator_id, "Choose local administrator", class: "col-sm-2 control-label" %>
 				<div class="col-sm-4">
-					<%= select_tag :administrator_id, options_for_select(@admins,@admins_cur),
+					<%= select_tag :administrator_id, options_for_select(@admins),
                          {id: 'administrator_selection', class: 'form-control'}  %><br/>
 				</div>
 			</div>
 		<% end %>
 		<!-- Choosing tutor-->
 		<div class="row col-sm-offset-2 form-group">
-			<%= student_form.label :tutor_id, "Choose Tutor", class: "col-sm-2 control-label" %>
+			<%= client_form.label :tutor_id, "Choose Tutor", class: "col-sm-2 control-label" %>
 			<div class="col-sm-4">
-				<%= student_form.select :tutor_id, options_for_select(@tutors,@tutors_cur), {} ,
+				<%= client_form.select :tutor_id, options_for_select(@tutors), {} ,
                                 {id: 'tutor_selection', class: 'form-control'}%>
 			</div>
 		</div>
 	<% end %>
 	<!--Password-->
+
 	<div class="row col-sm-offset-2 form-group">
-		<%= student_form.label :password, class: "col-sm-2 control-label" %>
+		<%= client_form.label :password, class: "col-sm-2 control-label" %>
 		<div class="col-sm-4">
-			<%= student_form.password_field :password, class: 'form-control', placeholder: "Leave empty for saving old" %>
+			<%= client_form.password_field :password, class: 'form-control', placeholder: "Password" %>
 		</div>
 	</div>
 	
 	<div class="row col-sm-offset-2 form-group">
-		<%= student_form.label :password_confirmation, "Confirmation", class: "col-sm-2 control-label" %>
+		<%= client_form.label :password_confirmation, "Confirmation", class: "col-sm-2 control-label" %>
 		<div class="col-sm-4">
-			<%= student_form.password_field :password_confirmation, class: 'form-control', placeholder: "Confirm your password" %>
+			<%= client_form.password_field :password_confirmation, class: 'form-control', placeholder: "Confirm your password" %>
 		</div>
 	</div>
 	
 	<div class="row col-sm-offset-2 form-group">
 		<div class="col-sm-offset-2 col-sm-2">
-			<%= student_form.submit "Confirm", class: "btn btn-primary" %>
+			<%= client_form.submit "Confirm", class: "btn btn-primary" %>
 		</div>
 	</div>
+
 <% end %>
-
-
 

@@ -1,9 +1,9 @@
 # == Schema Information
 #
-# Table name: students
+# Table name: clients
 #
 #  id                   :integer          not null, primary key
-#  adress               :string
+#  address              :string
 #  birth_date           :date
 #  code_name            :string
 #  date_off             :date
@@ -19,23 +19,23 @@
 #  tutor_id             :integer
 #
 
-class Student < ActiveRecord::Base
+class Client < ActiveRecord::Base
   before_validation :setup_fields, on: :create
 
   has_secure_password
   has_many :result_of_tests, dependent: :destroy
-  belongs_to :tutor, inverse_of: :students
+  belongs_to :tutor, inverse_of: :clients
 
   validates :code_name, presence: true, uniqueness: true, length: { in: 6..20}
   validates :gender, presence: true, inclusion: { in: [1,2,3] }
   #1 – dunno
-  #2 – Men
-  #3 – Women
+  #2 – Man
+  #3 – Woman
   validates :tutor,:mode_id, presence: true
   validates :is_active, :is_current_in_school, exclusion: { in: [nil] }
   validates :password, presence: true, allow_nil: true, length: {minimum: 4}
 
-  scope :all_students, ->() {all}
+  scope :all_clients, ->() {all}
 
   #Setups default fields
   def setup_fields
@@ -52,10 +52,10 @@ class Student < ActiveRecord::Base
       user_info[:Gender] = 'Unknown'
     elsif self.gender == 2
       #men
-      user_info[:Gender] = 'Men'
+      user_info[:Gender] = 'Man'
     else
       #women
-      user_info[:Gender] = 'Women'
+      user_info[:Gender] = 'Woman'
     end
     tutor = Tutor.find(self.tutor_id)
     user_info[:Tutor] = tutor.info.last_name+' '+tutor.info.name
@@ -72,7 +72,7 @@ class Student < ActiveRecord::Base
     user_info
   end
 
-  #Hides student for all users except SA
+  #Hides client for all users except SA
   def hide
     if self.is_active
       self.date_off = Date.current
@@ -83,7 +83,7 @@ class Student < ActiveRecord::Base
     self.save
   end
 
-  def get_student_interests(test_id = nil)
+  def get_client_interests(test_id = nil)
     table = execute_sql_statement(
         "SELECT interests.name, was_checked, earned_points, q_res.start as \"start\",
                 q_res.end as \"end\", q.number
@@ -92,7 +92,7 @@ class Student < ActiveRecord::Base
         WHERE p_i.picture_id = q.picture_id AND
               q_res.question_id = q.id AND
               res.id = q_res.result_of_test_id AND
-              res.student_id = #{self.id}#{test_id.nil? ? '':'AND'+test_id.to_s};").to_a
+              res.client_id = #{self.id}#{test_id.nil? ? '':'AND'+test_id.to_s};").to_a
     points_interests = Hash.new
     avg_answer_time = Hash.new
     table.each do |i|
@@ -116,17 +116,17 @@ class Student < ActiveRecord::Base
     end
   end
 
-  def self.students_of_admin(admin_id)
-    all_students.where('admin_id = ?', admin_id)
+  def self.clients_of_admin(admin_id)
+    all_clients.where('admin_id = ?', admin_id)
   end
 
-  def self.students_of_tutor(tutor_id)
-    all_students.where('tutor_id = ?', tutor_id)
+  def self.clients_of_tutor(tutor_id)
+    all_clients.where('tutor_id = ?', tutor_id)
   end
 
-  def self.all_students
+  def self.all_clients
     select(
-        'students.id as id, students.code_name as code_name, t.tutor_name as tutor_name,
+        'clients.id as id, clients.code_name as code_name, t.tutor_name as tutor_name,
         t.tutor_last_name as tutor_last_name, a.admin_name as admin_name, a.admin_last_name as admin_last_name,
         a.organisation as organisation, t.admin_id as administrator_id, tutor_id, is_active'
     ).joins(

@@ -9,21 +9,24 @@ class SessionsController < ApplicationController
   #Action for log in
   def create
     #Checking group of search
-    if params[:session][:is_student] == '1'
-      user = Student.find_by(code_name: params[:session][:codename])
-    else
-      user = Info.find_by(mail: params[:session][:codename])
+    user = Info.find_by(mail: params[:session][:codename])
+    is_client = false
+
+    if user.blank?
+      is_client = true
+      user = Client.find_by(code_name: params[:session][:codename])
     end
+
     #Checking log and pass
     if user && user.authenticate(params[:session][:password])
-      #if Student was deactivated
-      if params[:session][:is_student] == '1' && user.date_off != nil
+      #if Client was deactivated
+      if is_client && user.date_off.present?
         flash.now[:warning] = 'Your profile was deactivated!'
         render :new
         return
       end
       #Saving name
-      if params[:session][:is_student] == '1'
+      if is_client
         name_user = user.code_name
       else
         name_user = user.name

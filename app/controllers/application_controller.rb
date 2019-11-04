@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
   #Callback for checking confirmation of mail
   def check_mail_confirmation
     user = current_user
-    unless session[:user_type] != 'student' && user.info.is_mail_confirmed
+    unless session[:user_type] != 'client' && user.info.is_mail_confirmed
       flash[:danger] = "You haven't confirmed your mail!\n Please, confirm your mail."
       redirect_to :root
     end

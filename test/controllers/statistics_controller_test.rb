@@ -1,8 +1,8 @@
 require 'test_helper'
 
 class StatisticsControllerTest < ActionDispatch::IntegrationTest
-  test "should get student_overall" do
-    get statistics_student_overall_url
+  test "should get client_overall" do
+    get statistics_client_overall_url
     assert_response :success
   end
 
