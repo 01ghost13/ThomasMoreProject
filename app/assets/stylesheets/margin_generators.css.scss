@@ -1,0 +1,7 @@
+@for $percent from 0 through 10 {
+  @each $type in 'top', 'down', 'left', 'right' {
+    .m-#{$type}-#{$percent*10} {
+      margin-#{$type}: #{$percent * 10 + '%'};
+    }
+  }
+}

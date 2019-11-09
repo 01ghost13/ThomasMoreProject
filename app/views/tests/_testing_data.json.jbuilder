@@ -16,7 +16,7 @@ end
 
 json.static_pics do
   json.btn_back image_url('btn_back.png')
-  json.btn_exit image_url('btn_exit.png')
+  json.btn_exit image_url('btn_stop.png')
   json.btn_thumbs_down image_url('btn_td.png')
   json.btn_thumbs_up image_url('btn_tu.png')
   json.btn_question_mark image_url('btn_qm.png')

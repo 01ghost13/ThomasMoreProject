@@ -274,57 +274,55 @@ class TestingComponent extends React.Component {
         {this.renderGazeIndicator()}
         {this.renderHiddenCanvas()}
         <div className="row">
-          {this.renderInstructions()}
+          <div className="col-sm-3">
 
-          <div className="col-sm-1">
-            <img src={this.props.static_pics.btn_exit}
-                 className="img-responsive"
-                 id="btn_exit"
-                 onClick={() => this.exitTesting()}
-                 role="navigation_button"
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-sm-2">
-            <div className="row">
-              <img src={this.props.static_pics.btn_thumbs_up}
-                   className='img-responsive'
-                   id='btn_tu'
-                   onClick={() => this.nextQuestion('thumbs_up')}
-                   role="navigation_button"
-              />
+            <div className="row m-top-10">
+              <div className="col-sm-10">
+                {this.renderThumbsUp()}
+              </div>
             </div>
 
-            {this.renderBtnBack()}
-          </div>
-
-          {this.renderPicture()}
-
-          <div className="col-sm-offset-1 col-sm-2">
-            <div className="row">
-              <img src={this.props.static_pics.btn_thumbs_down}
-                   className='img-responsive'
-                   id='btn_td'
-                   onClick={() => this.nextQuestion('thumbs_down')}
-                   role="navigation_button"
-              />
+            <div className="row m-top-10">
+              <div className="col-sm-10">
+                {this.renderBtnBack()}
+              </div>
             </div>
 
+          </div>
+
+          <div className="col-sm-6">
             <div className="row">
-              <img src={this.props.static_pics.btn_question_mark}
-                   className='img-responsive'
-                   id='btn_qm'
-                   onClick={() => this.nextQuestion('question_mark')}
-                   role="navigation_button"
-              />
+              <div className="col-sm-12">
+                {this.renderPicture()}
+              </div>
+            </div>
+          </div>
+
+          <div className="col-sm-3">
+            <div className="row">
+              <div className="col-sm-offset-10 col-sm-3 exit-btn ">
+                {this.renderExitBtn()}
+              </div>
+            </div>
+
+            <div className="row m-top-10">
+              <div className="col-sm-offset-2 col-sm-10">
+                {this.renderThumbsDown()}
+              </div>
+            </div>
+
+            <div className="row m-top-10">
+              <div className="col-sm-offset-2 col-sm-10">
+                {this.renderSkipBtn()}
+              </div>
             </div>
           </div>
         </div>
+
         <div className="row description-row">
           {this.renderDescription()}
         </div>
+
         <div className="row">
           {this.renderProgressBar()}
         </div>
@@ -333,6 +331,8 @@ class TestingComponent extends React.Component {
   }
 
   renderGazeIndicator() {
+    if (!this.props.webgazer) { return; }
+
     return(
       <div className="indicator" id="gaze_indicator">
       </div>
@@ -344,39 +344,65 @@ class TestingComponent extends React.Component {
       return '';
 
     return (
-      <div className="row">
-        <img src={this.props.static_pics.btn_back}
-             className='img-responsive'
-             id='btn_back'
-             role="navigation_button"
-             onClick={this.previousQuestion}
-        />
-      </div>
+      <img src={this.props.static_pics.btn_back}
+           className='img-responsive pull-right'
+           id='btn_back'
+           role="navigation_button"
+           onClick={this.previousQuestion}
+      />
     );
   }
 
-  renderInstructions() {
+  renderThumbsUp() {
     return(
-      <div className="col-sm-offset-1 col-sm-10">
-        <div className="panel panel-default"
-             style={{display: 'none'}}
-        >
-          <div className="panel-body">
-            <h4>Some instructions for user</h4>
-          </div>
-        </div>
-      </div>
+      <img src={this.props.static_pics.btn_thumbs_up}
+           className='img-responsive pull-right'
+           id='btn_tu'
+           onClick={() => this.nextQuestion('thumbs_up')}
+           role="navigation_button"
+      />
+    );
+  }
+
+  renderThumbsDown() {
+    return(
+      <img src={this.props.static_pics.btn_thumbs_down}
+           className='img-responsive'
+           id='btn_td'
+           onClick={() => this.nextQuestion('thumbs_down')}
+           role="navigation_button"
+      />
+    );
+  }
+
+  renderSkipBtn() {
+    return(
+      <img src={this.props.static_pics.btn_question_mark}
+           className='img-responsive'
+           id='btn_qm'
+           onClick={() => this.nextQuestion('question_mark')}
+           role="navigation_button"
+      />
+    );
+  }
+
+  renderExitBtn() {
+    return(
+      <img src={this.props.static_pics.btn_exit}
+           className="img-responsive"
+           id="btn_exit"
+           onClick={() => this.exitTesting()}
+           role="navigation_button"
+      />
     );
   }
 
   renderPicture() {
     return (
-      <div className="col-sm-offset-1 col-sm-6">
-        <img src={this.state.current_question.image_url}
-             className='img-responsive'
-             id='cur_image'
-        />
-      </div>
+      <img src={this.state.current_question.image_url}
+           className='img-responsive'
+           id='cur_image'
+      />
     );
   }
 
