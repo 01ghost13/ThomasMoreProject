@@ -399,10 +399,12 @@ class TestingComponent extends React.Component {
 
   renderPicture() {
     return (
-      <img src={this.state.current_question.image_url}
-           className='img-responsive'
-           id='cur_image'
-      />
+      <div className="crop-image">
+        <img src={this.state.current_question.image_url}
+             className='img-responsive'
+             id='cur_image'
+        />
+      </div>
     );
   }
 

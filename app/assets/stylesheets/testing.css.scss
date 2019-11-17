@@ -6,3 +6,8 @@
   position: absolute;
   z-index: 10;
 }
+
+.crop-image {
+  max-height: 70vh;
+  overflow: hidden;
+}
