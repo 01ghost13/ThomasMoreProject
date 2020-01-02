@@ -54,7 +54,14 @@ class ResultOfTestsController < ApplicationController
       #Related interests for result
       related_i = {}
       q_test.each do |q|
-        related_i = q.picture.related_interests if q.number == r.number
+        attachment =
+            if q.youtube?
+              q.youtube_link
+            else
+              q.picture
+            end
+
+        related_i = attachment.related_interests if q.number == r.number
       end
       related_i.each_key do |interest|
         if interests[interest].nil?

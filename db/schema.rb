@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_04_132324) do
+ActiveRecord::Schema.define(version: 2019_11_17_131504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,9 +121,11 @@ ActiveRecord::Schema.define(version: 2019_11_04_132324) do
     t.integer "interest_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "youtube_link_id"
     t.index ["interest_id", "picture_id"], name: "index_picture_interests_on_interest_id_and_picture_id", unique: true
     t.index ["interest_id"], name: "index_picture_interests_on_interest_id"
     t.index ["picture_id"], name: "index_picture_interests_on_picture_id"
+    t.index ["youtube_link_id"], name: "index_picture_interests_on_youtube_link_id"
   end
 
   create_table "pictures", id: :serial, force: :cascade do |t|
@@ -156,8 +158,10 @@ ActiveRecord::Schema.define(version: 2019_11_04_132324) do
     t.integer "test_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "youtube_link_id"
     t.index ["picture_id"], name: "index_questions_on_picture_id"
     t.index ["test_id"], name: "index_questions_on_test_id"
+    t.index ["youtube_link_id"], name: "index_questions_on_youtube_link_id"
   end
 
   create_table "result_of_tests", id: :serial, force: :cascade do |t|
@@ -176,6 +180,13 @@ ActiveRecord::Schema.define(version: 2019_11_04_132324) do
     t.string "name"
     t.string "description"
     t.string "version"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "youtube_links", force: :cascade do |t|
+    t.string "description"
+    t.string "link"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

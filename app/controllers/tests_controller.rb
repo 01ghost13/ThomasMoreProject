@@ -23,6 +23,7 @@ class TestsController < ApplicationController
     #Numering questions
     @test.questions.each_with_index do |q, i|
       q.number = i + 1
+      next if q.picture_id.blank?
       @picture << Picture.find(q.picture_id)
     end
     unless params[:test][:questions_attributes]
@@ -52,6 +53,7 @@ class TestsController < ApplicationController
     @picture = []
     @pictures = Picture.pictures_list
     @test.questions.each do |q|
+      next if q.picture_id.blank?
       @picture << Picture.find(q.picture_id)
     end
     @dummy = Picture.find(@pictures.first[1])
@@ -81,6 +83,7 @@ class TestsController < ApplicationController
       @picture = []
       #Loading questions
       @test.questions.each do |q|
+        next if q.picture_id.blank?
         @picture << Picture.find(q.picture_id)
       end
       @user = @test
@@ -175,9 +178,7 @@ class TestsController < ApplicationController
       render json: { result_url: client_result_of_test_path(params[:client_id], res.id) } and return
     end
 
-    pic = @question.picture
-    @description = pic.description
-    @image = pic.middle_variant
+    @description = @question.attachment_description
 
     respond_to do |format|
        format.json do
@@ -222,8 +223,8 @@ class TestsController < ApplicationController
     #Filling first question
     @question = res.last_question
     @previous_question = res.previous_question
-    @description = @question.picture.description
-    @image = @question.picture.middle_variant
+    @description = @question.attachment_description
+    @image = @question.picture&.middle_variant
     @res = res
     render layout: 'testing_layout'
   end
@@ -241,18 +242,31 @@ class TestsController < ApplicationController
       redirect_to current_user
     end
   end
+
   def test_params
     i = 1
-    if params[:test][:questions_attributes]
+    if params[:test][:questions_attributes].present?
       params[:test][:questions_attributes].each_pair do |key, _|
         params[:test][:questions_attributes][key][:number] = i
         i += 1
       end
     end
     params.require(:test).permit(
-        :description, :name, :version, questions_attributes: [
-        :picture_id, :_destroy, :id, :number])
+        :description,
+        :name,
+        :version,
+        questions_attributes: [
+          :picture_id,
+          :_destroy,
+          :id,
+          :number,
+          youtube_link_attributes: [
+            :link
+          ]
+        ]
+    )
   end
+
   def check_exist_callback
     #edit - params[:id], other - params[:test_id]
     unless !params[:test_id].nil? && check_exist(params[:test_id], Test) ||

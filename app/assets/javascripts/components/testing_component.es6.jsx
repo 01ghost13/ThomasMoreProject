@@ -47,6 +47,10 @@ class TestingComponent extends React.Component {
     $('#gaze_indicator').css('background-color', color);
   }
 
+  isYoutube() {
+    return !_.isEmpty(this.state.current_question.youtube_link)
+  }
+
   //Callbacks
 
   initWebGazer() {
@@ -293,7 +297,7 @@ class TestingComponent extends React.Component {
           <div className="col-sm-6">
             <div className="row">
               <div className="col-sm-12">
-                {this.renderPicture()}
+                {this.renderAttachment()}
               </div>
             </div>
           </div>
@@ -408,6 +412,32 @@ class TestingComponent extends React.Component {
     );
   }
 
+  renderEmbedYoutube() {
+    // let youtube_link = 'http://www.youtube.com/embed/oHg5SJYRHA0?autoplay=1&loop=1';
+    let youtube_link = this.state.current_question.youtube_link;
+
+    return (
+      <div style={{width: '100%', height: '100%'}}>
+        <iframe is
+                width="600"
+                height="345"
+                src={youtube_link}
+                frameBorder="0"
+                allowFullScreen=""
+                allow='autoplay'
+        />
+      </div>
+    );
+  }
+
+  renderAttachment() {
+    if(this.isYoutube()) {
+      return this.renderEmbedYoutube();
+    } else {
+      return this.renderPicture();
+    }
+  }
+
   renderDescription() {
     return (
       <div className="col-sm-offset-2 col-sm-8">
@@ -458,12 +488,14 @@ TestingComponent.propTypes = {
   testing: React.PropTypes.shape({
     current_question: React.PropTypes.shape({
       image_url: React.PropTypes.string,
+      youtube_link: React.PropTypes.string,
       description: React.PropTypes.string,
       number: React.PropTypes.number,
       id: React.PropTypes.number
     }),
     previous_question: React.PropTypes.shape({
       image_url: React.PropTypes.string,
+      youtube_link: React.PropTypes.string,
       description: React.PropTypes.string,
       number: React.PropTypes.number,
       id: React.PropTypes.number

@@ -1,15 +1,25 @@
 json.testing do
   json.current_question do
     json.extract! question, *%i[id number]
+
     json.description description
-    json.image_url url_for(image)
+    if question.youtube?
+      json.youtube_link question.youtube_link.embed
+    else
+      json.image_url url_for(image)
+    end
   end
 
   if previous_question.present?
     json.previous_question do
       json.extract! previous_question, *%i[id number]
-      json.description previous_question.picture.description
-      json.image_url url_for(previous_question.picture.middle_variant)
+
+      json.description previous_question.attachment_description
+      if previous_question.youtube?
+        json.youtube_link previous_question.youtube_link.embed
+      else
+        json.image_url url_for(previous_question.picture.middle_variant)
+      end
     end
   end
 end

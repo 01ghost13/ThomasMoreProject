@@ -2,24 +2,42 @@
 #
 # Table name: questions
 #
-#  id         :integer          not null, primary key
-#  number     :integer
-#  picture_id :integer
-#  test_id    :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id              :integer          not null, primary key
+#  number          :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  picture_id      :integer
+#  test_id         :integer
+#  youtube_link_id :bigint
 #
 
 class Question < ActiveRecord::Base
   #Probably better to use linked list
   before_destroy :on_destroy
 
-  belongs_to :picture, inverse_of: :questions
+  belongs_to :picture, inverse_of: :questions, optional: true
+  belongs_to :youtube_link, inverse_of: :questions, optional: true
   belongs_to :test
   has_many :question_results, dependent: :nullify
 
-  validates :test, :picture, presence: true
+  validates :test, presence: true
   validates :number, presence: true, numericality: { only_integer: true, greater_than: 0 }
+
+  accepts_nested_attributes_for :youtube_link
+
+  def youtube?
+    youtube_link_id.present?
+  end
+
+  def attachment_description
+    if picture_id.present?
+      picture.description
+    elsif youtube_link_id.present?
+      youtube_link.description
+    else
+      ''
+    end
+  end
 
   private
     def on_destroy

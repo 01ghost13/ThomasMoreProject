@@ -16,6 +16,7 @@ class TestForm extends React.Component {
     this.versionChanged = this.versionChanged.bind(this);
     this.descriptionChanged = this.descriptionChanged.bind(this);
     this.addQuestion = this.addQuestion.bind(this);
+    this.addQuestionYT = this.addQuestionYT.bind(this);
   }
 
   nameChanged(event) {
@@ -33,6 +34,12 @@ class TestForm extends React.Component {
   pictureChanged(event, index) {
     let new_state = {...this.state};
     new_state.questions_attributes[index].picture_id = parseInt(event.target.value);
+    this.setState(new_state);
+  }
+
+  linkChanged(event, index) {
+    let new_state = {...this.state};
+    new_state.questions_attributes[index]['youtube_link_attributes']['link'] = event.target.value;
     this.setState(new_state);
   }
 
@@ -64,6 +71,30 @@ class TestForm extends React.Component {
     this.setState(new_state);
   }
 
+  addQuestionYT() {
+    let new_state = {...this.state};
+    new_state.questions_attributes.push({...this.defaultQuestionYT()});
+    this.setState(new_state);
+  }
+
+  defaultQuestionYT(){
+    let questions = _.filter(this.state.questions_attributes,
+      (question) => question._destroy !== true
+    );
+
+    return {
+      id: undefined,
+      youtube_link_attributes: {
+        link: undefined,
+        description: undefined
+      },
+      number: questions.length + 1
+    };
+  }
+
+  isYoutubeLink(question) {
+    return _.get(question, 'youtube_link_attributes') !== undefined;
+  }
   defaultQuestion() {
     let pictures = _.filter(this.state.questions_attributes,
       (question) => question._destroy !== true
@@ -160,17 +191,30 @@ class TestForm extends React.Component {
   renderQuestions() {
     let question_list = _.map(
       this.state.questions_attributes,
-      (question, index) => this.renderQuestion(question, index)
+      (question, index) => {
+        if(this.isYoutubeLink(question)) {
+          return this.renderYTLink(question, index);
+        } else {
+          return this.renderQuestion(question, index);
+        }
+      }
     );
 
     return(
       <div id="questions">
         {question_list}
         <div className="row col-sm-offset-7 form-group">
-          <a className="btn btn-primary col-sm-4"
+          <a className="btn btn-primary col-sm-6"
              onClick={this.addQuestion}
           >
-            Add question
+            Add question with picture
+          </a>
+        </div>
+        <div className="row col-sm-offset-7 form-group">
+          <a className="btn btn-primary col-sm-6"
+             onClick={this.addQuestionYT}
+          >
+            Add question with Youtube video
           </a>
         </div>
       </div>
@@ -187,36 +231,27 @@ class TestForm extends React.Component {
     );
   }
 
-  renderQuestion(question, index) {
+  renderYTLink(question, index) {
     if(question._destroy) {
       return '';
     }
 
-    let picture_preview = _.get(this.getPictureLinkById(question.picture_id), 'preview', '#');
-    let picture_options = _.map(this.props.picture_list, (picture) => this.pictureOption(picture));
     return (
       <div key={index}
            className="row col-sm-offset-2 form-group"
       >
-        <div className="row col-sm-offset-3"
-             style={{marginBottom: '20px'}}
-        >
-          <img src={picture_preview}
-               className="img-responsive img-rounded"
-          />
-        </div>
-
-        <div className="row form-group">
+        <div className="form-group">
           <label className="col-sm-2 control-label">
-            Picture
+            Youtube video
           </label>
+
           <div className="col-sm-4">
-            <select className="form-control"
-                    value={question.picture_id}
-                    onChange={(e) => this.pictureChanged(e, index)}
-            >
-              {picture_options}
-            </select>
+            <input className="form-control"
+                   type="text"
+                   placeholder="Youtube link"
+                   onChange={(e) => this.linkChanged(e, index)}
+                   value={question.youtube_link_attributes.link}
+            />
           </div>
           <div className="col-sm-4">
             <a className="btn btn-warning"
@@ -224,6 +259,53 @@ class TestForm extends React.Component {
             >
               Remove question
             </a>
+          </div>
+        </div>
+        <hr/>
+      </div>
+    );
+  }
+
+  renderQuestion(question, index) {
+    if(question._destroy) {
+      return '';
+    }
+
+    let picture_preview = _.get(this.getPictureLinkById(question.picture_id), 'preview', '#');
+    let picture_options = _.map(this.props.picture_list, (picture) => this.pictureOption(picture));
+
+    return (
+      <div key={index}
+           className="row col-sm-offset-2 form-group"
+      >
+        <div className="col-sm-12">
+          <div className="row col-sm-offset-3"
+               style={{marginBottom: '20px'}}
+          >
+            <img src={picture_preview}
+                 className="img-responsive img-rounded"
+            />
+          </div>
+
+          <div className="row form-group">
+            <label className="col-sm-2 control-label">
+              Picture
+            </label>
+            <div className="col-sm-4">
+              <select className="form-control"
+                      value={question.picture_id}
+                      onChange={(e) => this.pictureChanged(e, index)}
+              >
+                {picture_options}
+              </select>
+            </div>
+            <div className="col-sm-4">
+              <a className="btn btn-warning"
+                 onClick={() => this.removePicture(index)}
+              >
+                Remove question
+              </a>
+            </div>
           </div>
         </div>
         <hr/>
