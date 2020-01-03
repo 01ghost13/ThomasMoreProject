@@ -23,7 +23,13 @@ class MailController < ApplicationController
         redirect_back fallback_location: :root
         return
       end
-      AitscoreMailer.registration_confirmation(user_info).deliver
+
+      begin
+        AitscoreMailer.registration_confirmation(user_info).deliver
+      rescue => e
+        Rails.logger.error("Failed to email: \n #{e.backtrace}")
+      end
+
       flash[:success] = 'New email was sent!'
     else
       flash[:danger] = "Sorry. User doesn't exist"
@@ -40,7 +46,11 @@ class MailController < ApplicationController
     info = Info.find_by_mail(params[:mail])
     if info
       info.email_reset
-      AitscoreMailer.reset_password(info).deliver
+      begin
+        AitscoreMailer.reset_password(info).deliver
+      rescue => e
+        Rails.logger.error("Failed to email: \n #{e.backtrace}")
+      end
       flash[:success] = 'Email was sent.'
       redirect_to :root
     else

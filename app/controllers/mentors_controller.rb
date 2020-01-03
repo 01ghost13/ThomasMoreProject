@@ -25,7 +25,11 @@ class MentorsController < ApplicationController
     #If all is ok - creating
     if @user.save
       flash[:success] = 'Account created!'
-      AitscoreMailer.registration_confirmation(@user.info).deliver
+      begin
+        AitscoreMailer.registration_confirmation(@user.info).deliver
+      rescue => e
+        Rails.logger.error("Failed to email: \n #{e.backtrace}")
+      end
       redirect_to @user
     else
       render :new
