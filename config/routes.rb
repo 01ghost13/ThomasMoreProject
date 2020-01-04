@@ -58,8 +58,8 @@ Rails.application.routes.draw do
     member do
       #Adding testing pages
       get 'tests' => 'tests#index', as: 'tests'
-      get 'tests/:test_id/testing' => 'tests#testing', as: 'testing'
-      post 'tests/:test_id/testing/update_picture' => 'tests#update_picture'
+      get 'tests/:test_id/testing' => 'testing_process#testing', as: 'testing'
+      post 'tests/:test_id/testing/update_picture' => 'testing_process#update_picture'
       get 'edit/update_mentors' => 'clients#update_mentors'
       get 'mode_settings' => 'clients#mode_settings'
       patch 'mode_settings' => 'clients#update_mode_settings'
