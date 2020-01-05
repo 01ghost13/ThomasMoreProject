@@ -59,9 +59,8 @@
   <%= paginate @tests %>
 </div>
 
-<h1>Started tests</h1>
-
 <% if params[:id].present? %>
+  <h1>Started tests</h1>
   <div class="row">
     <div class="col-sm-12">
       <% if @not_finished_tests.empty? %>
