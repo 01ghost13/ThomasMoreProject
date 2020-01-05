@@ -92,14 +92,14 @@ gem 'rollbar', '~> 2.19'
 
 gem 'oj', '~> 2.16.1' # for rollbar dependecy
 
+# Sending emails in prod (https://github.com/stephenb/sendgrid)
+gem 'sendgrid'
+
 group :production, :staging do
 # Use Uglifier as compressor for JavaScript assets
   gem 'uglifier', '>= 1.3.0'
 
   gem 'whenever', require: false
-
-  # Sending emails in prod (https://github.com/stephenb/sendgrid)
-  gem 'sendgrid'
 end
 
 group :staging do

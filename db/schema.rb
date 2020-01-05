@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_17_131504) do
+ActiveRecord::Schema.define(version: 2020_01_19_143532) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,13 +57,11 @@ ActiveRecord::Schema.define(version: 2019_11_17_131504) do
     t.string "password_digest"
     t.boolean "is_current_in_school"
     t.integer "mentor_id"
-    t.integer "mode_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "emotion_recognition", default: false
     t.boolean "gaze_trace", default: false
     t.index ["mentor_id"], name: "index_clients_on_mentor_id"
-    t.index ["mode_id"], name: "index_clients_on_mode_id"
   end
 
   create_table "emotion_state_results", force: :cascade do |t|
@@ -107,12 +105,6 @@ ActiveRecord::Schema.define(version: 2019_11_17_131504) do
     t.datetime "updated_at", null: false
     t.index ["administrator_id"], name: "index_mentors_on_administrator_id"
     t.index ["info_id"], name: "index_mentors_on_info_id"
-  end
-
-  create_table "modes", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "picture_interests", id: :serial, force: :cascade do |t|
@@ -193,7 +185,6 @@ ActiveRecord::Schema.define(version: 2019_11_17_131504) do
 
   add_foreign_key "administrators", "infos"
   add_foreign_key "clients", "mentors"
-  add_foreign_key "clients", "modes"
   add_foreign_key "mentors", "administrators"
   add_foreign_key "mentors", "infos"
   add_foreign_key "picture_interests", "interests"
