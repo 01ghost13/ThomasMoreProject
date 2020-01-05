@@ -12,7 +12,10 @@ development:
 
 production:
   adapter: postgresql
-  database: db/production.postgresql
+  database: aitscore
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  encoding: unicode
   pool: 5
   timeout: 5000
 

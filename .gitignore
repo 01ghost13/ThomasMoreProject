@@ -32,3 +32,6 @@
 
 # Debug
 .byebug_history
+
+# Deploy
+/config/deploy/prod.pem

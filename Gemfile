@@ -91,6 +91,14 @@ gem 'lodash-rails'
 # Sending emails in prod (https://github.com/stephenb/sendgrid)
 gem 'sendgrid'
 
+# DEPLOY
+
+gem 'capistrano', '~> 3.11'
+
+gem 'capistrano-rails', '~> 1.4'
+
+gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
+
 group :production, :staging do
 # Use Uglifier as compressor for JavaScript assets
   gem 'uglifier', '>= 1.3.0'
