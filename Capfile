@@ -36,6 +36,8 @@ install_plugin Capistrano::SCM::Git
 
 require 'capistrano/rails'
 require 'capistrano/rbenv'
+require 'capistrano/puma'
+install_plugin Capistrano::Puma
 
 set :rbenv_type, :user
 set :rbenv_ruby, '2.4.4'

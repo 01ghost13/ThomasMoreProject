@@ -7,7 +7,7 @@ ruby '2.4.4'
 gem 'rails', '~> 5.2.1'
 
 # Use Puma as the app server
-gem 'puma', '~> 3.7'
+gem 'puma', '~> 4.0'
 
 # Use Paperclip to saving images in FS
 gem 'paperclip', '~> 5.0.0'
@@ -91,14 +91,6 @@ gem 'lodash-rails'
 # Sending emails in prod (https://github.com/stephenb/sendgrid)
 gem 'sendgrid'
 
-# DEPLOY
-
-gem 'capistrano', '~> 3.11'
-
-gem 'capistrano-rails', '~> 1.4'
-
-gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
-
 group :production, :staging do
 # Use Uglifier as compressor for JavaScript assets
   gem 'uglifier', '>= 1.3.0'
@@ -145,4 +137,14 @@ group :development do
   gem 'better_errors'
 
   gem 'annotate'
+
+  # DEPLOY
+
+  gem 'capistrano', '~> 3.11', require: false
+
+  gem 'capistrano-rails', '~> 1.4', require: false
+
+  gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4', require: false
+
+  gem 'capistrano3-puma', github: "seuros/capistrano-puma", require: false
 end
