@@ -230,7 +230,7 @@ class TestingComponent extends React.Component {
     }
 
     $.ajax(
-      'testing/update_picture', {
+      this.props.links.answer, {
         type: 'POST',
         dataType: 'json',
         data: {
@@ -507,6 +507,9 @@ TestingComponent.propTypes = {
     btn_thumbs_down: React.PropTypes.string,
     btn_thumbs_up: React.PropTypes.string,
     btn_question_mark: React.PropTypes.string
+  }),
+  links: React.PropTypes.shape({
+    answer: React.PropTypes.string
   }),
   questions_count: React.PropTypes.number,
   test_id: React.PropTypes.number,

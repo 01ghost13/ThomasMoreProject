@@ -19,7 +19,9 @@ class ResultOfTest < ActiveRecord::Base
 
   belongs_to :test
   belongs_to :client
+
   has_many :question_results, dependent: :destroy
+
   accepts_nested_attributes_for :question_results
 
   scope :result_page, -> { includes(:question_results, question_results: [:question, question: [:picture]]) }
@@ -173,7 +175,12 @@ class ResultOfTest < ActiveRecord::Base
       checked_states += values_to_save
       esr.states = values_to_save.map.with_index { |v, i| [i, v] }.to_h
     end
+  end
 
+  def progress
+    answered_count = question_results.count
+    total = test.questions.count
+    [answered_count, total]
   end
 
   private :setup_fields

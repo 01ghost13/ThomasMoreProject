@@ -58,8 +58,6 @@ Rails.application.routes.draw do
     member do
       #Adding testing pages
       get 'tests' => 'tests#index', as: 'tests'
-      get 'tests/:test_id/testing' => 'testing_process#testing', as: 'testing'
-      post 'tests/:test_id/testing/update_picture' => 'testing_process#update_picture'
       get 'edit/update_mentors' => 'clients#update_mentors'
       get 'mode_settings' => 'clients#mode_settings'
       patch 'mode_settings' => 'clients#update_mode_settings'
@@ -67,6 +65,12 @@ Rails.application.routes.draw do
     resources :result_of_tests, except: [:new, :create, :index], path: 'results', param: :result_id
     get 'results/:result_id/heatmap'=> 'result_of_tests#show_heatmap', as: 'heatmap'
     get 'update_mentors' => 'clients#update_mentors', on: :new
+  end
+
+  scope '/testing_process' do
+    get ':result_of_test_id/testing' => 'testing_process#testing', as: 'testing'
+    post ':result_of_test_id/answer' => 'testing_process#answer', as: 'testing_answer'
+    post 'clients/:id/tests/:test_id/start' => 'testing_process#begin', as: 'testing_begin'
   end
 
   #Tests pages

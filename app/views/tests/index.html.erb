@@ -27,7 +27,7 @@
             <td>Edit</td>
             <td>Delete</td>
         <% else %>
-            <td>Start</td>
+            <td></td>
         <% end %>
       </tr>
       </thead>
@@ -37,13 +37,18 @@
 				<td><h4><%= test[:description] %></h4></td>
 				<td><h4><%= test[:question_count] %></h4></td>
         <% if params[:id].nil? %>
-            <!--<td><%= link_to('Show', test_path(test[:id]), class: 'btn btn-default') %></td>-->
             <td><%= link_to('Edit', edit_test_path(test[:id]), class: 'btn btn-warning') %></td>
             <td><%= link_to('Delete', test_path(test[:id]), method: :delete,
                             data: { confirm: "Deleting will destroy all results of this test.\n Are you sure?" },
                             class: 'btn btn-danger') %></td>
         <% else %>
-          <td><%= link_to('Start', testing_client_path(params[:id],test[:id]), class: 'btn btn-success') %></td>
+          <td>
+            <%= link_to('Start',
+                        testing_begin_path(params[:id], test[:id]),
+                        method: :post,
+                        class: 'btn btn-success')
+            %>
+          </td>
         <% end %>
 			</tr>
 		<% end %>
@@ -53,3 +58,42 @@
 <div class="col-sm-12">
   <%= paginate @tests %>
 </div>
+
+<h1>Started tests</h1>
+
+<% if params[:id].present? %>
+  <div class="row">
+    <div class="col-sm-12">
+      <% if @not_finished_tests.empty? %>
+        <h2>There are no started tests</h2>
+      <% else %>
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <td>Start date</td>
+            <td>Test name and version</td>
+            <td>Progress</td>
+            <td></td>
+          </tr>
+          </thead>
+          <tbody>
+          <% @not_finished_tests.each do |result_of_test| %>
+            <tr>
+              <td><h4><%= date_to_local result_of_test.created_at %></h4></td>
+              <td><h4><%= result_of_test.test.name %></h4></td>
+              <td><h4><%= result_of_test.progress.join('/') %></h4></td>
+              <td>
+                <%= link_to('Continue',
+                            testing_path(result_of_test.id),
+                            class: 'btn btn-success'
+                    )
+                %>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    </div>
+  </div>
+<% end %>

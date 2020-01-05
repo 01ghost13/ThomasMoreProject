@@ -125,6 +125,10 @@ class TestsController < ApplicationController
       @tests << test.show_short
     end
     @tests = Kaminari.paginate_array(@tests).page(params[:page]).per(10)
+
+    if params[:id].present?
+      @not_finished_tests = ResultOfTest.where(client_id: params[:id], is_ended: false).order(created_at: :desc)
+    end
   end
 
   #Private methods

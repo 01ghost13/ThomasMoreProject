@@ -32,6 +32,10 @@ json.static_pics do
   json.btn_question_mark image_url('btn_qm.png')
 end
 
+json.links do
+  json.answer testing_answer_path(result_of_test.id)
+end
+
 json.questions_count test.questions.count
 
 json.test_id test.id
