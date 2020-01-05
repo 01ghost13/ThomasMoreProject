@@ -38,6 +38,7 @@ require 'capistrano/rails'
 require 'capistrano/rbenv'
 require 'capistrano/puma'
 install_plugin Capistrano::Puma
+install_plugin Capistrano::Puma::Nginx
 
 set :rbenv_type, :user
 set :rbenv_ruby, '2.4.4'

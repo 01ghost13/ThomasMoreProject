@@ -47,3 +47,6 @@ set :keep_releases, 3
 
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
+
+# capistrano/puma
+set :nginx_server_name, "77.241.80.19 localhost #{fetch(:application)}.local"
