@@ -14,7 +14,7 @@ gem 'paperclip', '~> 5.0.0'
 
 # Postgres
 gem 'pg'
-gem 'rails_12factor'
+# gem 'rails_12factor' #https://stackoverflow.com/questions/21670173/production-log-empty-on-rails-4-capistrano-passenger-nginx-server-digital
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 5.0.7'
