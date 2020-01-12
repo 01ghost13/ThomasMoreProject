@@ -49,4 +49,4 @@ set :keep_releases, 3
 # set :ssh_options, verify_host_key: :secure
 
 # capistrano/puma
-set :nginx_server_name, "77.241.80.19 localhost #{fetch(:application)}.local"
+set :nginx_server_name, "www.arbeidsinteressetest.be arbeidsinteressetest.be"
