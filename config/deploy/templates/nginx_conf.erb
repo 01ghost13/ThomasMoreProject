@@ -12,18 +12,10 @@ upstream puma_<%= fetch(:nginx_config_name) %> { <%
     <%= server %>
   <% end %>
 }
-<% if fetch(:nginx_use_ssl) -%>
-server {
-  listen 80;
-  server_name <%= fetch(:nginx_server_name) %>;
-  return 301 https://$host$1$request_uri;
-}
-<% end -%>
 
 server {
 <% if fetch(:nginx_use_ssl) -%>
-  listen 443;
-  ssl on;
+  listen 443 ssl;
   <% if fetch(:nginx_ssl_certificate) -%>
   ssl_certificate <%= fetch(:nginx_ssl_certificate) %>;
   <% else -%>
@@ -98,4 +90,15 @@ server {
   if (-f $document_root/system/maintenance.html) {
     return 503;
   }
+
+  include <%= fetch :lets_encrypt_conf %>;
+  ssl_dhparam  <%= fetch :ssl_dhparam %>;
 }
+
+<% if fetch(:nginx_use_ssl) -%>
+server {
+  listen 80;
+  server_name <%= fetch(:nginx_server_name) %>;
+  return 301 https://$host$1$request_uri;
+}
+<% end -%>

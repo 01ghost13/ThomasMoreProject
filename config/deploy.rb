@@ -48,5 +48,12 @@ set :keep_releases, 3
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
 
-# capistrano/puma
-set :nginx_server_name, "www.arbeidsinteressetest.be arbeidsinteressetest.be"
+# capistrano/nginx
+set :website_url, 'arbeidsinteressetest.be'
+set :nginx_server_name, "www.#{fetch :website_url} #{fetch :website_url}"
+# capistrano/nginx/ssl
+set :nginx_use_ssl, true
+set :nginx_ssl_certificate, "/etc/letsencrypt/live/www.arbeidsinteressetest.be/fullchain.pem"
+set :nginx_ssl_certificate_key, "/etc/letsencrypt/live/www.arbeidsinteressetest.be/privkey.pem"
+set :lets_encrypt_conf, "/etc/letsencrypt/options-ssl-nginx.conf"
+set :ssl_dhparam, "/etc/letsencrypt/ssl-dhparams.pem"
