@@ -94,6 +94,8 @@ gem 'sendgrid'
 group :production, :staging do
 # Use Uglifier as compressor for JavaScript assets
   gem 'uglifier', '>= 1.3.0'
+
+  gem 'whenever', require: false
 end
 
 group :staging do

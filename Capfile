@@ -37,6 +37,8 @@ install_plugin Capistrano::SCM::Git
 require 'capistrano/rails'
 require 'capistrano/rbenv'
 require 'capistrano/puma'
+require 'whenever/capistrano'
+
 install_plugin Capistrano::Puma
 install_plugin Capistrano::Puma::Nginx
 

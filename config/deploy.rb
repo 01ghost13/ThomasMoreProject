@@ -51,6 +51,7 @@ set :keep_releases, 3
 # capistrano/nginx
 set :website_url, 'arbeidsinteressetest.be'
 set :nginx_server_name, "www.#{fetch :website_url} #{fetch :website_url}"
+
 # capistrano/nginx/ssl
 set :nginx_use_ssl, true
 set :nginx_ssl_certificate, "/etc/letsencrypt/live/www.arbeidsinteressetest.be/fullchain.pem"
