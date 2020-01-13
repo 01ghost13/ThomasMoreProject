@@ -22,13 +22,13 @@ class YoutubeLink < ActiveRecord::Base
   # https://www.youtube.com/embed/oHg5SJYRHA0?autoplay=1&loop=1
   def embed
     regex = if 'youtu.be'.in?(link)
-      # https://youtu.be/IhTXDklRLME
-      /(?<=youtu\.be\/)\w+\/?$/
-    elsif 'youtube.com'.in?(link)
-      # https://m.youtube.com/watch?v=IhTXDklRLME
-      # https://www.youtube.com/watch?v=IhTXDklRLME
-      /(?<=watch\?v=)\w+\/?$/
-    end
+              # https://youtu.be/IhTXDklRLME
+              /(?<=youtu\.be\/)[\w-]+\/?$/
+            elsif 'youtube.com'.in?(link)
+              # https://m.youtube.com/watch?v=IhTXDklRLME
+              # https://www.youtube.com/watch?v=IhTXDklRLME
+              /(?<=watch\?v=)[\w-]+\/?$/
+            end
 
     return if regex.blank?
 
@@ -53,7 +53,7 @@ class YoutubeLink < ActiveRecord::Base
     def link_pattern
       return if link.blank?
 
-      regex = /https:\/\/(www\.)?(((m\.)?youtube\.com\/watch\?v=\w+)|(youtu\.be\/\w+))\/?$/
+      regex = /https:\/\/(www\.)?(((m\.)?youtube\.com\/watch\?v=[\w-]+)|(youtu\.be\/[\w-]+))\/?$/
       unless regex =~ link
         errors.add(:link, 'Wrong youtube link. It should be https://youtu.be/<ID>, https://m.youtube.com/watch?v=<ID> or https://www.youtube.com/watch?v=<ID>')
       end
