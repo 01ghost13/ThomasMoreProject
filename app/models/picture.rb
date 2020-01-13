@@ -18,6 +18,7 @@ class Picture < ActiveRecord::Base
 
   validates :description, presence: true, length: {in: 5..50}
   validates :picture_interests, nested_attributes_uniqueness: {field: :interest_id}
+  validate :image_validation
 
   #returns related interests to a picture
   def related_interests
@@ -43,5 +44,15 @@ class Picture < ActiveRecord::Base
       ["%{name}"%{name: t.description}, t.id]
     end
   end
+
+  private
+    def image_validation
+      if image.attached?
+        unless image.blob.content_type.starts_with?('image/')
+          image.purge
+          errors[:base] << 'Attachment must be image or gif'
+        end
+      end
+    end
 end
 
