@@ -31,12 +31,24 @@ class Picture < ActiveRecord::Base
   end
 
   def small_variant
-    image.variant(quality: 40, resize: '150x150')
+    opts =
+        if gif?
+          { coalesce: true, quality: 40, resize: '150x150' }
+        else
+          { quality: 40, resize: '150x150' }
+        end
+    image.variant(opts)
   end
 
   def middle_variant
     # was 80%, 300x300 - too blurry
-    image.variant(quality: 90, resize: '550x550')
+    opts =
+        if gif?
+          { coalesce: true, quality: 90, resize: '550x550' }
+        else
+          { quality: 90, resize: '550x550' }
+        end
+    image.variant(opts)
   end
 
   #Returns all pictures
@@ -46,12 +58,24 @@ class Picture < ActiveRecord::Base
     end
   end
 
+  def gif?
+    image.blob.content_type.starts_with?('image/gif')
+  end
+
+  def image?
+    !gif?
+  end
+
   private
     def image_validation
       if image.attached?
         unless image.blob.content_type.starts_with?('image/')
           image.purge
           errors[:base] << 'Attachment must be image or gif'
+        end
+        if image.blob.byte_size > 3.megabytes
+          image.purge
+          errors[:base] << 'Attachment is too big'
         end
       end
     end
