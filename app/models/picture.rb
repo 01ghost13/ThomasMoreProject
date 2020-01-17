@@ -35,7 +35,8 @@ class Picture < ActiveRecord::Base
   end
 
   def middle_variant
-    image.variant(quality: 80, resize: '300x300')
+    # was 80%, 300x300 - too blurry
+    image.variant(quality: 90, resize: '550x550')
   end
 
   #Returns all pictures
