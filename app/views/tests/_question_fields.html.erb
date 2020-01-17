@@ -1,7 +1,7 @@
 <div class="row col-sm-offset-2 form-group nested-fields">
   <div class="row col-sm-offset-3 form-group" id="image">
     <% if @dummy.image.attachment.present? %>
-      <%= image_tag url_for(@dummy.image.try(:variant, resize: '150x150')) %>
+      <%= image_tag url_for(@dummy.small_variant) %>
     <% end %>
   </div>
 
