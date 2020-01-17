@@ -12,4 +12,9 @@ if @environment == 'production'
   every '0 0,12 * */2 *' do
     command "sudo /usr/local/bin/certbot-auto renew"
   end
+
+  # every night in 0 0
+  every '0 0 * * *' do
+    rake 'picture:generate_variants', environment: :production
+  end
 end
