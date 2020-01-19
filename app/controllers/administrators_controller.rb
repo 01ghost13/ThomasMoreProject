@@ -29,13 +29,13 @@ class AdministratorsController < ApplicationController
     #If data ok - creating
     if captcha && @user.save
       flash[:success] = 'Account created! Confirmation of account was sent to email.'
-      if Rails.env.staging?
-        begin
-          AitscoreMailer.registration_confirmation(@user.info).deliver
-        rescue => e
-          Rails.logger.error("Failed to email: \n #{e.backtrace}")
-        end
+
+      begin
+        AitscoreMailer.registration_confirmation(@user.info).deliver
+      rescue => e
+        Rails.logger.error("Failed to email: \n #{e.backtrace}")
       end
+
       #Logging in as a new user if not logged
       log_in @user.info unless logged_in?
       redirect_to @user
