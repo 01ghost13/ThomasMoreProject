@@ -36,7 +36,7 @@ class YoutubeLink < ActiveRecord::Base
 
     return if result.blank?
 
-    "https://www.youtube.com/embed/#{result[0]}?autoplay=1&loop=1"
+    "https://www.youtube.com/embed/#{result[0]}?autoplay=1&loop=1&&playlist=#{result[0]}&rel=0"
   end
 
   #returns related interests to a picture
