@@ -7,9 +7,9 @@
     <% else %>
         <%= link_to('Back to profile', client_path(params[:id]), class: 'btn btn-primary') %>
 
-      <% unless current_user.is_a?(Client) %>
-          <%= link_to('Edit mode settings', mode_settings_client_path(params[:id]), class: 'btn btn-default') %>
-      <% end %>
+      <%# unless current_user.is_a?(Client) %>
+          <%#= link_to('Edit mode settings', mode_settings_client_path(params[:id]), class: 'btn btn-default') %>
+      <%# end %>
 
     <% end %>
   </div>

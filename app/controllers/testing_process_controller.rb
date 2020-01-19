@@ -68,8 +68,10 @@ class TestingProcessController < ApplicationController
         test_id: params[:test_id],
         was_in_school: @client.is_current_in_school,
         client_id: @client.id,
-        gaze_trace: @client.gaze_trace,
-        emotion_recognition: @client.emotion_recognition
+        # gaze_trace:  && @client.gaze_trace,
+        # emotion_recognition: @client.emotion_recognition
+        gaze_trace: false,
+        emotion_recognition: false
     )
 
     redirect_to testing_path(@result_of_test.id)
