@@ -16,7 +16,6 @@
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  mentor_id            :integer
-#  mode_id              :integer
 #
 
 class Client < ActiveRecord::Base
@@ -31,7 +30,7 @@ class Client < ActiveRecord::Base
   #1 – dunno
   #2 – Man
   #3 – Woman
-  validates :mentor,:mode_id, presence: true
+  validates :mentor, presence: true
   validates :is_active, :is_current_in_school, exclusion: { in: [nil] }
   validates :password, presence: true, allow_nil: true, length: {minimum: 4}
 
@@ -40,7 +39,6 @@ class Client < ActiveRecord::Base
   #Setups default fields
   def setup_fields
     self.is_active = true
-    self.mode_id = Mode.all.first.id
   end
   
   #Creates map with info

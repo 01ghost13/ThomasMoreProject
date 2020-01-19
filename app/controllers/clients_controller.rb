@@ -142,10 +142,10 @@ class ClientsController < ApplicationController
   def client_update_params
     if session[:user_type] == 'administrator'
       params[:client][:mentor_id] ||= ''
-      params.require(:client).permit(:code_name,:mentor_id,:gender,:mode_id,
+      params.require(:client).permit(:code_name,:mentor_id,:gender,
                                       :is_current_in_school,:password,:password_confirmation)
     else
-      params.require(:client).permit(:code_name,:gender,:mode_id,
+      params.require(:client).permit(:code_name,:gender,
                                       :is_current_in_school,:password,:password_confirmation)
     end
   end
