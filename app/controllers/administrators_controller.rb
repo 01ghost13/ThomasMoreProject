@@ -25,7 +25,7 @@ class AdministratorsController < ApplicationController
   def create
     #Loading data
     @user = Administrator.new(administrator_params)
-    captcha = Rails.env.staging? ? verify_recaptcha(model: @user) : true
+    captcha = verify_recaptcha(model: @user)
     #If data ok - creating
     if captcha && @user.save
       flash[:success] = 'Account created! Confirmation of account was sent to email.'
