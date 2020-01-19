@@ -36,14 +36,28 @@
 		<div class='btn-group col-sm-4' role='group' aria-label='...'>
 			<%= link_to('Edit', edit_client_path(params[:id]), class: 'btn btn-warning col-sm-4') %>
       <div class="col-sm-1"></div>
-      <%= link_to('Hide', client_path(params[:id], paranoic: true), method: :delete,
-                  class: 'btn btn-warning col-sm-4') %>
+      <% if @user.is_active %>
+        <%= link_to('Hide', client_path(params[:id], paranoic: true), method: :delete,
+                    class: 'btn btn-warning col-sm-4')
+        %>
+      <% else %>
+        <%= link_to('Recover', client_path(params[:id], paranoic: true), method: :delete,
+                    class: 'btn btn-primary col-sm-4')
+        %>
+      <% end %>
 		</div>
 	</div>
 <% end %>
 <div class='row'>
-	<div class='btn-group col-sm-4' role='group' aria-label='...'>
-		<%= link_to('Choose test',tests_client_path(params[:id]), class: 'btn btn-primary col-sm-4') %>
+	<div class='btn-group col-sm-4'
+       role='group'
+       aria-label='...'
+  >
+    <% if @user.is_active %>
+      <%= link_to('Choose test', tests_client_path(params[:id]), class: 'btn btn-primary col-sm-4') %>
+    <% else %>
+      <div class="col-sm-4"></div>
+    <% end %>
     <% if @is_super_adm %>
         <div class="col-sm-1"></div>
         <%= link_to('Delete', client_path(params[:id], paranoic: false), method: :delete,

@@ -73,7 +73,10 @@ class ClientsController < ApplicationController
     unless @user.is_active
       #Client is inactive
       flash[:warning] = 'Client was deactivated in: ' + @user.date_off.to_s
-      redirect_back fallback_location: current_user and return
+      unless is_super?
+        redirect_to :index
+        return
+      end
     end
     @user_info = @user.show_info.to_a
     #Loading all test results
