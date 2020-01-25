@@ -1,0 +1,57 @@
+<% provide(:title, 'Home') %>
+<div class="row">
+  <div class="col-sm-12">
+    <h1>
+      Aitscore
+    </h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-8">
+    <p class="text-justify big">
+      De ArbeidsInteresse Test (AIT) is ontwikkeld door MPI Oosterlo & Thomas More Kempen. Een goede match tussen persoon en job, waarbij de functie aansluit bij de interesses en mogelijkheden, verhoogt de arbeidssatisfactie van mensen met een verstandelijke beperking aanzienlijk. De AIT is ontwikkeld om de interesse in bepaalde werkgebieden te tonen zonder rekening te houden met de competenties.
+    </p>
+    <p class="text-justify big">
+      De AIT is ontwikkeld als een visuele test die online kan worden afgelegd. De AIT schetst een beeld van de werkgebieden waarin de testpersoon wil werken of niet en levert informatie die aanvullend is bij andere methodieken die peilen naar arbeidsinteresse.
+      De gebruiker krijgt één foto tegelijk te zien en kan vervolgens zijn / haar voorkeur aangeven door de rode (negatieve) of groene (positieve) knop te selecteren. Als de gebruiker geen mening heeft over een foto, kan hij / zij deze foto overslaan.
+    </p>
+
+    <div>
+      <%= image_tag('home_page/test_example.png',
+                    class: 'img-responsive margin-auto')
+      %>
+    </div>
+
+    <p class="text-justify big">
+      De foto's zijn verdeeld in verschillende werkgebieden (bijvoorbeeld: voedselbereidingswerk, klantgericht werk, administratief werk, enz.). Na het beëindigen van de test, tonen de resultaten aan welke werkgebieden de voorkeur van de gebruiker heeft.
+    </p>
+    <div>
+      <%= image_tag('home_page/diagram.png',
+                    class: 'img-responsive margin-auto')
+      %>
+    </div>
+
+  </div>
+  <div class="col-sm-4">
+    <p class="text-justify big">
+      Het doel van de AIT is om de interesses voor werk van onze doelgroep regelmatig te screenen.
+    </p>
+    <p class="text-justify big">
+      De AIT is beschikbaar voor organisaties die werken met mensen met een verstandelijke beperking.
+    </p>
+    <p class="text-justify big">
+      Heb je interesse om de test gratis uit te proberen? Stuur dan een mailtje naar
+      <a href="mailto:Raf.Hensbergen@mpi-oosterlo.be">Raf.Hensbergen@mpi-oosterlo.be</a>​
+    </p>
+    <p class="text-justify big">
+      Heb je al een account?
+    </p>
+    <div class="row col-sm-offset-2 form-group">
+      <div class="col-sm-offset-2 col-sm-2">
+        <%= link_to 'Log in', login_path, class: 'btn btn-primary' %>
+      </div>
+    </div>
+
+  </div>
+</div>
