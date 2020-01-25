@@ -6,8 +6,9 @@ Rails.application.routes.draw do
   end
 
   #Routes
+  root 'static_pages#home'
+
   #Login pages
-  root 'sessions#new'
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
@@ -15,6 +16,7 @@ Rails.application.routes.draw do
   #Static pages
   get 'about' => 'static_pages#about'
   get 'contacts' => 'static_pages#contacts'
+  get 'home' => 'static_pages#home'
 
   #Pages for working with emails
   get 'confirmation_email' => 'mail#confirmation_email'

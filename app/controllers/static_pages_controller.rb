@@ -40,4 +40,7 @@ class StaticPagesController < ApplicationController
   #Page with contacts
   def contacts
   end
+
+  def home
+  end
 end

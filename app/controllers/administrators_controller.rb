@@ -3,18 +3,15 @@ class AdministratorsController < ApplicationController
   include Recaptcha::Verify
 
   before_action :check_exist_callback, only: [:edit, :update, :show, :delete, :delegate]
-  before_action :check_log_in, only: [:index,:edit, :update, :show, :delegate]
+  before_action :check_log_in, only: [:new, :create, :index, :edit, :update, :show, :delegate]
   before_action :check_rights, only: [:edit, :update, :show]
   before_action :check_type_rights, only: [:edit, :update, :show]
   before_action :check_mail_confirmation, except: [:new, :show, :create]
-  before_action :check_super_admin, only: [:index, :delegate, :delete]
+  before_action :check_super_admin, only: [:new, :create, :index, :delegate, :delete]
 
   #Create admin page
   def new
     #If super administrator, then have access
-    if logged_in? && !is_super?
-      redirect_back fallback_location: current_user and return
-    end
     #Loading info for viewing
     @user = Administrator.new
     @user_info = Info.new
@@ -102,50 +99,50 @@ class AdministratorsController < ApplicationController
   ##########################################################
   #Private methods
   private
-  def load_admin_for_deletion
-    administrator = Administrator.find(params[:id])
-    #Blocking a deletion of super administrator
-    if administrator.is_super
-      flash[:danger] = "You can't delete this administrator!"
-      redirect_to current_user
+    def load_admin_for_deletion
+      administrator = Administrator.find(params[:id])
+      #Blocking a deletion of super administrator
+      if administrator.is_super
+        flash[:danger] = "You can't delete this administrator!"
+        redirect_to current_user
+      end
+      administrator
     end
-    administrator
-  end
 
-  #Attributes for forms
-  def administrator_params
-    adm_param = params
-    adm_param[:administrator][:info_attributes][:id] = @user.info.id unless params[:id].nil?
-    adm_param.require(:administrator).permit(:organisation,:organisation_address,info_attributes: [:id,:name,:last_name,:mail,:phone,:password,:password_confirmation])
-  end
-
-  #Attributes for delete forms
-  def delete_administrator_params
-    params.require(:administrator).permit(mentors_attributes: [:administrator_id, :id])
-  end
-
-  #Callback for checking rights
-  def check_rights
-    #Only SA or user can edit/delete their accounts
-    unless is_super? || session[:user_type] == 'administrator' && session[:type_id] == params[:id].to_i
-      flash[:danger] = 'You have no access to this page.'
-      #Redirect
-      redirect_to current_user
+    #Attributes for forms
+    def administrator_params
+      adm_param = params
+      adm_param[:administrator][:info_attributes][:id] = @user.info.id unless params[:id].nil?
+      adm_param.require(:administrator).permit(:organisation,:organisation_address,info_attributes: [:id,:name,:last_name,:mail,:phone,:password,:password_confirmation])
     end
-  end
 
-  #Callback for checking type of user
-  def check_type_rights
-    unless session[:user_type] == 'administrator' || is_super?
-      flash[:danger] = 'You have no access to this page!'
-      redirect_to current_user
+    #Attributes for delete forms
+    def delete_administrator_params
+      params.require(:administrator).permit(mentors_attributes: [:administrator_id, :id])
     end
-  end
 
-  #Callback for checking existence of record
-  def check_exist_callback
-    unless check_exist(params[:id], Administrator)
-      redirect_to current_user
+    #Callback for checking rights
+    def check_rights
+      #Only SA or user can edit/delete their accounts
+      unless is_super? || session[:user_type] == 'administrator' && session[:type_id] == params[:id].to_i
+        flash[:danger] = 'You have no access to this page.'
+        #Redirect
+        redirect_to current_user
+      end
     end
-  end
+
+    #Callback for checking type of user
+    def check_type_rights
+      unless session[:user_type] == 'administrator' || is_super?
+        flash[:danger] = 'You have no access to this page!'
+        redirect_to current_user
+      end
+    end
+
+    #Callback for checking existence of record
+    def check_exist_callback
+      unless check_exist(params[:id], Administrator)
+        redirect_to current_user
+      end
+    end
 end
