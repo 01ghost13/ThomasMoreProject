@@ -14,6 +14,7 @@
 <header class="navbar navbar-fixed-top navbar-inverse" id="header_id">
   <div class="container">
     <nav>
+      <%= link_to 'Aitscore', root_path, class: 'navbar-brand' %>
     	<ul class="nav navbar-nav navbar-right">
     	<% if logged_in? %>
         <% if session[:user_type] != 'client' %>
@@ -30,7 +31,7 @@
     		<%#= link_to 'About', about_path %>
     	</li>
     	<li>
-    		<!--<%= link_to 'Contacts', contacts_path %>-->
+    		<!--<%#= link_to 'Contacts', contacts_path %>-->
     	</li>
     	</ul>
     </nav>
