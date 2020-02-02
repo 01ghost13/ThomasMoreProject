@@ -12,6 +12,8 @@
 #
 
 class Administrator < ActiveRecord::Base
+  include Userable
+
   before_validation :setup_fields, on: :create
   
   has_many :mentors, dependent: :restrict_with_error
@@ -28,6 +30,10 @@ class Administrator < ActiveRecord::Base
 
   accepts_nested_attributes_for :info
   accepts_nested_attributes_for :mentors
+
+  def username
+    "#{info.name} #{info.last_name} | Administrator"
+  end
 
   #returns list of admins for viewing
   def self.admins_list

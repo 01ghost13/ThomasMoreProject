@@ -10,6 +10,8 @@
 #
 
 class Mentor < ActiveRecord::Base
+  include Userable
+
   has_many :clients, inverse_of: :mentor, dependent: :restrict_with_error
   belongs_to :info, inverse_of: :mentor, autosave: true, dependent: :destroy
   
@@ -20,6 +22,10 @@ class Mentor < ActiveRecord::Base
   validates_associated :info, allow_blank: true
   accepts_nested_attributes_for :info
   accepts_nested_attributes_for :clients
+
+  def username
+    "#{info.name} #{info.last_name} | Mentor"
+  end
 
   #Shows info of mentor as a map
   def show

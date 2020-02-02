@@ -40,6 +40,14 @@ class Client < ActiveRecord::Base
   def setup_fields
     self.is_active = true
   end
+
+  def username
+    "#{code_name} | Client"
+  end
+
+  def email
+    'Does not have any'
+  end
   
   #Creates map with info
   def show_info

@@ -9,15 +9,16 @@ Rollbar.configure do |config|
     config.enabled = false
   end
 
+  # https://docs.rollbar.com/docs/person-tracking
   # By default, Rollbar will try to call the `current_user` controller method
   # to fetch the logged-in user object, and then call that object's `id`
   # method to fetch this property. To customize:
-  # config.person_method = "my_current_user"
-  # config.person_id_method = "my_id"
+  config.person_method = 'current_user'
+  config.person_id_method = 'id'
 
   # Additionally, you may specify the following:
-  # config.person_username_method = "username"
-  # config.person_email_method = "email"
+  config.person_username_method = 'username'
+  config.person_email_method = 'email'
 
   # If you want to attach custom data to all exception and message reports,
   # provide a lambda like the following. It should return a hash.
