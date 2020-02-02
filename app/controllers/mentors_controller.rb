@@ -67,7 +67,7 @@ class MentorsController < ApplicationController
     if @is_super_adm
         @q = Mentor.all_mentors.ransack(params[:q])
       else
-        @q = Mentor.mentors_of_administrator(session[:type_id]).ransack(params[:q])
+        @q = Mentor.all_mentors.mentors_of_administrator(session[:type_id]).joins(:info).ransack(params[:q])
     end
     @mentors = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
     @mentors = @mentors.page(params[:page]).per(5)
