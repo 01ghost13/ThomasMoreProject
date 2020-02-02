@@ -63,12 +63,14 @@ class MentorsController < ApplicationController
       redirect_to current_user and return
     end
     @is_super_adm = is_super?
+
     #Loading all mentors if super admin
-    if @is_super_adm
-        @q = Mentor.all_mentors.ransack(params[:q])
-      else
-        @q = Mentor.all_mentors.mentors_of_administrator(session[:type_id]).joins(:info).ransack(params[:q])
-    end
+    @q = Mentor.all_mentors
+    @q = unless @is_super_adm
+          @q.mentors_of_administrator(session[:type_id])
+         end
+    @q = @q.ransack(params[:q])
+
     @mentors = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
     @mentors = @mentors.page(params[:page]).per(5)
   end
