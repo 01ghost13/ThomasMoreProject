@@ -66,8 +66,10 @@ class MentorsController < ApplicationController
 
     #Loading all mentors if super admin
     @q = Mentor.all_mentors
-    @q = unless @is_super_adm
-          @q.mentors_of_administrator(session[:type_id])
+    @q = if @is_super_adm
+           @q
+         else
+           @q.mentors_of_administrator(session[:type_id])
          end
     @q = @q.ransack(params[:q])
 
