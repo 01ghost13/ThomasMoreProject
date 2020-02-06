@@ -74,7 +74,7 @@ class ClientsController < ApplicationController
       #Client is inactive
       flash[:warning] = 'Client was deactivated in: ' + @user.date_off.to_s
       unless is_super?
-        redirect_to :index
+        redirect_to clients_path
         return
       end
     end
