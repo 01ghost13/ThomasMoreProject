@@ -7,7 +7,7 @@ ruby '2.4.4'
 gem 'rails', '~> 5.2.1'
 
 # Use Puma as the app server
-gem 'puma', '~> 4.0'
+gem 'puma', '~> 4.3'
 
 # Use Paperclip to saving images in FS
 gem 'paperclip', '~> 5.0.0'
