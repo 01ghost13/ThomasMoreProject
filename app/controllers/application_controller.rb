@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  include SessionsHelper
   protect_from_forgery with: :exception
   before_action :authenticate_user!
 
@@ -46,15 +45,5 @@ class ApplicationController < ActionController::Base
       flash[:danger] = 'You have no access to this page!'
       redirect_to current_user.role_model
     end
-  end
-
-  # Checks is user logged?
-  def logged_in?
-    user_signed_in?
-  end
-
-  # Checks is user - SA
-  def is_super?
-    current_user.super_admin?
   end
 end

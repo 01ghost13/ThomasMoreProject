@@ -32,4 +32,14 @@ module ApplicationHelper
     }[current_user.role.to_sym]
     "#{path}/settings"
   end
+
+  # Checks is user logged?
+  def logged_in?
+    user_signed_in?
+  end
+
+  # Checks is user - SA
+  def is_super?
+    current_user.super_admin?
+  end
 end

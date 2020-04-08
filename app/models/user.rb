@@ -32,9 +32,9 @@ class User < ActiveRecord::Base
   enum role: { client: 0, local_admin: 1, mentor: 2, super_admin: 3 }
 
   belongs_to :userable, polymorphic: true
-  belongs_to :administrator, foreign_key: 'userable_id'
-  belongs_to :mentor, foreign_key: 'userable_id'
-  belongs_to :client, foreign_key: 'userable_id'
+  belongs_to :administrator, foreign_key: 'userable_id', optional: true
+  belongs_to :mentor, foreign_key: 'userable_id', optional: true
+  belongs_to :client, foreign_key: 'userable_id', optional: true
 
   def role_model
     return administrator if local_admin? || super_admin?

@@ -18,7 +18,7 @@ class Administrator < ActiveRecord::Base
   
   has_many :mentors, dependent: :restrict_with_error
   has_one :user, as: :userable
-  belongs_to :info, inverse_of: :administrator, autosave: true, dependent: :destroy
+  belongs_to :info, inverse_of: :administrator, autosave: true, dependent: :destroy, optional: true
   
   validates :organisation, presence: true, length: { in: 5..30}
   validates :info_id, uniqueness: true
@@ -26,8 +26,8 @@ class Administrator < ActiveRecord::Base
   validates :is_super, exclusion: { in: [nil] }
   validates :organisation_address, presence: true, uniqueness: true, length: { in: 5..100}
 
-  validates_presence_of :info
-  validates_associated :info, allow_blank: true
+  # validates_presence_of :info
+  # validates_associated :info, allow_blank: true
 
   accepts_nested_attributes_for :info
   accepts_nested_attributes_for :mentors
