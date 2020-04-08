@@ -17,6 +17,7 @@ class Administrator < ActiveRecord::Base
   before_validation :setup_fields, on: :create
   
   has_many :mentors, dependent: :restrict_with_error
+  has_one :user, as: :userable
   belongs_to :info, inverse_of: :administrator, autosave: true, dependent: :destroy
   
   validates :organisation, presence: true, length: { in: 5..30}

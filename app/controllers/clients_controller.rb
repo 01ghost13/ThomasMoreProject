@@ -15,7 +15,7 @@ class ClientsController < ApplicationController
   def create
     #Creating client
     @user = Client.new(client_params)
-    @user.mentor_id = session[:type_id] if session[:user_type] == 'mentor'
+    @user.mentor_id = current_user.role_model.id if current_user.mentor?
     
     #trying to save
     if @user.save
@@ -68,8 +68,8 @@ class ClientsController < ApplicationController
   def show
     @user = Client.find(params[:id])
     @is_super_adm = is_super?
-    @is_my_client = session[:user_type] == 'mentor' && @user.mentor_id == session[:type_id]
-    @is_client_of_my_mentor = session[:user_type] == 'administrator' && @user.mentor.administrator_id == session[:type_id]
+    @is_my_client = current_user.mentor? && @user.mentor_id == current_user.role_model.id
+    @is_client_of_my_mentor = current_user.local_admin? && @user.mentor.administrator_id == current_user.role_model.id
     unless @user.is_active
       #Client is inactive
       flash[:warning] = 'Client was deactivated in: ' + @user.date_off.to_s
@@ -96,17 +96,17 @@ class ClientsController < ApplicationController
 
   #List of clients
   def index
-    if session[:user_type] == 'client'
+    if current_user.client?
       flash[:danger] = 'You have no access to this page!'
-      redirect_to current_user and return
+      redirect_to current_user.role_model and return
     end
     @is_super_adm = is_super?
     if @is_super_adm
       @q = Client.all_clients.ransack(params[:q])
-    elsif session[:user_type] == 'mentor'
-      @q = Client.clients_of_mentor(session[:type_id]).ransack(params[:q])
-    elsif session[:user_type] == 'administrator'
-      @q = Client.clients_of_admin(session[:type_id]).ransack(params[:q])
+    elsif current_user.mentor?
+      @q = Client.clients_of_mentor(current_user.role_model.id).ransack(params[:q])
+    elsif current_user.local_admin?
+      @q = Client.clients_of_admin(current_user.role_model.id).ransack(params[:q])
     end
     @clients = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
     @clients = @clients.page(params[:page]).per(5)
@@ -143,7 +143,7 @@ class ClientsController < ApplicationController
 
   #Attributes for edit page
   def client_update_params
-    if session[:user_type] == 'administrator'
+    if current_user.local_admin?
       params[:client][:mentor_id] ||= ''
       params.require(:client).permit(:code_name,:mentor_id,:gender,
                                       :is_current_in_school,:password,:password_confirmation)
@@ -156,9 +156,9 @@ class ClientsController < ApplicationController
   #Rights checking
   def check_rights
     #Sa, admin, mentor
-    unless is_super? || session[:user_type] == 'administrator' || session[:user_type] == 'mentor'
+    unless is_super? || current_user.local_admin? || current_user.mentor?
       flash[:danger] = 'You have no access to this page.'
-      redirect_to current_user
+      redirect_to current_user.role_model
     end
   end
 
@@ -166,12 +166,12 @@ class ClientsController < ApplicationController
   def check_editing_rights
     user = Client.find(params[:id])
     is_super_adm = is_super?
-    is_my_client = session[:user_type] == 'mentor' && user.mentor_id == session[:type_id]
-    is_client_of_my_mentor = session[:user_type] == 'administrator' && user.mentor.administrator_id == session[:type_id]
-    is_i = session[:user_type] == 'client' && user.id == session[:type_id]
+    is_my_client = current_user.mentor? && user.mentor_id == current_user.role_model.id
+    is_client_of_my_mentor = current_user.local_admin? && user.mentor.administrator_id == current_user.role_model.id
+    is_i = current_user.client? && user.id == current_user.role_model.id
     unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
       flash[:warning] = 'You have no access to this page.'
-      redirect_to current_user
+      redirect_to current_user.role_model
     end
   end
 
@@ -186,8 +186,8 @@ class ClientsController < ApplicationController
       else
         @mentors = Mentor.mentors_list(@admins.first[1])
       end
-    elsif session[:user_type] == 'administrator'
-      @mentors = Mentor.mentors_list(session[:type_id])
+    elsif current_user.local_admin?
+      @mentors = Mentor.mentors_list(current_user.role_model.id)
     end
   end
 
@@ -210,8 +210,8 @@ class ClientsController < ApplicationController
           @mentors_cur = 0
         end
       end
-    elsif session[:user_type] == 'administrator'
-      @mentors = Mentor.mentors_list(session[:type_id])
+    elsif current_user.local_admin?
+      @mentors = Mentor.mentors_list(current_user.role_model.id)
       @mentors_cur = @user.mentor_id
     end
   end
@@ -219,7 +219,7 @@ class ClientsController < ApplicationController
   #Callback for checking existence of record
   def check_exist_callback
     unless check_exist(params[:id], Client)
-      redirect_to current_user
+      redirect_to current_user.role_model
     end
   end
 

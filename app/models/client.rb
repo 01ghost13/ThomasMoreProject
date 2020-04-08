@@ -22,6 +22,7 @@ class Client < ActiveRecord::Base
   before_validation :setup_fields, on: :create
 
   has_secure_password
+  has_one :user, as: :userable
   has_many :result_of_tests, dependent: :destroy
   belongs_to :mentor, inverse_of: :clients
 

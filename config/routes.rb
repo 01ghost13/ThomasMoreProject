@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+  # Login pages
+  devise_for :users
+
   #Concerns
   concern :group_result do
     resources :result_of_tests, only: [:index], path: 'results', param: :result_id
@@ -8,27 +11,23 @@ Rails.application.routes.draw do
   #Routes
   root 'static_pages#home'
 
-  #Login pages
-  get 'login' => 'sessions#new'
-  post 'login' => 'sessions#create'
-  delete 'logout' => 'sessions#destroy'
-
   #Static pages
   get 'about' => 'static_pages#about'
   get 'contacts' => 'static_pages#contacts'
   get 'home' => 'static_pages#home'
 
-  #Pages for working with emails
-  get 'confirmation_email' => 'mail#confirmation_email'
-  get 'send_confirmation_again' => 'mail#send_confirmation_again'
+  # TODO FIX
+  # Pages for working with emails
+  # get 'confirmation_email' => 'mail#confirmation_email'
+  # get 'send_confirmation_again' => 'mail#send_confirmation_again'
 
-  #form for reset password
-  get 'reset_password' => 'mail#reset_password'
-  post 'reset_password' => 'mail#submit_reset_password'
+  # form for reset password
+  # get 'reset_password' => 'mail#reset_password'
+  # post 'reset_password' => 'mail#submit_reset_password'
 
-  #form for sending reset-link to email
-  get 'forgot_password' => 'mail#forgot_password'
-  post 'forgot_password' => 'mail#submit_forgot_password'
+  # form for sending reset-link to email
+  # get 'forgot_password' => 'mail#forgot_password'
+  # post 'forgot_password' => 'mail#submit_forgot_password'
 
   #Interests pages
   resources :interests, only: [:index, :destroy]

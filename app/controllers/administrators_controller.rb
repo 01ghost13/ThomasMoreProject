@@ -35,7 +35,7 @@ class AdministratorsController < ApplicationController
 
       #Logging in as a new user if not logged
       log_in @user.info unless logged_in?
-      redirect_to @user
+      redirect_to @user.role_model
     else
       render :new
     end
@@ -104,7 +104,7 @@ class AdministratorsController < ApplicationController
       #Blocking a deletion of super administrator
       if administrator.is_super
         flash[:danger] = "You can't delete this administrator!"
-        redirect_to current_user
+        redirect_to current_user.role_model
       end
       administrator
     end
@@ -124,25 +124,25 @@ class AdministratorsController < ApplicationController
     #Callback for checking rights
     def check_rights
       #Only SA or user can edit/delete their accounts
-      unless is_super? || session[:user_type] == 'administrator' && session[:type_id] == params[:id].to_i
+      unless is_super? || current_user.local_admin? && current_user.role_model.id == params[:id].to_i
         flash[:danger] = 'You have no access to this page.'
         #Redirect
-        redirect_to current_user
+        redirect_to current_user.role_model
       end
     end
 
     #Callback for checking type of user
     def check_type_rights
-      unless session[:user_type] == 'administrator' || is_super?
+      unless current_user.local_admin? || is_super?
         flash[:danger] = 'You have no access to this page!'
-        redirect_to current_user
+        redirect_to current_user.role_model
       end
     end
 
     #Callback for checking existence of record
     def check_exist_callback
       unless check_exist(params[:id], Administrator)
-        redirect_to current_user
+        redirect_to current_user.role_model
       end
     end
 end

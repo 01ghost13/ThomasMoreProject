@@ -20,7 +20,7 @@ class MentorsController < ApplicationController
     #Loading info
     @user = Mentor.new(mentor_params)
 
-    @user.administrator_id = session[:type_id] unless @is_super_admin
+    @user.administrator_id = current_user.role_model.id unless @is_super_admin
     
     #If all is ok - creating
     if @user.save
@@ -58,9 +58,9 @@ class MentorsController < ApplicationController
 
   #All mentors page
   def index
-    unless session[:user_type] == 'administrator'
+    unless current_user.local_admin? || current_user.super_admin?
       flash[:danger] = 'You have no access to this page!'
-      redirect_to current_user and return
+      redirect_to current_user.role_model and return
     end
     @is_super_adm = is_super?
 
@@ -69,7 +69,7 @@ class MentorsController < ApplicationController
     @q = if @is_super_adm
            @q
          else
-           @q.mentors_of_administrator(session[:type_id])
+           @q.mentors_of_administrator(current_user.role_model.id)
          end
     @q = @q.ransack(params[:q])
 
@@ -110,28 +110,30 @@ class MentorsController < ApplicationController
   def check_rights
     user = Mentor.find(params[:id])
     #It is my page?
-    is_i = (session[:user_type] == 'mentor' && session[:type_id] == params[:id].to_i)
+    is_i = (current_user.mentor? && current_user.role_model.id == params[:id].to_i)
     #It is my mentor?
-    is_my_mentor = (!user.nil? && session[:user_type] == 'administrator' && user.administrator_id == session[:type_id])
+    is_my_mentor = (!user.nil? && current_user.local_admin? && user.administrator_id == current_user.role_model.id)
     unless is_i || is_super? || is_my_mentor
       flash[:danger] = 'You have no access to this page.'
-      redirect_to current_user
+      redirect_to current_user.role_model
     end
   end
 
   #Rights of viewing
   def check_type_rights
-    is_my_adm = session[:user_type] == 'administrator'
+    return if is_super?
+
+    is_my_adm = current_user.local_admin?
     #Checking creation or showing
     unless params[:id].nil?
       user = Mentor.find(params[:id])
-      is_my_adm = (!user.nil? && session[:user_type] == 'administrator' && user.administrator_id == session[:type_id])
+      is_my_adm = (!user.nil? && current_user.local_admin? && user.administrator_id == current_user.role_model.id)
     end
 
     #checking rights
-    unless is_super? || is_my_adm
+    unless is_my_adm
       flash[:danger] = 'You have no access to this page.'
-      redirect_to current_user
+      redirect_to current_user.role_model
     end
   end
 
@@ -159,7 +161,7 @@ class MentorsController < ApplicationController
   #Callback for checking existence of record
   def check_exist_callback
     unless check_exist(params[:id], Mentor)
-      redirect_to current_user
+      redirect_to current_user.role_model
     end
   end
 end

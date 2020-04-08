@@ -44,14 +44,16 @@
       Heb je interesse om de test gratis uit te proberen? Stuur dan een mailtje naar
       <a href="mailto:Raf.Hensbergen@mpi-oosterlo.be">Raf.Hensbergen@mpi-oosterlo.be</a>​
     </p>
-    <p class="text-justify big">
-      Heb je al een account?
-    </p>
-    <div class="row col-sm-offset-2 form-group">
-      <div class="col-sm-offset-2 col-sm-2">
-        <%= link_to 'Log in', login_path, class: 'btn btn-primary' %>
-      </div>
-    </div>
 
+    <% unless user_signed_in? %>
+      <p class="text-justify big">
+        Heb je al een account?
+      </p>
+      <div class="row col-sm-offset-2 form-group">
+        <div class="col-sm-offset-2 col-sm-2">
+          <%= link_to 'Log in', new_user_session_path, class: 'btn btn-primary' %>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>

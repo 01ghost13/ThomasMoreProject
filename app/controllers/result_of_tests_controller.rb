@@ -179,33 +179,33 @@ class ResultOfTestsController < ApplicationController
   def check_rights
     user = Client.find(params[:client_id])
     is_super_adm = is_super?
-    is_my_client = session[:user_type] == 'mentor' && user.mentor_id == session[:type_id]
-    is_client_of_my_mentor = session[:user_type] == 'administrator' && user.mentor.administrator_id == session[:type_id]
-    @i_am_client = session[:user_type] == 'client'
-    is_i = @i_am_client && params[:client_id].to_i == session[:type_id]
+    is_my_client = current_user.mentor? && user.mentor_id == current_user.role_model.id
+    is_client_of_my_mentor = current_user.local_admin? && user.mentor.administrator_id == current_user.role_model.id
+    @i_am_client = current_user.client?
+    is_i = @i_am_client && params[:client_id].to_i == current_user.role_model.id
     unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
       flash[:danger] = 'You have no access to this page.'
-      redirect_to current_user
+      redirect_to current_user.role_model
     end
   end
   def check_admin_rights
     client = Client.find(params[:client_id])
     is_super_adm = is_super?
-    is_my_client = session[:user_type] == 'mentor' && client.mentor_id == session[:type_id]
-    is_client_of_my_mentor = session[:user_type] == 'administrator' && client.mentor.administrator_id == session[:type_id]
+    is_my_client = current_user.mentor? && client.mentor_id == current_user.role_model.id
+    is_client_of_my_mentor = current_user.local_admin? && client.mentor.administrator_id == current_user.role_model.id
     unless is_super_adm || is_my_client || is_client_of_my_mentor
       flash[:danger] = 'You have no access to this page.'
-      redirect_to current_user
+      redirect_to current_user.role_model
     end
   end
   def result_exist_callback
     unless check_exist(params[:result_id], ResultOfTest)
-      redirect_to current_user
+      redirect_to current_user.role_model
     end
   end
   def client_exist_callback
     unless check_exist(params[:client_id], Client)
-      redirect_to current_user
+      redirect_to current_user.role_model
     end
   end
 end

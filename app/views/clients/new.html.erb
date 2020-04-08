@@ -34,7 +34,7 @@
 			<%= client_form.check_box(:is_current_in_school) %>
 		</div>
 	</div>
-	<% if session[:user_type] == 'administrator' %>
+	<% if current_user.local_admin? %>
 		<!-- Adm -->
 		<% if @is_super_adm %>
 			<!-- Choosing adm -->
