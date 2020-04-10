@@ -15,15 +15,17 @@
 #  password_digest      :string
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  employee_id          :bigint
 #  mentor_id            :integer
 #
 
 class Client < ActiveRecord::Base
   before_validation :setup_fields, on: :create
 
-  has_secure_password
   has_one :user, as: :userable
   has_many :result_of_tests, dependent: :destroy
+  belongs_to :employee, optional: true
+  # @deprecated
   belongs_to :mentor, inverse_of: :clients
 
   validates :code_name, presence: true, uniqueness: true, length: { in: 6..20}

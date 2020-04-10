@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_07_124821) do
+ActiveRecord::Schema.define(version: 2020_04_09_103750) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,8 @@ ActiveRecord::Schema.define(version: 2020_04_07_124821) do
     t.datetime "updated_at", null: false
     t.boolean "emotion_recognition", default: false
     t.boolean "gaze_trace", default: false
+    t.bigint "employee_id"
+    t.index ["employee_id"], name: "index_clients_on_employee_id"
     t.index ["mentor_id"], name: "index_clients_on_mentor_id"
   end
 
@@ -68,6 +70,16 @@ ActiveRecord::Schema.define(version: 2020_04_07_124821) do
     t.json "states", default: []
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "employees", force: :cascade do |t|
+    t.string "organisation"
+    t.string "phone"
+    t.string "organisation_address"
+    t.string "last_name"
+    t.string "name"
+    t.bigint "employee_id"
+    t.index ["employee_id"], name: "index_employees_on_employee_id"
   end
 
   create_table "gaze_trace_results", force: :cascade do |t|

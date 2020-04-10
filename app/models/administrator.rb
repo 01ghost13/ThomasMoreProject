@@ -11,6 +11,7 @@
 #  organisation_address :string
 #
 
+# @deprecated
 class Administrator < ActiveRecord::Base
   include Userable
 
@@ -18,6 +19,7 @@ class Administrator < ActiveRecord::Base
   
   has_many :mentors, dependent: :restrict_with_error
   has_one :user, as: :userable
+  # @deprecated
   belongs_to :info, inverse_of: :administrator, autosave: true, dependent: :destroy, optional: true
   
   validates :organisation, presence: true, length: { in: 5..30}

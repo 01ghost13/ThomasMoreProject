@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
   belongs_to :administrator, foreign_key: 'userable_id', optional: true
   belongs_to :mentor, foreign_key: 'userable_id', optional: true
   belongs_to :client, foreign_key: 'userable_id', optional: true
+  belongs_to :employee, foreign_key: 'userable_id', optional: true
 
   def role_model
     return administrator if local_admin? || super_admin?
