@@ -31,19 +31,40 @@ class User < ActiveRecord::Base
 
   enum role: { client: 0, local_admin: 1, mentor: 2, super_admin: 3 }
 
-  belongs_to :userable, polymorphic: true
+  scope :all_local_admins, ->{ where(role: :local_admin) }
+  scope :all_clients, ->{ where(role: :client) }
+  scope :all_mentors, ->{ where(role: :mentor) }
+  scope :all_super_admins, ->{ where(role: :super_admin) }
+  scope :other_local_admins, ->(id){ all_local_admins.where.not(id: id) }
+
   belongs_to :administrator, foreign_key: 'userable_id', optional: true
   belongs_to :mentor, foreign_key: 'userable_id', optional: true
-  belongs_to :client, foreign_key: 'userable_id', optional: true
-  belongs_to :employee, foreign_key: 'userable_id', optional: true
+  belongs_to :client, foreign_key: 'userable_id', optional: true, dependent: :destroy
+
+  belongs_to :employee, foreign_key: 'userable_id', optional: true, dependent: :destroy
+
+  belongs_to :userable, polymorphic: true, optional: true
+
+  accepts_nested_attributes_for :administrator
+  accepts_nested_attributes_for :mentor
+  accepts_nested_attributes_for :client
+  accepts_nested_attributes_for :employee
 
   def role_model
-    return administrator if local_admin? || super_admin?
     return client if client?
-    mentor if mentor?
+
+    employee
+  end
+
+  def show
+    user_info = role_model.show
+    user_info[:email] = self.email
+    user_info
   end
 
   def local_admin?
     role == 'local_admin' || super_admin?
   end
+
+  ransack_alias :full_name, :employee_last_name_or_employee_name
 end

@@ -48,10 +48,10 @@
 </a>
 	<ul class="dropdown-menu">
 		<li>
-			<%= link_to("Settings", edit_administrator_path(current_user.role_model.id)) %>
+			<%= link_to("Settings", edit_administrator_path(current_user)) %>
 		</li>
 		<li>
-			<%= link_to("My Profile", current_user.administrator) %>
+			<%= link_to("My Profile", administrator_path(current_user)) %>
 		</li>
 	</ul>
 </li>

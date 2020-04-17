@@ -1,4 +1,5 @@
-<p>Greetings <%= @user.last_name.titleize %> <%= @user.name.titleize %>,</p>
+<% employee = @user.employee %>
+<p>Greetings <%= employee.last_name.titleize %> <%= employee.name.titleize %>,</p>
 
 <p>You can confirm your account email through the link below:</p>
 
