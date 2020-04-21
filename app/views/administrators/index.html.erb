@@ -1,13 +1,15 @@
 <% provide(:title,"Administrators List") %>
 <h1 class="col-sm-12">All administrators</h1>
 <div>
-  <%= search_form_for @q, url: administrators_path do |f|%>
+  <%= search_form_for @q, url: administrators_path do |f| %>
       <div class="form-group col-sm-4">
-        <%= f.label :full_name_cont, 'Search',
-                    class: 'sr-only' %>
+        <%= f.label :full_name_cont,
+                    'Search',
+                    class: 'sr-only'
+        %>
         <%= f.search_field :full_name_cont,
                            {
-                             placeholder: 'Enter codename here...',
+                             placeholder: 'Enter name or last name here...',
                              class: 'form-control'
                            }
         %>

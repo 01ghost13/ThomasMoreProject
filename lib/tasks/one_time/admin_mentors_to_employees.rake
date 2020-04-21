@@ -29,7 +29,7 @@ namespace :one_time do
           user_mentor.update(userable: e_mentor.reload)
 
           record_mentor.clients.each do |client|
-            client.update_column('employee_id', e.id)
+            client.update_column('employee_id', e_mentor.id)
           end
         end
       end

@@ -98,7 +98,7 @@ class ClientsController < ApplicationController
   def index
     if current_user.client?
       flash[:danger] = 'You have no access to this page!'
-      redirect_to current_user.role_model and return
+      redirect_to show_path_resolver(current_user) and return
     end
     @is_super_adm = is_super?
     if @is_super_adm
@@ -158,7 +158,7 @@ class ClientsController < ApplicationController
     #Sa, admin, mentor
     unless is_super? || current_user.local_admin? || current_user.mentor?
       flash[:danger] = 'You have no access to this page.'
-      redirect_to current_user.role_model
+      redirect_to show_path_resolver(current_user)
     end
   end
 
@@ -171,7 +171,7 @@ class ClientsController < ApplicationController
     is_i = current_user.client? && user.id == current_user.role_model.id
     unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
       flash[:warning] = 'You have no access to this page.'
-      redirect_to current_user.role_model
+      redirect_to show_path_resolver(current_user)
     end
   end
 
@@ -219,7 +219,7 @@ class ClientsController < ApplicationController
   #Callback for checking existence of record
   def check_exist_callback
     unless check_exist(params[:id], Client)
-      redirect_to current_user.role_model
+      redirect_to show_path_resolver(current_user)
     end
   end
 

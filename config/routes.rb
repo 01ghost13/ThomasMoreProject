@@ -16,19 +16,6 @@ Rails.application.routes.draw do
   get 'contacts' => 'static_pages#contacts'
   get 'home' => 'static_pages#home'
 
-  # TODO FIX
-  # Pages for working with emails
-  # get 'confirmation_email' => 'mail#confirmation_email'
-  # get 'send_confirmation_again' => 'mail#send_confirmation_again'
-
-  # form for reset password
-  # get 'reset_password' => 'mail#reset_password'
-  # post 'reset_password' => 'mail#submit_reset_password'
-
-  # form for sending reset-link to email
-  # get 'forgot_password' => 'mail#forgot_password'
-  # post 'forgot_password' => 'mail#submit_forgot_password'
-
   #Interests pages
   resources :interests, only: [:index, :destroy]
   resources :interests, only: [] do
@@ -47,6 +34,7 @@ Rails.application.routes.draw do
       delete 'delete' => 'administrators#delete'
     end
   end
+
   #...Mentors
   resources :mentors, concerns: :group_result do
     member do
@@ -54,6 +42,7 @@ Rails.application.routes.draw do
       delete 'delete' => 'mentors#delete'
     end
   end
+
   #...Clients
   resources :clients, concerns: :group_result do
     member do

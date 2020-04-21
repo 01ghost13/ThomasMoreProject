@@ -86,7 +86,7 @@ class TestingProcessController < ApplicationController
       is_i = current_user.client? && params[:id].to_i == current_user.role_model.id
       unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
         flash[:warning] = 'You have no access to this page.'
-        redirect_to current_user.role_model
+        redirect_to show_path_resolver(current_user)
       end
     end
 
@@ -94,7 +94,7 @@ class TestingProcessController < ApplicationController
       #edit - params[:id], other - params[:test_id]
       unless !params[:test_id].nil? && check_exist(params[:test_id], Test) ||
           params[:test_id].nil? && check_exist(params[:id], Test)
-        redirect_to current_user.role_model
+        redirect_to show_path_resolver(current_user)
       end
     end
 end

@@ -42,4 +42,19 @@ module ApplicationHelper
   def is_super?
     current_user.super_admin?
   end
+
+  def show_path_resolver(user)
+    case(user.role)
+      when :client
+        client_path(user)
+      when :local_admin
+        administrator_path(user)
+      when :super_admin
+        administrator_path(user)
+      when :mentor
+        mentor_path(user)
+      else
+        root_path
+    end
+  end
 end

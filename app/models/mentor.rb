@@ -9,6 +9,7 @@
 #  info_id          :integer
 #
 
+# @deprecated
 class Mentor < ActiveRecord::Base
   include Userable
 

@@ -15,12 +15,10 @@ class AdministratorsController < ApplicationController
   end
 
   def create
-    #Loading data
     @user = User.new(administrator_params)
     @user.role = :local_admin
     @user.userable = @user.build_employee(administrator_params[:employee_attributes])
 
-    # If data ok - creating
     if @user.save
       flash[:success] = 'Account created! Confirmation of account was sent to email.'
 
@@ -60,12 +58,11 @@ class AdministratorsController < ApplicationController
   def delegate
     @administrator = load_admin_for_deletion
 
-    employee = @administrator.employee
-
+    # TODO FIX BUG scope returns ALL other entities, but not related to old one
     # Loading information about mentors and admins for page
     @admins = User
       .includes(:employee)
-      .other_local_admins(employee.id)
+      .other_local_admins(@administrator.id)
       .map(&:employee)
       .map do |t|
         ['%{org}: %{lname} %{name}' % { org: t.organisation, lname: t.last_name, name: t.name }, t.id]
@@ -84,7 +81,13 @@ class AdministratorsController < ApplicationController
       end
     end
 
-    @admins = @administrator.other_administrators
+    @admins = User
+      .includes(:employee)
+      .other_local_admins(@administrator.id)
+      .map(&:employee)
+      .map do |t|
+        ['%{org}: %{lname} %{name}' % { org: t.organisation, lname: t.last_name, name: t.name }, t.id]
+      end
     @user = @administrator
     render :delegate
   end

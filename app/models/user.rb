@@ -36,6 +36,9 @@ class User < ActiveRecord::Base
   scope :all_mentors, ->{ where(role: :mentor) }
   scope :all_super_admins, ->{ where(role: :super_admin) }
   scope :other_local_admins, ->(id){ all_local_admins.where.not(id: id) }
+  scope :other_mentors, ->(id){ all_mentors.where.not(id: id) }
+  # todo not the best place for scope
+  scope :mentors_of_administrator, ->(id){ where('employees.employee_id = :id', id: id) }
 
   belongs_to :administrator, foreign_key: 'userable_id', optional: true
   belongs_to :mentor, foreign_key: 'userable_id', optional: true
@@ -64,6 +67,17 @@ class User < ActiveRecord::Base
 
   def local_admin?
     role == 'local_admin' || super_admin?
+  end
+
+  def self.admins_list
+    all_local_admins
+      .joins(:employee)
+      .order('employees.organisation')
+      .map do |t|
+        employee = t.employee
+        org = '%{org}: %{lname} %{name}' % { org: employee.organisation, lname: employee.last_name, name: employee.name }
+        [org, employee.id]
+      end
   end
 
   ransack_alias :full_name, :employee_last_name_or_employee_name

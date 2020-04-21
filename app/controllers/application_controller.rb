@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include ApplicationHelper
+
   protect_from_forgery with: :exception
   before_action :authenticate_user!
 
@@ -43,7 +45,7 @@ class ApplicationController < ActionController::Base
   def check_super_admin
     unless is_super?
       flash[:danger] = 'You have no access to this page!'
-      redirect_to current_user.role_model
+      redirect_to show_path_resolver(current_user)
     end
   end
 end

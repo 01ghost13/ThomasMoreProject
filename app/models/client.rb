@@ -22,9 +22,12 @@
 class Client < ActiveRecord::Base
   before_validation :setup_fields, on: :create
 
+  # @deprecated
+  # has_secure_password
+
   has_one :user, as: :userable
   has_many :result_of_tests, dependent: :destroy
-  belongs_to :employee, optional: true
+  belongs_to :employee, optional: true, inverse_of: :clients
   # @deprecated
   belongs_to :mentor, inverse_of: :clients
 
@@ -35,7 +38,8 @@ class Client < ActiveRecord::Base
   #3 – Woman
   validates :mentor, presence: true
   validates :is_active, :is_current_in_school, exclusion: { in: [nil] }
-  validates :password, presence: true, allow_nil: true, length: {minimum: 4}
+
+  # validates :password, presence: true, allow_nil: true, length: {minimum: 4}
 
   scope :all_clients, ->() {all}
 

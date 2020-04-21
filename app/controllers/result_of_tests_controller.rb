@@ -185,7 +185,7 @@ class ResultOfTestsController < ApplicationController
     is_i = @i_am_client && params[:client_id].to_i == current_user.role_model.id
     unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
       flash[:danger] = 'You have no access to this page.'
-      redirect_to current_user.role_model
+      redirect_to show_path_resolver(current_user)
     end
   end
   def check_admin_rights
@@ -195,17 +195,17 @@ class ResultOfTestsController < ApplicationController
     is_client_of_my_mentor = current_user.local_admin? && client.mentor.administrator_id == current_user.role_model.id
     unless is_super_adm || is_my_client || is_client_of_my_mentor
       flash[:danger] = 'You have no access to this page.'
-      redirect_to current_user.role_model
+      redirect_to show_path_resolver(current_user)
     end
   end
   def result_exist_callback
     unless check_exist(params[:result_id], ResultOfTest)
-      redirect_to current_user.role_model
+      redirect_to show_path_resolver(current_user)
     end
   end
   def client_exist_callback
     unless check_exist(params[:client_id], Client)
-      redirect_to current_user.role_model
+      redirect_to show_path_resolver(current_user)
     end
   end
 end
