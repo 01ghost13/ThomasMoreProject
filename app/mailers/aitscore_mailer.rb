@@ -1,3 +1,4 @@
+# @deprecated
 class AitscoreMailer < ApplicationMailer
   default from: 'derpy@aitscore.com'
 

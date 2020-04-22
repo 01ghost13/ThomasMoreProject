@@ -1,8 +1,8 @@
 class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
+  include ApplicationHelper
+
   protect_from_forgery with: :exception
-  include SessionsHelper
+  before_action :authenticate_user!
 
   #Callback for checking session
   def check_log_in
@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
   end
 
   #Callback for checking log out session
+  # @deprecated
   def check_log_out
     if logged_in?
       flash[:warning] = 'This pages only for logged out users'
@@ -24,8 +25,9 @@ class ApplicationController < ActionController::Base
 
   #Callback for checking confirmation of mail
   def check_mail_confirmation
-    user = current_user
-    unless session[:user_type] != 'client' && user.info.is_mail_confirmed
+    return if current_user.client?
+
+    unless current_user.confirmed?
       flash[:danger] = "You haven't confirmed your mail!\n Please, confirm your mail."
       redirect_to :root
     end
@@ -43,7 +45,7 @@ class ApplicationController < ActionController::Base
   def check_super_admin
     unless is_super?
       flash[:danger] = 'You have no access to this page!'
-      redirect_to current_user
+      redirect_to show_path_resolver(current_user)
     end
   end
 end

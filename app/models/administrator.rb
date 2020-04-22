@@ -11,13 +11,16 @@
 #  organisation_address :string
 #
 
+# @deprecated
 class Administrator < ActiveRecord::Base
   include Userable
 
   before_validation :setup_fields, on: :create
   
   has_many :mentors, dependent: :restrict_with_error
-  belongs_to :info, inverse_of: :administrator, autosave: true, dependent: :destroy
+  has_one :user, as: :userable
+  # @deprecated
+  belongs_to :info, inverse_of: :administrator, autosave: true, dependent: :destroy, optional: true
   
   validates :organisation, presence: true, length: { in: 5..30}
   validates :info_id, uniqueness: true
@@ -25,8 +28,8 @@ class Administrator < ActiveRecord::Base
   validates :is_super, exclusion: { in: [nil] }
   validates :organisation_address, presence: true, uniqueness: true, length: { in: 5..100}
 
-  validates_presence_of :info
-  validates_associated :info, allow_blank: true
+  # validates_presence_of :info
+  # validates_associated :info, allow_blank: true
 
   accepts_nested_attributes_for :info
   accepts_nested_attributes_for :mentors

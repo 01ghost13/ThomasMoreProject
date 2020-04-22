@@ -20,6 +20,41 @@ module ApplicationHelper
       return
     end
     converted_date = date.to_s(:iso8601)
-    html_string = "<div class=\"date_to_local\">#{converted_date}</div>".html_safe
+    "<div class=\"date_to_local\">#{converted_date}</div>".html_safe
+  end
+
+  def settings_partial
+    path = {
+      client: 'clients',
+      local_admin: 'administrators',
+      mentor: 'mentors',
+      super_admin: 'administrators'
+    }[current_user.role.to_sym]
+    "#{path}/settings"
+  end
+
+  # Checks is user logged?
+  def logged_in?
+    user_signed_in?
+  end
+
+  # Checks is user - SA
+  def is_super?
+    current_user.super_admin?
+  end
+
+  def show_path_resolver(user)
+    case(user.role)
+      when :client
+        client_path(user)
+      when :local_admin
+        administrator_path(user)
+      when :super_admin
+        administrator_path(user)
+      when :mentor
+        mentor_path(user)
+      else
+        root_path
+    end
   end
 end

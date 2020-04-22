@@ -39,7 +39,7 @@ class TestingComponent extends React.Component {
   }
 
   client_url() {
-    return this.props.client_url.replace(':id', this.props.client_id);
+    return this.props.client_url.replace(':id', this.props.user_id);
   }
 
   switchIndicator(){
@@ -514,6 +514,7 @@ TestingComponent.propTypes = {
   questions_count: React.PropTypes.number,
   test_id: React.PropTypes.number,
   client_id: React.PropTypes.number,
+  user_id: React.PropTypes.number,
   webgazer: React.PropTypes.bool,
   emotion_tracking: React.PropTypes.bool,
   mode: React.PropTypes.string
@@ -544,6 +545,7 @@ TestingComponent.defaultProps = {
   questions_count: 1,
   test_id: 0,
   client_id: 0,
+  user_id: 0,
   client_url: '/clients/:id',
   webgazer: false,
   emotion_tracking: false,

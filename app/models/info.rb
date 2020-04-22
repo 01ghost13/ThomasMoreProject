@@ -15,6 +15,7 @@
 #  reset_token       :string
 #
 
+# @deprecated
 class Info < ActiveRecord::Base
   before_validation :setup_fields, on: :create
   before_create :generate_mail_token
@@ -32,6 +33,18 @@ class Info < ActiveRecord::Base
             length: {minimum: 6},
             format: {with: /[-0-9)(+]/, message: 'only numbers, plus, minus signs, brackets'},
             unless: ->{ phone.blank? }
+
+  def mentor?
+    self.mentor.present?
+  end
+
+  def administrator?
+    self.administrator.present?
+  end
+
+  def super_administrator?
+    administrator? && self.administrator.is_super
+  end
 
   #Setups default fields
   def setup_fields

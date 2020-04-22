@@ -1,11 +1,18 @@
 <% provide(:title,"Administrators List") %>
 <h1 class="col-sm-12">All administrators</h1>
 <div>
-  <%= search_form_for @q do |f|%>
+  <%= search_form_for @q, url: administrators_path do |f| %>
       <div class="form-group col-sm-4">
-        <%= f.label :full_name_cont, 'Search', class: 'sr-only' %>
-        <%= f.search_field :full_name_cont, {placeholder: 'Enter codename here...',
-                                             class: 'form-control'} %>
+        <%= f.label :full_name_cont,
+                    'Search',
+                    class: 'sr-only'
+        %>
+        <%= f.search_field :full_name_cont,
+                           {
+                             placeholder: 'Enter name or last name here...',
+                             class: 'form-control'
+                           }
+        %>
       </div>
       <%= f.submit 'Search', class: 'btn btn-primary col-sm-1' %>
   <% end %>
@@ -14,10 +21,10 @@
 	<table class="table table-hover">
     <thead>
       <tr>
-        <td><%= sort_link @q, :last_name, 'Last name'%></td>
-        <td><%= sort_link @q, :name, 'Name' %></td>
-        <td><%= sort_link @q, :organisation, 'Organisation' %></td>
-        <td><%= sort_link @q, :organisation_address, 'Organisation address' %></td>
+        <td><%= sort_link @q, 'employees.last_name', 'Last name'%></td>
+        <td><%= sort_link @q, 'employees.name', 'Name' %></td>
+        <td><%= sort_link @q, 'employees.organisation', 'Organisation' %></td>
+        <td><%= sort_link @q, 'employees.organisation_address', 'Organisation address' %></td>
         <td>Profile</td>
         <td>Edit</td>
         <td>Delete</td>
@@ -25,10 +32,11 @@
     </thead>
 		<% @admins.each do |admin| %>
 			<tr>
-				<td><h4><%= admin[:last_name].titleize %></h4></td>
-        <td><h4><%= admin[:name].titleize %></h4></td>
-        <td><h4><small><%= admin[:organisation].titleize %></small></h4></td>
-        <td><h4><small><%= admin[:organisation_address].titleize %></small></h4></td>
+        <% employee = admin.employee %>
+				<td><h4><%= employee[:last_name].titleize %></h4></td>
+        <td><h4><%= employee[:name].titleize %></h4></td>
+        <td><h4><small><%= employee[:organisation].titleize %></small></h4></td>
+        <td><h4><small><%= employee[:organisation_address].titleize %></small></h4></td>
         <td><%= link_to('Profile', administrator_path(admin[:id]), class: 'btn btn-default') %></td>
 				<td><%= link_to('Edit', edit_administrator_path(admin[:id]), class: 'btn btn-warning') %></td>
         <td><%= link_to('Delete', delete_administrator_path(admin[:id]), class: 'btn btn-danger') %></td>

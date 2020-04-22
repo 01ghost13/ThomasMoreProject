@@ -1,5 +1,8 @@
 class StaticPagesController < ApplicationController
+  skip_before_action :authenticate_user!
+
   #Log in page
+  # @deprecated
   def log_in
   end
 

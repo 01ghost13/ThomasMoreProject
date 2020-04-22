@@ -6,29 +6,27 @@ class ClientsController < ApplicationController
   before_action :info_for_new_page, only: [:create, :new]
   before_action :check_deactivated, only: [:edit, :update, :mode_settings]
 
-  #New client page
   def new
-    @user = Client.new
+    @user = User.new
+    @user.build_client
   end
   
-  #Action for create client
   def create
-    #Creating client
-    @user = Client.new(client_params)
-    @user.mentor_id = session[:type_id] if session[:user_type] == 'mentor'
-    
-    #trying to save
+    @user = User.new(client_params)
+    @user.role = :client
+    @user.userable = @user.build_client(client_params[:client_attributes])
+
     if @user.save
       flash[:success] = 'Account created!'
-      redirect_to @user
+      redirect_to client_path(@user)
     else
       render :new
     end
   end
 
-  #Action for hiding and deleting clients
   def destroy
-    client = Client.find(params[:id])
+    client = User.find(params[:id])
+
     if params[:paranoic] == 'true' || params[:paranoic] == nil
       if client.hide
         flash[:success] = 'Client was hided/recovered.'
@@ -36,90 +34,94 @@ class ClientsController < ApplicationController
         flash[:warning] = "Can't hide/recover client"
       end
     elsif params[:paranoic] == 'false' && is_super?
-      #True deleting
+      # True deleting
       if client.destroy
         flash[:success] = 'Client was deleted.'
       else
         flash[:danger] = "You can't delete this client"
       end
     end
-    redirect_back fallback_location: current_user
+
+    redirect_back fallback_location: show_path_resolver(current_user)
   end
   
-  #Update client profile page
   def edit
-    @user = Client.find(params[:id])
+    @user = User.find(params[:id])
     info_for_edit_page
   end
   
-  #Action for updating
   def update
-    @user = Client.find(params[:id])
-    if @user.update(client_update_params)
+    @user = User.find(params[:id])
+    if @user.update(client_params)
       flash[:success] = 'Update Complete'
-      redirect_to @user
+      redirect_to client_path(@user)
     else
       info_for_edit_page
       render :edit
     end
   end
   
-  #Profile page
   def show
-    @user = Client.find(params[:id])
+    @user = User.find(params[:id])
+    client = @user.role_model
+
     @is_super_adm = is_super?
-    @is_my_client = session[:user_type] == 'mentor' && @user.mentor_id == session[:type_id]
-    @is_client_of_my_mentor = session[:user_type] == 'administrator' && @user.mentor.administrator_id == session[:type_id]
+    @is_my_client = current_user.mentor? && client.employee_id == current_user.role_model.id
+    @is_client_of_my_mentor = current_user.local_admin? && client.employee.employee_id == current_user.role_model.id
+
     unless @user.is_active
-      #Client is inactive
+      # Client is inactive
       flash[:warning] = 'Client was deactivated in: ' + @user.date_off.to_s
       unless is_super?
         redirect_to clients_path
         return
       end
     end
-    @user_info = @user.show_info.to_a
-    #Loading all test results
+
+    @user_info = @user.show.to_a
+    # Loading all test results
     @test_results = []
-    ResultOfTest.order(:created_at).reverse_order.where(client_id: @user.id).limit(5).each do |res|
+    ResultOfTest.order(:created_at).reverse_order.where(client_id: client.id).limit(5).each do |res|
       @test_results << res.show_short
     end
   end
   
-  #Function for ajax updating
+  # Function for ajax updating
   def update_mentors
-    @mentors = Mentor.mentors_list(params[:administrator_id])
+    @mentors = User.mentors_list(params[:administrator_id])
     respond_to do |format|
        format.js {}
     end
   end
 
-  #List of clients
   def index
-    if session[:user_type] == 'client'
+    if current_user.client?
       flash[:danger] = 'You have no access to this page!'
-      redirect_to current_user and return
+      redirect_to show_path_resolver(current_user) and return
     end
     @is_super_adm = is_super?
-    if @is_super_adm
-      @q = Client.all_clients.ransack(params[:q])
-    elsif session[:user_type] == 'mentor'
-      @q = Client.clients_of_mentor(session[:type_id]).ransack(params[:q])
-    elsif session[:user_type] == 'administrator'
-      @q = Client.clients_of_admin(session[:type_id]).ransack(params[:q])
-    end
+    @q =
+        if @is_super_adm
+          User.all_clients_ransack
+        elsif current_user.mentor?
+          User.clients_of_mentor(current_user.role_model.id)
+        elsif current_user.local_admin?
+          User.clients_of_admin(current_user.role_model.id)
+        end
+    @q = @q.ransack(params[:q])
     @clients = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
     @clients = @clients.page(params[:page]).per(5)
+    # @clients = @clients.includes(:client, client: [:employee, employee: :user]).page(params[:page]).per(5)
   end
 
   # Page for editing modes
   def mode_settings
-    @user = Client.find(params[:id])
+    @user = User.find(params[:id])
   end
 
   # Update edited modes
   def update_mode_settings
-    @user = Client.find(params[:id])
+    @user = User.find(params[:id])
     if @user.update(mode_params)
       flash[:success] = 'Update Complete'
       redirect_to tests_client_path(params[:id])
@@ -131,102 +133,115 @@ class ClientsController < ApplicationController
   ##########################################################
   #Private methods
   private
-  #Attributes for creation page
+
   def client_params
-    params.require(:client).permit(:code_name,:mentor_id,:gender,
-                                    :is_current_in_school,:password,:password_confirmation)
+    params
+      .require(:user)
+      .permit(
+        :password,
+        :password_confirmation,
+        client_attributes: %i[code_name employee_id gender is_current_in_school],
+      )
+      .tap do |p|
+        # HACK FOR DEVISE TO WORK
+        # TODO FIX THIS LATER
+
+        p.delete(:password) if p[:password].blank?
+        p.delete(:password_confirmation) if p[:password_confirmation].blank?
+        p[:email] = "#{p.dig(:client_attributes, :code_name).gsub(' ','')}@mail.com"
+
+        if current_user.mentor?
+          p[:client_attributes][:employee_id] = current_user.role_model.id
+        end
+      end
   end
 
   def mode_params
-    params.require(:client).permit(:gaze_trace, :emotion_recognition)
-  end
-
-  #Attributes for edit page
-  def client_update_params
-    if session[:user_type] == 'administrator'
-      params[:client][:mentor_id] ||= ''
-      params.require(:client).permit(:code_name,:mentor_id,:gender,
-                                      :is_current_in_school,:password,:password_confirmation)
-    else
-      params.require(:client).permit(:code_name,:gender,
-                                      :is_current_in_school,:password,:password_confirmation)
-    end
+    params
+      .require(:user)
+      .permit(client_attributes: %i[gaze_trace emotion_recognition])
   end
 
   #Rights checking
   def check_rights
     #Sa, admin, mentor
-    unless is_super? || session[:user_type] == 'administrator' || session[:user_type] == 'mentor'
+    unless is_super? || current_user.local_admin? || current_user.mentor?
       flash[:danger] = 'You have no access to this page.'
-      redirect_to current_user
+      redirect_to show_path_resolver(current_user)
     end
   end
 
   #Rights of editing profile
   def check_editing_rights
-    user = Client.find(params[:id])
+    user = User.find(params[:id])
+    client = user.role_model
     is_super_adm = is_super?
-    is_my_client = session[:user_type] == 'mentor' && user.mentor_id == session[:type_id]
-    is_client_of_my_mentor = session[:user_type] == 'administrator' && user.mentor.administrator_id == session[:type_id]
-    is_i = session[:user_type] == 'client' && user.id == session[:type_id]
+    is_my_client = current_user.mentor? && client.employee_id == current_user.role_model.id
+    is_client_of_my_mentor = current_user.local_admin? && client.employee.employee_id == current_user.role_model.id
+    is_i = current_user.client? && user.id == current_user.id
     unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
       flash[:warning] = 'You have no access to this page.'
-      redirect_to current_user
+      redirect_to show_path_resolver(current_user)
     end
   end
 
-  #Loads info for 'new' page
+  # Loads info for 'new' page
   def info_for_new_page
     @is_super_adm = is_super?
+
     if @is_super_adm
-      #Loading Choosing of adm
-      @admins = Administrator.admins_list
-      if @admins.empty?
-        @mentors = []
-      else
-        @mentors = Mentor.mentors_list(@admins.first[1])
-      end
-    elsif session[:user_type] == 'administrator'
-      @mentors = Mentor.mentors_list(session[:type_id])
+      # Loading Choosing of adm
+      @admins = User.admins_list
+
+      @mentors =
+        if @admins.empty?
+          []
+        else
+          User.mentors_list(@admins.first[1])
+        end
+    elsif current_user.local_admin?
+      @mentors = User.mentors_list(current_user.role_model.id)
     end
   end
 
-  #Loading data for edit page
+  # Loading data for edit page
   def info_for_edit_page
     @is_super_adm = is_super?
+
     if @is_super_adm
-      #Loading Choosing of adm
-      @admins = Administrator.admins_list
+      # Loading Choosing of adm
+      @admins = User.admins_list
+
       if @admins.empty?
         @mentors = []
       else
-        if @user.mentor
-          @admins_cur = @user.mentor.administrator_id
-          @mentors = Mentor.mentors_list(@admins_cur)
-          @mentors_cur = @user.mentor_id
+        employee = @user.employee
+        if employee.present?
+          @admins_cur = employee.employee_id
+          @mentors_cur = @user.employee_id
         else
           @admins_cur = params[:administrator_id]
-          @mentors = Mentor.mentors_list(@admins_cur)
           @mentors_cur = 0
         end
+        @mentors = User.mentors_list(@admins_cur)
       end
-    elsif session[:user_type] == 'administrator'
-      @mentors = Mentor.mentors_list(session[:type_id])
-      @mentors_cur = @user.mentor_id
+    elsif current_user.local_admin?
+      @mentors = User.mentors_list(current_user.role_model.id)
+      @mentors_cur = @user.employee_id
     end
   end
 
-  #Callback for checking existence of record
+  # Callback for checking existence of record
   def check_exist_callback
-    unless check_exist(params[:id], Client)
-      redirect_to current_user
+    unless check_exist(params[:id], User)
+      redirect_to show_path_resolver(current_user)
     end
   end
 
-  #Callback for checking deactivated clients
+  # Callback for checking deactivated clients
   def check_deactivated
-    @user = Client.find(params[:id])
-    if !is_super? && @user.date_off != nil
+    @user = User.find(params[:id])
+    if !is_super? && @user.date_off.present?
       flash[:warning] = "You can't edit deactivated client!"
       redirect_back fallback_location: current_user
     end

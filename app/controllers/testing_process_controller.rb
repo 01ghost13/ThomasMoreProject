@@ -25,7 +25,7 @@ class TestingProcessController < ApplicationController
     if @question.blank?
       res = manager.result_of_test
       render json: {
-        result_url: client_result_of_test_path(res.client_id, res.id)
+        result_url: client_result_of_test_path(res.user.id, res.id)
       }
       return
     end
@@ -62,7 +62,8 @@ class TestingProcessController < ApplicationController
   end
 
   def begin
-    @client = Client.find_by(id: params[:id])
+    user = User.find_by(id: params[:id])
+    @client = user.client
 
     @result_of_test = ResultOfTest.create(
         test_id: params[:test_id],
@@ -79,14 +80,16 @@ class TestingProcessController < ApplicationController
 
   private
     def check_rights
-      user = Client.find(params[:id])
+      user = User.find(params[:id])
+      client = user.client
+
       is_super_adm = is_super?
-      is_my_client = session[:user_type] == 'mentor' && user.mentor_id == session[:type_id]
-      is_client_of_my_mentor = session[:user_type] == 'administrator' && user.mentor.administrator_id == session[:type_id]
-      is_i = session[:user_type] == 'client' && params[:id].to_i == session[:type_id]
+      is_my_client = current_user.mentor? && client.employee_id == current_user.role_model.id
+      is_client_of_my_mentor = current_user.local_admin? && client.employee.employee_id == current_user.role_model.id
+      is_i = current_user.client? && params[:id].to_i == current_user.role_model.id
       unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
         flash[:warning] = 'You have no access to this page.'
-        redirect_to current_user
+        redirect_to show_path_resolver(current_user)
       end
     end
 
@@ -94,7 +97,7 @@ class TestingProcessController < ApplicationController
       #edit - params[:id], other - params[:test_id]
       unless !params[:test_id].nil? && check_exist(params[:test_id], Test) ||
           params[:test_id].nil? && check_exist(params[:id], Test)
-        redirect_to current_user
+        redirect_to show_path_resolver(current_user)
       end
     end
 end

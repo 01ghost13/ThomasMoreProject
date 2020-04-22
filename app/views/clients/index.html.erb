@@ -1,13 +1,22 @@
 <% provide(:title,"Clients List") %>
 <h1 class="col-sm-12">All Clients</h1>
 <div>
-  <%= search_form_for @q do |f|%>
-      <div class="form-group col-sm-4">
-        <%= f.label :code_name_cont, 'Search', class: 'sr-only' %>
-        <%= f.search_field :code_name_cont, {placeholder: 'Enter codename here...',
-                             class: 'form-control'} %>
-      </div>
-      <%= f.submit 'Search', class: 'btn btn-primary col-sm-1' %>
+  <%= search_form_for @q,
+                      url: clients_path do |f|
+  %>
+    <div class="form-group col-sm-4">
+      <%= f.label :code_name_cont,
+                  'Search',
+                  class: 'sr-only'
+      %>
+      <%= f.search_field :code_name_cont,
+                         {
+                            placeholder: 'Enter codename here...',
+                            class: 'form-control'
+                         }
+      %>
+    </div>
+    <%= f.submit 'Search', class: 'btn btn-primary col-sm-1' %>
   <% end %>
 </div>
 <div class="col-sm-12">
@@ -33,7 +42,7 @@
           <%= client[:organisation] %></small></h4></td>
         <td><h4><small>
           <%= link_to("#{client[:admin_name].titleize} #{client[:admin_last_name].titleize}",
-              administrator_path(client.administrator_id)) %></small></h4></td>
+              administrator_path(client[:admin_user_id])) %></small></h4></td>
 				<td><h4><small>
           <%= link_to("#{client[:mentor_name].titleize } #{client[:mentor_last_name].titleize }",
                       mentor_path(client[:mentor_id])) %>

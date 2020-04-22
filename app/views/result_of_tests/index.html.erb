@@ -10,7 +10,7 @@
       <td>Ended</td>
       <td>End date</td>
       <td>Result</td>
-      <% unless session[:user_type] == 'client' %>
+      <% unless current_user.client? %>
         <td>Edit</td>
         <td>Delete</td>
       <% end %>
@@ -29,7 +29,7 @@
         <td><h4><%= date_to_local result[:date_of_end] %></h4></td>
         <td><%= link_to('Result', client_result_of_test_path(params[:client_id], result[:id]),
                         class: 'btn btn-default') %></td>
-        <% unless session[:user_type] == 'client' %>
+        <% unless current_user.client? %>
           <td><%= link_to('Edit', edit_client_result_of_test_path(params[:client_id], result[:id]),
                         class: 'btn btn-warning') %></td>
           <td><%= link_to('Delete', client_result_of_test_path(params[:client_id], result[:id]), method: :delete,

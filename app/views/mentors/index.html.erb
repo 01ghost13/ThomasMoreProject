@@ -1,11 +1,18 @@
 <% provide(:title,"Mentors List") %>
 <h1 class="col-sm-12">All mentors</h1>
 <div>
-  <%= search_form_for @q do |f|%>
+  <%= search_form_for @q, url: administrators_path do |f| %>
       <div class="form-group col-sm-4">
-        <%= f.label :full_name_cont, 'Search', class: 'sr-only' %>
-        <%= f.search_field :full_name_cont, {placeholder: 'Enter name or last name here...',
-                                             class: 'form-control'} %>
+        <%= f.label :full_name_cont,
+                    'Search',
+                    class: 'sr-only'
+        %>
+        <%= f.search_field :full_name_cont,
+                           {
+                               placeholder: 'Enter name or last name here...',
+                               class: 'form-control'
+                           }
+        %>
       </div>
       <%= f.submit 'Search', class: 'btn btn-primary col-sm-1' %>
   <% end %>
@@ -14,10 +21,11 @@
 	<table class="table table-hover">
     <thead>
     <tr>
-      <td><%= sort_link @q, :last_name, 'Last name'%></td>
-      <td><%= sort_link @q, :name, 'Name' %></td>
-      <td><%= sort_link @q, :organisation, 'Organisation' %></td>
-      <td><%= sort_link @q, :admin_name, 'Administrator' %></td>
+      <td><%= sort_link @q, 'employees.last_name', 'Last name'%></td>
+      <td><%= sort_link @q, 'employees.name', 'Name' %></td>
+      <td><%= sort_link @q, 'employees.organisation', 'Organisation' %></td>
+      <%# TODO administrator name sort %>
+      <td>Administrator</td>
       <td>Profile</td>
       <td>Edit</td>
       <td>Delete</td>
@@ -25,15 +33,29 @@
     </thead>
 		<% @mentors.each do |mentor| %>
 			<tr>
-				<td><h4><%= mentor[:last_name].titleize %></h4></td>
-        <td><h4><%= mentor[:name].titleize %></h4></td>
-				<td><h4><small><%= mentor[:organisation].titleize %></small></h4></td>
-				<td><h4><small>
-          <%= link_to "#{mentor[:admin_last_name].titleize} #{mentor[:admin_name].titleize}",
-                      administrator_path(mentor[:administrator_id]) %></small></h4></td>
-        <td><%= link_to('Profile', mentor_path(mentor[:mentors_id]), class: 'btn btn-default') %></td>
-        <td><%= link_to('Edit', edit_mentor_path(mentor[:mentors_id]), class: 'btn btn-warning') %></td>
-        <td><%= link_to('Delete', delete_mentor_path(mentor[:mentors_id]), class: 'btn btn-danger') %></td>
+        <% employee = mentor.employee %>
+        <% employee_of_mentor = employee.employee %>
+				<td><h4><%= employee[:last_name].titleize %></h4></td>
+        <td><h4><%= employee[:name].titleize %></h4></td>
+
+        <% if employee_of_mentor.present? %>
+          <td><h4><small><%= employee_of_mentor[:organisation] %></small></h4></td>
+          <td>
+            <h4>
+              <small>
+                  <%= link_to "#{employee_of_mentor[:last_name].titleize} #{employee_of_mentor[:name].titleize}",
+                              administrator_path(employee_of_mentor.user.id)
+                  %>
+              </small>
+            </h4>
+          </td>
+        <% else %>
+        <td></td>
+        <td></td>
+        <% end %>
+        <td><%= link_to('Profile', mentor_path(mentor[:id]), class: 'btn btn-default') %></td>
+        <td><%= link_to('Edit', edit_mentor_path(mentor[:id]), class: 'btn btn-warning') %></td>
+        <td><%= link_to('Delete', delete_mentor_path(mentor[:id]), class: 'btn btn-danger') %></td>
 			</tr>
 		<% end %>
 	</table>

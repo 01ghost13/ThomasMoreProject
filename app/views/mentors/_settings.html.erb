@@ -2,9 +2,6 @@
 	<%= link_to "Create client", new_client_path %>
 </li>
 <li>
-	<!--<%= link_to "Search", "" %>-->
-</li>
-<li>
   <%= link_to "Clients", clients_path %>
 </li>
 <li class="dropdown">
@@ -12,13 +9,13 @@
 </a>
 	<ul class="dropdown-menu">
 		<li>
-			<%= link_to("Settings", edit_mentor_path(session[:type_id])) %>
+			<%= link_to("Settings", edit_mentor_path(current_user)) %>
 		</li>
 		<li>
-			<%= link_to("My Profile", current_user) %>
+			<%= link_to("My Profile", mentor_path(current_user)) %>
 		</li>
 	</ul>
 </li>
 <li>
-  <%= link_to "Log out", logout_path, method: "delete" %>
+  <%= link_to "Log out", destroy_user_session_path, method: "delete" %>
 </li>
