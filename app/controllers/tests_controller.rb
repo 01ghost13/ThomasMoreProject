@@ -127,18 +127,23 @@ class TestsController < ApplicationController
     @tests = Kaminari.paginate_array(@tests).page(params[:page]).per(10)
 
     if params[:id].present?
-      @not_finished_tests = ResultOfTest.where(client_id: params[:id], is_ended: false).order(created_at: :desc)
+      @not_finished_tests = ResultOfTest
+        .joins(client: :user)
+        .where('users.id': params[:id], is_ended: false)
+        .order(created_at: :desc)
     end
   end
 
   #Private methods
   private
     def check_rights
-      user = Client.find(params[:id])
+      user = User.find(params[:id])
+      client = user.client
+
       is_super_adm = is_super?
-      is_my_client = current_user.mentor? && user.mentor_id == current_user.role_model.id
-      is_client_of_my_mentor = current_user.local_admin? && user.mentor.administrator_id == current_user.role_model.id
-      is_i = current_user.client? && params[:id].to_i == current_user.role_model.id
+      is_my_client = current_user.mentor? && client.employee_id == current_user.role_model.id
+      is_client_of_my_mentor = current_user.local_admin? && client.employee.employee_id == current_user.role_model.id
+      is_i = current_user.client? && params[:id].to_i == current_user.id
       unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
         flash[:warning] = 'You have no access to this page.'
         redirect_to show_path_resolver(current_user)

@@ -42,6 +42,8 @@ json.test_id test.id
 
 json.client_id client.id
 
+json.user_id client.user.id
+
 json.start_time DateTime.current
 
 json.webgazer mode == 'heatmap' ? false : result_of_test.gaze_trace?

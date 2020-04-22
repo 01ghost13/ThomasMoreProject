@@ -30,7 +30,6 @@ class ResultOfTestsController < ApplicationController
     end
   end
 
-  #Page of result
   def show
     #Loading result
     result = ResultOfTest.result_page.find(params[:result_id])
@@ -113,11 +112,11 @@ class ResultOfTestsController < ApplicationController
     end
   end
 
-  #List of results
   def index
     #Loading test results
-    results = ResultOfTest.where(client_id: params[:client_id]).order(:created_at).reverse_order
-    client = Client.find(params[:client_id])
+    user = User.find(params[:client_id])
+    client = user.client
+    results = ResultOfTest.where(client_id: client.id).order(:created_at).reverse_order
     @code_name = client.code_name
     @results = []
     results.each do |result|
@@ -129,7 +128,6 @@ class ResultOfTestsController < ApplicationController
     @avg_time = client.get_client_interests[:avg_answer_time]
   end
 
-  #Action for deleting results
   def destroy
     result = ResultOfTest.find(params[:result_id])
     if result.destroy
@@ -177,22 +175,24 @@ class ResultOfTestsController < ApplicationController
     params.require(:result_of_test).permit(question_results_attributes: [:was_checked,:id])
   end
   def check_rights
-    user = Client.find(params[:client_id])
+    user = User.find(params[:client_id])
+    client = user.client
     is_super_adm = is_super?
-    is_my_client = current_user.mentor? && user.mentor_id == current_user.role_model.id
-    is_client_of_my_mentor = current_user.local_admin? && user.mentor.administrator_id == current_user.role_model.id
+    is_my_client = current_user.mentor? && client.employee_id == current_user.role_model.id
+    is_client_of_my_mentor = current_user.local_admin? && client.employee.employee_id == current_user.role_model.id
     @i_am_client = current_user.client?
-    is_i = @i_am_client && params[:client_id].to_i == current_user.role_model.id
+    is_i = @i_am_client && params[:client_id].to_i == current_user.id
     unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
       flash[:danger] = 'You have no access to this page.'
       redirect_to show_path_resolver(current_user)
     end
   end
   def check_admin_rights
-    client = Client.find(params[:client_id])
+    user = User.find(params[:client_id])
+    client = user.client
     is_super_adm = is_super?
-    is_my_client = current_user.mentor? && client.mentor_id == current_user.role_model.id
-    is_client_of_my_mentor = current_user.local_admin? && client.mentor.administrator_id == current_user.role_model.id
+    is_my_client = current_user.mentor? && client.employee_id == current_user.role_model.id
+    is_client_of_my_mentor = current_user.local_admin? && client.employee.employee_id == current_user.role_model.id
     unless is_super_adm || is_my_client || is_client_of_my_mentor
       flash[:danger] = 'You have no access to this page.'
       redirect_to show_path_resolver(current_user)
@@ -204,7 +204,7 @@ class ResultOfTestsController < ApplicationController
     end
   end
   def client_exist_callback
-    unless check_exist(params[:client_id], Client)
+    unless check_exist(params[:client_id], User)
       redirect_to show_path_resolver(current_user)
     end
   end

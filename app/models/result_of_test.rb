@@ -62,6 +62,7 @@ class ResultOfTest < ActiveRecord::Base
     result_info[:name_of_test] = Test.find(self.test_id).name
     result_info[:id] = self.id
     result_info[:client_id] = self.client_id
+    result_info[:user_id] = client.user.id
     result_info[:is_ended] = self.is_ended
     result_info[:test_id] = self.test_id
     result_info[:date_of_end] = ''

@@ -53,6 +53,71 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :client
   accepts_nested_attributes_for :employee
 
+  class << self
+    # TODO FIX n+1 query
+    def admins_list
+      all_local_admins
+        .joins(:employee)
+        .order('employees.organisation')
+        .select { |u| u.employee.employees.count.positive? }
+        .map do |t|
+          employee = t.employee
+          org = '%{org}: %{lname} %{name}' % { org: employee.organisation, lname: employee.last_name, name: employee.name }
+          [org, employee.id]
+        end
+    end
+
+    def mentors_list(employee_id)
+      all_mentors
+        .joins(:employee)
+        .where('employees.employee_id': employee_id)
+        .order(:id)
+        .map do |t|
+          employee = t.employee
+          view_s = '%{email}: %{lname} %{name}'%{email: t.email, lname: employee.last_name, name: employee.name}
+          [view_s, employee.id]
+        end
+    end
+
+    def clients_of_admin(admin_id)
+      all_clients_ransack.where('admin_id = ?', admin_id)
+    end
+
+    def clients_of_mentor(mentor_id)
+      all_clients_ransack.where('mentor_id = ?', mentor_id)
+    end
+
+    def all_clients_ransack
+      mentors = User
+        .all_mentors
+        .select(
+          'employees.name as mentor_name, employees.last_name as mentor_last_name,
+           employees.id as id, employees.employee_id as admin_id, users.id as m_id'
+        )
+        .joins(:employee)
+        .to_sql
+
+      administrators = User
+        .all_local_admins
+        .select(
+          'employees.name as admin_name, employees.last_name as admin_last_name,
+          employees.id as a_id, employees.organisation, users.id as admin_user_id'
+        )
+        .joins(:employee)
+        .to_sql
+
+      all_clients
+        .select(
+          'users.id as id, clients.code_name as code_name, t.mentor_name as mentor_name, t.m_id as mentor_id,
+          t.mentor_last_name as mentor_last_name, a.admin_name as admin_name, a.admin_last_name as admin_last_name,
+          a.organisation as organisation, t.admin_id as administrator_id, clients.employee_id, users.is_active, admin_user_id'
+        )
+        .joins(:client)
+        .joins("JOIN (#{mentors}) as t on clients.employee_id = t.id")
+        .joins("JOIN (#{administrators}) as a on t.admin_id = a.a_id")
+    end
+  end
+
   def role_model
     return client if client?
 
@@ -69,16 +134,18 @@ class User < ActiveRecord::Base
     role == 'local_admin' || super_admin?
   end
 
-  def self.admins_list
-    all_local_admins
-      .joins(:employee)
-      .order('employees.organisation')
-      .map do |t|
-        employee = t.employee
-        org = '%{org}: %{lname} %{name}' % { org: employee.organisation, lname: employee.last_name, name: employee.name }
-        [org, employee.id]
+  # Hides client for all users except SA
+  # TODO MOVE TO MODULE
+  def hide
+    self.date_off =
+      if is_active
+        Date.current
       end
+    self.is_active = !self.is_active
+
+    save
   end
 
   ransack_alias :full_name, :employee_last_name_or_employee_name
+  ransack_alias :code_name, :client_code_name
 end

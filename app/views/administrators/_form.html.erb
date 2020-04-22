@@ -1,6 +1,9 @@
 <%= render 'shared/error_message' %>
 
-<%= form_for @user, url: @user.new_record? ? administrators_path : administrator_path(@user), class: 'form-horizontal' do |f| %>
+<%= form_for @user,
+             url: @user.new_record? ? administrators_path : administrator_path(@user),
+             class: 'form-horizontal' do |f|
+%>
   <%= f.fields_for :employee,
                    class: 'form-horizontal' do |ff|
   %>
