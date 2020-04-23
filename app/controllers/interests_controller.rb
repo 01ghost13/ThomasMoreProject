@@ -1,9 +1,8 @@
 class InterestsController < AdminController
-  # before_action :check_log_in
-  before_action :check_super_admin
 
   #Action for creation Interest
   def create
+    authorize!
     @interest = Interest.new(interest_params)
     if @interest.save
       flash[:success] = 'Interest added!'
@@ -16,6 +15,7 @@ class InterestsController < AdminController
   #Action for updating interest
   def update
     interest = Interest.find(params[:interest][:id])
+    authorize!(interest)
     if interest.update(interest_params)
       flash[:success] = 'Interest updated!'
       redirect_to interests_path
@@ -26,6 +26,7 @@ class InterestsController < AdminController
 
   def destroy
     interest = Interest.find(params[:id])
+    authorize!(interest)
     if interest.destroy
       flash[:success] = 'Interest deleted!'
       redirect_to interests_path
@@ -35,6 +36,7 @@ class InterestsController < AdminController
   end
 
   def index
+    authorize!
     interest_query = Interest.order(:created_at).reverse_order
     @q = interest_query.ransack(params[:q])
     @interests_list = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
