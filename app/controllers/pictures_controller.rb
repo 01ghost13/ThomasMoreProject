@@ -1,9 +1,8 @@
 class PicturesController < AdminController
-  # before_action :check_log_in
-  before_action :check_super_admin
 
   #Page of list of pictures
   def index
+    authorize!
     picture_query = Picture.with_attached_image.includes(:picture_interests).order(:created_at).reverse_order
     @q = picture_query.ransack(params[:q])
     @pictures = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
@@ -12,12 +11,14 @@ class PicturesController < AdminController
 
   #Create picture page
   def new
+    authorize!
     @picture = Picture.new
     @interests = Interest.interests_list
   end
 
   #Action for create
   def create
+    authorize!
     @picture = Picture.new(picture_params)
 
     @picture.image.attach(io: image_io, filename: image_name) if params[:picture][:image].is_a?(String)
@@ -43,12 +44,14 @@ class PicturesController < AdminController
   #Page for edit picture
   def edit
     @picture = Picture.find(params[:id])
+    authorize!(@picture)
     @interests = Interest.interests_list
   end
 
   #Action for edit
   def update
     @picture = Picture.find(params[:id])
+    authorize!(@picture)
 
 	if Rails.env.staging?
 	  file = convert_data_uri_to_upload(params[:picture])
@@ -78,6 +81,7 @@ class PicturesController < AdminController
   #Action for deleting Picture
   def destroy
     picture = Picture.find(params[:id])
+    authorize!(picture)
     if picture.destroy
       flash[:success] = 'Picture deleted!'
     else
