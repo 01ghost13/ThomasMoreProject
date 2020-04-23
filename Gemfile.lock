@@ -20,6 +20,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    action_policy (0.4.3)
     actioncable (5.2.1)
       actionpack (= 5.2.1)
       nio4r (~> 2.0)
@@ -368,6 +369,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  action_policy (~> 0.4.0)
   activestorage-cloudinary-service
   annotate
   axlsx (= 2.1.0.pre)
@@ -422,4 +424,4 @@ RUBY VERSION
    ruby 2.4.4p296
 
 BUNDLED WITH
-   1.16.2
+   1.16.6
