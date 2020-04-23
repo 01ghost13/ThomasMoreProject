@@ -1,5 +1,5 @@
-class InterestsController < ApplicationController
-  before_action :check_log_in
+class InterestsController < AdminController
+  # before_action :check_log_in
   before_action :check_super_admin
 
   #Action for creation Interest

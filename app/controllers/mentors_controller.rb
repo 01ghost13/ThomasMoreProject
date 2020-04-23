@@ -1,7 +1,6 @@
-class MentorsController < ApplicationController
-
+class MentorsController < AdminController
   before_action :check_exist_callback, only: [:edit, :update, :show, :delete, :delegate]
-  before_action :check_log_in, only: [:new,:create,:edit,:update,:show,:index,:delegate, :delete]
+  # before_action :check_log_in, only: [:new,:create,:edit,:update,:show,:index,:delegate, :delete]
   before_action :check_type_rights, only: [:new,:create,:index,:delegate, :delete]
   before_action :check_rights, only: [:edit,:update,:show]
   before_action :check_mail_confirmation, except: [:show]

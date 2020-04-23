@@ -1,7 +1,7 @@
-class ResultOfTestsController < ApplicationController
+class ResultOfTestsController < AdminController
   before_action :result_exist_callback, only: [:edit, :update, :show, :destroy]
   before_action :client_exist_callback
-  before_action :check_log_in
+  # before_action :check_log_in
   before_action :check_rights, only: [:show, :index]
   before_action :check_admin_rights, except: [:show, :index]
 

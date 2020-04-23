@@ -1,5 +1,5 @@
-class TestingProcessController < ApplicationController
-  before_action :check_log_in
+class TestingProcessController < AdminController
+  # before_action :check_log_in
   before_action :check_exist_callback, only: %i[begin]
   before_action :check_rights, only: %i[begin]
 

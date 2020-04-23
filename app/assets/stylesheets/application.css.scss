@@ -66,3 +66,6 @@ p.big {
 .alert-notice {
   @include alert-variant($alert-info-bg, $alert-info-border, $alert-info-text);
 }
+.alert-alert {
+  @include alert-variant($alert-warning-bg, $alert-warning-border, $alert-warning-text);
+}

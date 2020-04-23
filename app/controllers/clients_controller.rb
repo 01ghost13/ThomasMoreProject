@@ -1,6 +1,6 @@
-class ClientsController < ApplicationController
+class ClientsController < AdminController
   before_action :check_exist_callback, only: [:destroy, :edit, :update, :show, :mode_settings]
-  before_action :check_log_in, only: [:new, :create, :index, :update, :edit, :destroy, :show, :mode_settings]
+  # before_action :check_log_in, only: [:new, :create, :index, :update, :edit, :destroy, :show, :mode_settings]
   before_action :check_rights, only: [:new, :create, :index]
   before_action :check_editing_rights, only: [:update, :edit, :destroy, :show, :mode_settings]
   before_action :info_for_new_page, only: [:create, :new]

@@ -1,5 +1,5 @@
-class TestsController < ApplicationController
-  before_action :check_log_in
+class TestsController < AdminController
+  # before_action :check_log_in
   before_action :check_exist_callback, only: [:testing, :edit, :update, :destroy]
   before_action :check_rights, only: [:testing]
   before_action :check_super_admin, only: [:new, :create, :edit, :update, :destroy]
