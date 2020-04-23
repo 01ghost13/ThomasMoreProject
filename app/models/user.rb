@@ -146,6 +146,16 @@ class User < ActiveRecord::Base
     save
   end
 
+  def policy_class
+    if super_admin? || local_admin?
+      AdministratorPolicy
+    elsif mentor?
+      MentorPolicy
+    elsif client?
+      ClientPolicy
+    end
+  end
+
   ransack_alias :full_name, :employee_last_name_or_employee_name
   ransack_alias :code_name, :client_code_name
 end

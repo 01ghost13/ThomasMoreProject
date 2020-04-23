@@ -1,28 +1,21 @@
+# basic controller for admin scope
 class AdminController < ApplicationController
   before_action :authenticate_user!
   verify_authorized
 
-  #Callback for checking session
-  # @deprecated
-  def check_log_in
-    unless logged_in?
-      flash[:warning] = 'Only registered people can see this page.'
-      #Redirecting to home page
-      redirect_to :root
-    end
+  rescue_from ActionPolicy::Unauthorized do |ex|
+    Rails.logger.error <<-TEXT
+      User #{current_user.id}(#{current_user.role}) failed authorization.
+      Stage: #{ex.result.reasons.details}
+      Backtrace: #{ex.backtrace}
+    TEXT
+
+    flash[:danger] = ex.result.reasons.full_messages
+    redirect_to show_path_resolver(current_user)
   end
 
-  #Callback for checking log out session
+  # Callback for checking confirmation of mail
   # @deprecated
-  def check_log_out
-    if logged_in?
-      flash[:warning] = 'This pages only for logged out users'
-      #Redirecting to home page
-      redirect_to :root
-    end
-  end
-
-  #Callback for checking confirmation of mail
   def check_mail_confirmation
     return if current_user.client?
 
@@ -32,6 +25,7 @@ class AdminController < ApplicationController
     end
   end
 
+  # @deprecated
   def check_exist(id, class_ref)
     if class_ref.exists?(id)
       true
@@ -41,6 +35,7 @@ class AdminController < ApplicationController
     end
   end
 
+  # @deprecated
   def check_super_admin
     unless is_super?
       flash[:danger] = 'You have no access to this page!'
