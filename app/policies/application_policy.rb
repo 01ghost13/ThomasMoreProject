@@ -20,6 +20,10 @@ class ApplicationPolicy < ActionPolicy::Base
       # end
     end
 
+    def mentor?
+      user.mentor?
+    end
+
     def local_admin?
       user.local_admin?
     end
@@ -49,5 +53,9 @@ class ApplicationPolicy < ActionPolicy::Base
 
     def me?
       user.id == record.id
+    end
+
+    def my_mentor?
+      user.employee.id == record.employee.try(:employee_id)
     end
 end
