@@ -20,6 +20,10 @@ class ApplicationPolicy < ActionPolicy::Base
       # end
     end
 
+    def client?
+      user.client?
+    end
+
     def mentor?
       user.mentor?
     end
@@ -51,11 +55,27 @@ class ApplicationPolicy < ActionPolicy::Base
       user.client? || user.confirmed?
     end
 
+    def active?
+      record.date_off.blank?
+    end
+
+    def activated?
+      user.date_off.blank?
+    end
+
     def me?
       user.id == record.id
     end
 
     def my_mentor?
       user.employee.id == record.employee.try(:employee_id)
+    end
+
+    def my_client?
+      user.employee.id == record.employee_id
+    end
+
+    def client_of_my_mentor?
+      user.employee.id == record.employee.employee_id
     end
 end
