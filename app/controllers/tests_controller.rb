@@ -1,23 +1,20 @@
 class TestsController < AdminController
-  # before_action :check_log_in
-  before_action :check_exist_callback, only: [:testing, :edit, :update, :destroy]
-  before_action :check_rights, only: [:testing]
-  before_action :check_super_admin, only: [:new, :create, :edit, :update, :destroy]
 
-  #Page of creation of Tests
   def new
+    authorize!
     @test = Test.new
     @pictures = Picture.pictures_list
   end
 
   #Action for ajax
   def update_image
+    authorize!
     @id = params[:event_id]
     @picture = Picture.find(params[:picture_id])
   end
 
-  #Action for creation of test
   def create
+    authorize!
     @test = Test.new(test_params)
     @picture = []
     #Numering questions
@@ -47,9 +44,9 @@ class TestsController < AdminController
     end
   end
 
-  #Page of editing tests
   def edit
-    @test = Test.find(params[:id])
+    @test = Test.find_by(id: params[:id])
+    authorize!(@test)
     @picture = []
     @pictures = Picture.pictures_list
     @test.questions.each do |q|
@@ -60,18 +57,10 @@ class TestsController < AdminController
     @picture = [@dummy] if @picture.empty?
   end
 
-  def all_questions_destroy?(questions)
-    questions.each_key do |key|
-      if questions[key]['_destroy'] != 'true'
-        return false
-      end
-    end
-    true
-  end
-
-  #Action of editing tests
   def update
-    @test = Test.find(params[:id])
+    @test = Test.find_by(id: params[:id])
+    authorize!(@test)
+
     empty_list = all_questions_destroy?(test_params[:questions_attributes].to_hash)
     if !params[:test].nil? && !empty_list && @test.update(test_params)
       flash[:success] = 'Test updated!'
@@ -100,9 +89,10 @@ class TestsController < AdminController
     end
   end
 
-  #Action for deleting tests
   def destroy
-    test = Test.find(params[:id])
+    test = Test.find_by(params[:id])
+    authorize!(test)
+
     if test.destroy
       flash[:success] = 'Test deleted!'
     else
@@ -111,19 +101,11 @@ class TestsController < AdminController
     redirect_to tests_path
   end
 
-  #Page of list of tests
   def index
     #Only super admin has access to aitscore\tests
-    if params[:id].nil? && !is_super?
-      flash[:warning] = 'You have no access to this page.'
-      redirect_to show_path_resolver(current_user)
-      return
-    end
-    tests = Test.all
-    @tests = []
-    tests.each do |test|
-      @tests << test.show_short
-    end
+    authorize!(params)
+
+    @tests = Test.all.map(&:show_short)
     @tests = Kaminari.paginate_array(@tests).page(params[:page]).per(10)
 
     if params[:id].present?
@@ -134,20 +116,15 @@ class TestsController < AdminController
     end
   end
 
-  #Private methods
   private
-    def check_rights
-      user = User.find(params[:id])
-      client = user.client
 
-      is_super_adm = is_super?
-      is_my_client = current_user.mentor? && client.employee_id == current_user.role_model.id
-      is_client_of_my_mentor = current_user.local_admin? && client.employee.employee_id == current_user.role_model.id
-      is_i = current_user.client? && params[:id].to_i == current_user.id
-      unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
-        flash[:warning] = 'You have no access to this page.'
-        redirect_to show_path_resolver(current_user)
+    def all_questions_destroy?(questions)
+      questions.each_key do |key|
+        if questions[key]['_destroy'] != 'true'
+          return false
+        end
       end
+      true
     end
 
     def test_params
@@ -172,13 +149,5 @@ class TestsController < AdminController
             ]
           ]
       )
-    end
-
-    def check_exist_callback
-      #edit - params[:id], other - params[:test_id]
-      unless !params[:test_id].nil? && check_exist(params[:test_id], Test) ||
-              params[:test_id].nil? && check_exist(params[:id], Test)
-        redirect_to show_path_resolver(current_user)
-      end
     end
 end
