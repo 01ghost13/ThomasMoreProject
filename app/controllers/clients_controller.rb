@@ -146,7 +146,7 @@ class ClientsController < AdminController
       .permit(
         :password,
         :password_confirmation,
-        client_attributes: %i[code_name employee_id gender is_current_in_school],
+        client_attributes: %i[id code_name employee_id gender is_current_in_school],
       )
       .tap do |p|
         # HACK FOR DEVISE TO WORK
@@ -170,6 +170,7 @@ class ClientsController < AdminController
 
   # Loads info for 'new' page
   def info_for_new_page
+    # TODO FIX BUG WHEN SAVING FAILS LINKED MENTOR IS UNSET
     @is_super_adm = is_super?
 
     if @is_super_adm
@@ -198,10 +199,10 @@ class ClientsController < AdminController
       if @admins.empty?
         @mentors = []
       else
-        employee = @user.employee
+        employee = @user.client.employee
         if employee.present?
           @admins_cur = employee.employee_id
-          @mentors_cur = @user.employee_id
+          @mentors_cur = @user.client.employee_id
         else
           @admins_cur = params[:administrator_id]
           @mentors_cur = 0
@@ -210,7 +211,7 @@ class ClientsController < AdminController
       end
     elsif current_user.local_admin?
       @mentors = User.mentors_list(current_user.role_model.id)
-      @mentors_cur = @user.employee_id
+      @mentors_cur = @user.client.employee_id
     end
   end
 end
