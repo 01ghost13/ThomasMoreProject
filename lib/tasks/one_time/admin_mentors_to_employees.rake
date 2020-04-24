@@ -14,7 +14,7 @@ namespace :one_time do
           organisation_address: record.organisation_address,
         )
         user.update(userable: e.reload)
-
+        p "--#{user.email}, I:#{info.id}, E:#{e.id}"
         record.mentors.each do |record_mentor|
           user_mentor = record_mentor.user
           info_mentor = record_mentor.info
@@ -27,9 +27,11 @@ namespace :one_time do
           )
 
           user_mentor.update(userable: e_mentor.reload)
+          p "----#{user_mentor.email}, I:#{info_mentor.id}, E:#{e_mentor.id}"
 
           record_mentor.clients.each do |client|
             client.update_column('employee_id', e_mentor.id)
+            p "------#{client.user.email}, E_ID:#{e_mentor.id}, C:#{client.id}"
           end
         end
       end
