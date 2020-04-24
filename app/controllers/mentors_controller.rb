@@ -1,18 +1,15 @@
-class MentorsController < ApplicationController
-
-  before_action :check_exist_callback, only: [:edit, :update, :show, :delete, :delegate]
-  before_action :check_log_in, only: [:new,:create,:edit,:update,:show,:index,:delegate, :delete]
-  before_action :check_type_rights, only: [:new,:create,:index,:delegate, :delete]
-  before_action :check_rights, only: [:edit,:update,:show]
-  before_action :check_mail_confirmation, except: [:show]
-  before_action :info_for_forms, only: [:new, :create, :edit, :update]
+class MentorsController < AdminController
+  before_action :preload_entity, only: %i[edit update show delete delegate]
+  before_action :info_for_forms, only: %i[new create edit update]
 
   def new
+    authorize!
     @user = User.new
     @user.build_employee
   end
 
   def create
+    authorize!
     @user = User.new(mentor_params)
     @user.role = :mentor
     @user.userable = @user.build_employee(mentor_params[:employee_attributes])
@@ -25,16 +22,12 @@ class MentorsController < ApplicationController
     end
   end
 
-  #Edit profile page
   def edit
-    #Finding user
-    @user = User.find(params[:id])
+    authorize!(@user)
   end
   
-  #Action for updating user
   def update
-    #Finding mentor
-    @user = User.find(params[:id])
+    authorize!(@user)
     #If mentor exit and data - OK, changing
     if @user.update(mentor_params)
       flash[:success] = 'Update Complete'
@@ -46,11 +39,7 @@ class MentorsController < ApplicationController
   end
 
   def index
-    unless current_user.local_admin? || current_user.super_admin?
-      flash[:danger] = 'You have no access to this page!'
-      redirect_to show_path_resolver(current_user)
-      return
-    end
+    authorize!
 
     @is_super_adm = is_super?
 
@@ -68,13 +57,14 @@ class MentorsController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
+    authorize!(@user)
     # TODO Make presenter
     @user_info = @user.show.to_a
   end
 
   def delegate
-    @mentor = User.find(params[:id])
+    authorize!(@user)
+    @mentor = @user
 
     # TODO FIX BUG scope returns ALL other entities, but not related to old one
     @mentors = User
@@ -87,7 +77,8 @@ class MentorsController < ApplicationController
   end
 
   def delete
-    @mentor = User.find(params[:id])
+    authorize!(@user)
+    @mentor = @user
     employee = @mentor.employee
 
     if employee.clients.empty? || employee.update(delete_mentor_params)
@@ -110,13 +101,19 @@ class MentorsController < ApplicationController
   ##########################################################
   #Private methods
   private
+
+    def preload_entity
+      @user = User.find_by(id: params[:id])
+    end
+
   #Rights checking
+  # @deprecated
   def check_rights
     user = User.find(params[:id])
     # It is my page?
     is_i = (current_user.mentor? && current_user.id == params[:id].to_i)
     # It is my mentor?
-    is_my_mentor = (current_user.local_admin? && user.employee.id == current_user.role_model.id)
+    is_my_mentor = (current_user.local_admin? && user.employee.employee_id == current_user.role_model.id)
     unless is_i || is_super? || is_my_mentor
       flash[:danger] = 'You have no access to this page.'
       redirect_to show_path_resolver(current_user)
@@ -124,6 +121,7 @@ class MentorsController < ApplicationController
   end
 
   #Rights of viewing
+  # @deprecated
   def check_type_rights
     return if is_super?
 
@@ -131,7 +129,7 @@ class MentorsController < ApplicationController
     #Checking creation or showing
     unless params[:id].nil?
       user = User.find(params[:id])
-      is_my_adm = (!user.nil? && current_user.local_admin? && user.administrator_id == current_user.role_model.id)
+      is_my_adm = (!user.nil? && current_user.local_admin? && user.employee.id == current_user.role_model.id)
     end
 
     #checking rights
@@ -157,7 +155,7 @@ class MentorsController < ApplicationController
 
         if @is_super_admin
           p[:employee_attributes][:employee_id] = params.dig(:user, :employee_attributes, :employee_id)
-        else
+        elsif current_user.local_admin?
           p[:employee_attributes][:employee_id] = current_user.employee.id
         end
       end
@@ -178,6 +176,7 @@ class MentorsController < ApplicationController
   end
 
   #Callback for checking existence of record
+  # @deprecated
   def check_exist_callback
     unless check_exist(params[:id], User)
       redirect_to show_path_resolver(current_user)

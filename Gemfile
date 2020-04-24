@@ -95,6 +95,9 @@ gem 'oj', '~> 2.16.1' # for rollbar dependecy
 # Authentication
 gem 'devise', '~> 4.7'
 
+# authorisation gem
+gem 'action_policy', '~> 0.4.0'
+
 # Sending emails in prod (https://github.com/stephenb/sendgrid)
 gem 'sendgrid'
 

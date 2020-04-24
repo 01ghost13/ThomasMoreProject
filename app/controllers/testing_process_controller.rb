@@ -1,15 +1,18 @@
-class TestingProcessController < ApplicationController
-  before_action :check_log_in
-  before_action :check_exist_callback, only: %i[begin]
-  before_action :check_rights, only: %i[begin]
+class TestingProcessController < AdminController
+  before_action :preload_entity
 
   #Updates picture in /testing process
   def answer
+    result_of_test = ResultOfTest.find_by(id: params[:result_of_test_id])
+
+    authorize!(result_of_test, with: TestProccessPolicy)
     manager = TestingManager.new(params[:result_of_test_id])
 
     unless manager.valid?
       flash[:danger] = manager.errors.values.last
-      redirect_back fallback_location: current_user
+      render json: {
+        result_url: show_path_resolver(current_user)
+      }
       return
     end
 
@@ -25,7 +28,7 @@ class TestingProcessController < ApplicationController
     if @question.blank?
       res = manager.result_of_test
       render json: {
-        result_url: client_result_of_test_path(res.user.id, res.id)
+        result_url: client_result_of_test_path(res.client.user.id, res.id)
       }
       return
     end
@@ -40,11 +43,14 @@ class TestingProcessController < ApplicationController
   end
 
   def testing
+    result_of_test = ResultOfTest.find_by(id: params[:result_of_test_id])
+
+    authorize!(result_of_test, with: TestProccessPolicy)
     manager = TestingManager.new(params[:result_of_test_id])
 
     unless manager.valid?
       flash[:danger] = manager.errors.values.last
-      redirect_back fallback_location: current_user
+      redirect_back fallback_location: show_path_resolver(current_user)
       return
     end
 
@@ -62,42 +68,41 @@ class TestingProcessController < ApplicationController
   end
 
   def begin
-    user = User.find_by(id: params[:id])
-    @client = user.client
+    test = Test.find(params[:test_id])
+    authorize!(@user, with: TestProccessPolicy)
+
+    @client = @user.client
 
     @result_of_test = ResultOfTest.create(
-        test_id: params[:test_id],
-        was_in_school: @client.is_current_in_school,
-        client_id: @client.id,
-        # gaze_trace:  && @client.gaze_trace,
-        # emotion_recognition: @client.emotion_recognition
-        gaze_trace: false,
-        emotion_recognition: false
+      test_id: params[:test_id],
+      was_in_school: @client.is_current_in_school,
+      client_id: @client.id,
+      # gaze_trace:  && @client.gaze_trace,
+      # emotion_recognition: @client.emotion_recognition
+      gaze_trace: false,
+      emotion_recognition: false
     )
 
     redirect_to testing_path(@result_of_test.id)
   end
 
+  def index
+    authorize!(@user, with: TestProccessPolicy)
+
+    @tests = Test.all.map(&:show_short)
+    @tests = Kaminari.paginate_array(@tests).page(params[:page]).per(10)
+
+    @not_finished_tests = ResultOfTest
+                              .joins(client: :user)
+                              .where('users.id': params[:id], is_ended: false)
+                              .order(created_at: :desc)
+
+    render 'tests/index'
+  end
+
   private
-    def check_rights
-      user = User.find(params[:id])
-      client = user.client
 
-      is_super_adm = is_super?
-      is_my_client = current_user.mentor? && client.employee_id == current_user.role_model.id
-      is_client_of_my_mentor = current_user.local_admin? && client.employee.employee_id == current_user.role_model.id
-      is_i = current_user.client? && params[:id].to_i == current_user.role_model.id
-      unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
-        flash[:warning] = 'You have no access to this page.'
-        redirect_to show_path_resolver(current_user)
-      end
-    end
-
-    def check_exist_callback
-      #edit - params[:id], other - params[:test_id]
-      unless !params[:test_id].nil? && check_exist(params[:test_id], Test) ||
-          params[:test_id].nil? && check_exist(params[:id], Test)
-        redirect_to show_path_resolver(current_user)
-      end
+    def preload_entity
+      @user = User.find_by(id: params[:id])
     end
 end

@@ -1,7 +1,7 @@
 <% provide(:title,"Mentors List") %>
 <h1 class="col-sm-12">All mentors</h1>
 <div>
-  <%= search_form_for @q, url: administrators_path do |f| %>
+  <%= search_form_for @q, url: mentors_path do |f| %>
       <div class="form-group col-sm-4">
         <%= f.label :full_name_cont,
                     'Search',

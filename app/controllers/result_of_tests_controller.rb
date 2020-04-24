@@ -1,14 +1,8 @@
-class ResultOfTestsController < ApplicationController
-  before_action :result_exist_callback, only: [:edit, :update, :show, :destroy]
-  before_action :client_exist_callback
-  before_action :check_log_in
-  before_action :check_rights, only: [:show, :index]
-  before_action :check_admin_rights, except: [:show, :index]
+class ResultOfTestsController < AdminController
 
-  #Edit results page
   def edit
-    #Loading res info
-    @result = ResultOfTest.find(params[:result_id])
+    @result = ResultOfTest.find_by(id: params[:result_id])
+    authorize!(@result)
     @user = @result
     #Only finished results are editable
     unless @result.is_ended
@@ -17,10 +11,9 @@ class ResultOfTestsController < ApplicationController
     end
   end
 
-  #Action for updating results
   def update
-    #Loading res info
-    @result = ResultOfTest.find(params[:result_id])
+    @result = ResultOfTest.find_by(id: params[:result_id])
+    authorize!(@result)
     @user = @result
     if @result.update(result_params)
       flash[:success] = 'Update Complete'
@@ -31,8 +24,8 @@ class ResultOfTestsController < ApplicationController
   end
 
   def show
-    #Loading result
-    result = ResultOfTest.result_page.find(params[:result_id])
+    result = ResultOfTest.result_page.find_by(id: params[:result_id])
+    authorize!(result)
 
     #If test was changed, results are outdated
     if result.is_outdated?
@@ -113,8 +106,9 @@ class ResultOfTestsController < ApplicationController
   end
 
   def index
-    #Loading test results
-    user = User.find(params[:client_id])
+    user = User.find_by(id: params[:client_id])
+    authorize!(user)
+
     client = user.client
     results = ResultOfTest.where(client_id: client.id).order(:created_at).reverse_order
     @code_name = client.code_name
@@ -129,7 +123,9 @@ class ResultOfTestsController < ApplicationController
   end
 
   def destroy
-    result = ResultOfTest.find(params[:result_id])
+    result = ResultOfTest.find_by(id: params[:result_id])
+    authorize!(result)
+
     if result.destroy
       flash[:success] = 'Result deleted!'
       redirect_to client_result_of_tests_path(params[:client_id])
@@ -140,8 +136,8 @@ class ResultOfTestsController < ApplicationController
   end
 
   def show_heatmap
-    #Loading test
-    @result = ResultOfTest.result_page.find(params[:result_id])
+    @result = ResultOfTest.result_page.find_by(id: params[:result_id])
+    authorize!(@result)
     @test = @result.test
 
     #Loading client
@@ -151,13 +147,13 @@ class ResultOfTestsController < ApplicationController
       #Cant find test or client
       flash[:danger] = "Can't find client" if @client.blank?
       flash[:danger] = "Can't find test" if @test.blank?
-      redirect_back fallback_location: current_user and return
+      redirect_back fallback_location: show_path_resolver(current_user) and return
     end
 
     #Checking questions in test
     if @test.questions.blank?
       flash[:danger] = 'Test is empty!'
-      redirect_back fallback_location: current_user and return
+      redirect_back fallback_location: show_path_resolver(current_user) and return
     end
 
     #Filling first question
@@ -168,44 +164,10 @@ class ResultOfTestsController < ApplicationController
     @heatmap = question_result.gaze_trace_result
   end
 
-  ##########################################################
-  #Private methods
   private
-  def result_params
-    params.require(:result_of_test).permit(question_results_attributes: [:was_checked,:id])
-  end
-  def check_rights
-    user = User.find(params[:client_id])
-    client = user.client
-    is_super_adm = is_super?
-    is_my_client = current_user.mentor? && client.employee_id == current_user.role_model.id
-    is_client_of_my_mentor = current_user.local_admin? && client.employee.employee_id == current_user.role_model.id
-    @i_am_client = current_user.client?
-    is_i = @i_am_client && params[:client_id].to_i == current_user.id
-    unless is_super_adm || is_my_client || is_client_of_my_mentor || is_i
-      flash[:danger] = 'You have no access to this page.'
-      redirect_to show_path_resolver(current_user)
+    def result_params
+      params
+        .require(:result_of_test)
+        .permit(question_results_attributes: %i[was_checked id])
     end
-  end
-  def check_admin_rights
-    user = User.find(params[:client_id])
-    client = user.client
-    is_super_adm = is_super?
-    is_my_client = current_user.mentor? && client.employee_id == current_user.role_model.id
-    is_client_of_my_mentor = current_user.local_admin? && client.employee.employee_id == current_user.role_model.id
-    unless is_super_adm || is_my_client || is_client_of_my_mentor
-      flash[:danger] = 'You have no access to this page.'
-      redirect_to show_path_resolver(current_user)
-    end
-  end
-  def result_exist_callback
-    unless check_exist(params[:result_id], ResultOfTest)
-      redirect_to show_path_resolver(current_user)
-    end
-  end
-  def client_exist_callback
-    unless check_exist(params[:client_id], User)
-      redirect_to show_path_resolver(current_user)
-    end
-  end
 end

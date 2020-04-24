@@ -1,20 +1,14 @@
-class AdministratorsController < ApplicationController
-  # include Recaptcha::ClientHelper
-  # include Recaptcha::Verify
-
-  before_action :check_exist_callback, only: [:edit, :update, :show, :delete, :delegate]
-  before_action :check_log_in, only: [:new, :create, :index, :edit, :update, :show, :delegate]
-  before_action :check_rights, only: [:edit, :update, :show]
-  before_action :check_type_rights, only: [:edit, :update, :show]
-  before_action :check_mail_confirmation, except: [:new, :show, :create]
-  before_action :check_super_admin, only: [:new, :create, :index, :delegate, :delete]
+class AdministratorsController < AdminController
+  before_action :preload_entity, only: %i[edit update show delete delegate]
 
   def new
+    authorize!
     @user = User.new
     @user.build_employee
   end
 
   def create
+    authorize!
     @user = User.new(administrator_params)
     @user.role = :local_admin
     @user.userable = @user.build_employee(administrator_params[:employee_attributes])
@@ -29,17 +23,18 @@ class AdministratorsController < ApplicationController
   end
 
   def index
+    authorize!
     @q = User.all_local_admins.joins(:employee).ransack(params[:q])
     @admins = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
     @admins = @admins.page(params[:page]).per(5)
   end
 
   def edit
-    @user = User.find(params[:id])
+    authorize!(@user)
   end
   
   def update
-    @user = User.find(params[:id])
+    authorize!(@user)
 
     if @user.update(administrator_params)
       flash[:success] = 'Update Complete'
@@ -50,13 +45,14 @@ class AdministratorsController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
+    authorize!(@user)
     # TODO Make presenter
     @user_info = @user.show.to_a
   end
 
   def delegate
-    @administrator = load_admin_for_deletion
+    authorize!(@user)
+    @administrator = @user
 
     # TODO FIX BUG scope returns ALL other entities, but not related to old one
     # Loading information about mentors and admins for page
@@ -70,7 +66,8 @@ class AdministratorsController < ApplicationController
   end
 
   def delete
-    @administrator = load_admin_for_deletion
+    authorize!(@user)
+    @administrator = @user
 
     employee = @administrator.employee
     # Admin can be deleted only if hasn't mentors
@@ -88,12 +85,16 @@ class AdministratorsController < ApplicationController
       .map do |t|
         ['%{org}: %{lname} %{name}' % { org: t.organisation, lname: t.last_name, name: t.name }, t.id]
       end
-    @user = @administrator
     render :delegate
   end
 
   private
 
+    def preload_entity
+      @user = User.find_by(id: params[:id])
+    end
+
+    # @deprecated
     def load_admin_for_deletion
       administrator = User.find(params[:id])
       #Blocking a deletion of super administrator
@@ -125,6 +126,7 @@ class AdministratorsController < ApplicationController
     end
 
     #Callback for checking rights
+    # @deprecated
     def check_rights
       #Only SA or user can edit/delete their accounts
       unless is_super? || current_user.local_admin? && current_user.id == params[:id].to_i
@@ -135,6 +137,7 @@ class AdministratorsController < ApplicationController
     end
 
     #Callback for checking type of user
+    # @deprecated
     def check_type_rights
       unless current_user.local_admin? || is_super?
         flash[:danger] = 'You have no access to this page!'
@@ -143,6 +146,7 @@ class AdministratorsController < ApplicationController
     end
 
     #Callback for checking existence of record
+    # @deprecated
     def check_exist_callback
       unless check_exist(params[:id], User)
         redirect_to show_path_resolver(current_user)
