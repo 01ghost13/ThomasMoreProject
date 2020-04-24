@@ -9,9 +9,11 @@
 #  info_id          :integer
 #
 
+# @deprecated
 class Mentor < ActiveRecord::Base
   include Userable
 
+  has_one :user, as: :userable
   has_many :clients, inverse_of: :mentor, dependent: :restrict_with_error
   belongs_to :info, inverse_of: :mentor, autosave: true, dependent: :destroy
   

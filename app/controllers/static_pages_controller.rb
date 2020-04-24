@@ -1,5 +1,7 @@
 class StaticPagesController < ApplicationController
+
   #Log in page
+  # @deprecated
   def log_in
   end
 

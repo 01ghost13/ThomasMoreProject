@@ -5,8 +5,13 @@
 		<table class="table table-hover">
 			<% @user_info.each do |element|%>
 				<tr>
-					<td><h4><%= element[0].to_s.humanize %></h4></td>		
-					<td><h4><small><%= element[1].to_s.humanize %></small></h4></td>
+					<td><h4><%= element[0].to_s.humanize %></h4></td>
+          <% if element[0] == :email %>
+            <% field = element[1].to_s %>
+          <% else %>
+            <% field = element[1].to_s.humanize %>
+          <% end %>
+					<td><h4><small><%= field %></small></h4></td>
 				</tr>
 			<% end %>
 		</table>

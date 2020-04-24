@@ -1,0 +1,28 @@
+<%= render 'shared/error_message' %>
+
+<%= form_for @user,
+             url: @user.new_record? ? administrators_path : administrator_path(@user),
+             class: 'form-horizontal' do |f|
+%>
+  <%= f.fields_for :employee,
+                   class: 'form-horizontal' do |ff|
+  %>
+    <%= render partial: 'employees/form',
+               locals: {
+                 f: ff
+               }
+    %>
+  <% end %>
+
+  <%= render partial: 'users/form',
+             locals: {
+               f: f
+             }
+  %>
+
+  <div class="row col-sm-offset-2 form-group">
+    <div class="col-sm-offset-2 col-sm-2">
+      <%= f.submit 'Confirm', class: 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>

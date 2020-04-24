@@ -15,24 +15,34 @@
 #  password_digest      :string
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  employee_id          :bigint
 #  mentor_id            :integer
 #
 
 class Client < ActiveRecord::Base
   before_validation :setup_fields, on: :create
 
-  has_secure_password
+  # @deprecated
+  # has_secure_password
+
+  has_one :user, as: :userable
   has_many :result_of_tests, dependent: :destroy
-  belongs_to :mentor, inverse_of: :clients
+  belongs_to :employee, optional: true, inverse_of: :clients
+  # @deprecated
+  belongs_to :mentor, optional: true, inverse_of: :clients
 
   validates :code_name, presence: true, uniqueness: true, length: { in: 6..20}
+
+  # TODO Create enum
   validates :gender, presence: true, inclusion: { in: [1,2,3] }
   #1 – dunno
   #2 – Man
   #3 – Woman
-  validates :mentor, presence: true
+  # @deprecated
+  # validates :mentor, presence: true
   validates :is_active, :is_current_in_school, exclusion: { in: [nil] }
-  validates :password, presence: true, allow_nil: true, length: {minimum: 4}
+
+  # validates :password, presence: true, allow_nil: true, length: {minimum: 4}
 
   scope :all_clients, ->() {all}
 
@@ -49,8 +59,7 @@ class Client < ActiveRecord::Base
     'Does not have any'
   end
   
-  #Creates map with info
-  def show_info
+  def show
     user_info = {Codename: self.code_name}
     #Adding gender
     if self.gender == 1
@@ -63,8 +72,8 @@ class Client < ActiveRecord::Base
       #women
       user_info[:Gender] = 'Woman'
     end
-    mentor = Mentor.find(self.mentor_id)
-    user_info[:Mentor] = mentor.info.last_name+' '+mentor.info.name
+
+    user_info[:Mentor] = "#{employee.last_name} #{employee.name}"
     user_info[:Current_in_school] = self.is_current_in_school ? 'Yes' : 'No'
     user_info
   end
@@ -79,6 +88,7 @@ class Client < ActiveRecord::Base
   end
 
   #Hides client for all users except SA
+  # @deprecated
   def hide
     if self.is_active
       self.date_off = Date.current

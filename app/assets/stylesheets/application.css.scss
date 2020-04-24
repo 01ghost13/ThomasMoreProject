@@ -62,3 +62,10 @@ p.big {
   font-size: 16px;
   line-height: 1.2;
 }
+
+.alert-notice {
+  @include alert-variant($alert-info-bg, $alert-info-border, $alert-info-text);
+}
+.alert-alert {
+  @include alert-variant($alert-warning-bg, $alert-warning-border, $alert-warning-text);
+}

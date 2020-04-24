@@ -4,7 +4,7 @@ class TestingManager
 
   def initialize(result_of_test_id)
     @result_of_test = ResultOfTest
-      .includes(:test, :client)
+      .includes(:test, :client, client: :user)
       .find_by(id: result_of_test_id)
 
     @client = @result_of_test.client
