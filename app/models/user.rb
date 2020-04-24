@@ -42,11 +42,11 @@ class User < ActiveRecord::Base
 
   belongs_to :administrator, foreign_key: 'userable_id', optional: true
   belongs_to :mentor, foreign_key: 'userable_id', optional: true
-  belongs_to :client, foreign_key: 'userable_id', optional: true, dependent: :destroy
+  belongs_to :client, foreign_key: 'userable_id', optional: true
 
-  belongs_to :employee, foreign_key: 'userable_id', optional: true, dependent: :destroy
+  belongs_to :employee, foreign_key: 'userable_id', optional: true
 
-  belongs_to :userable, polymorphic: true, optional: true
+  belongs_to :userable, polymorphic: true, optional: true, dependent: :destroy
 
   accepts_nested_attributes_for :administrator
   accepts_nested_attributes_for :mentor
