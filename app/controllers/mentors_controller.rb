@@ -155,7 +155,7 @@ class MentorsController < AdminController
 
         if @is_super_admin
           p[:employee_attributes][:employee_id] = params.dig(:user, :employee_attributes, :employee_id)
-        else
+        elsif current_user.local_admin?
           p[:employee_attributes][:employee_id] = current_user.employee.id
         end
       end
