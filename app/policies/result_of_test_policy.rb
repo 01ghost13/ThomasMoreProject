@@ -11,12 +11,12 @@ class ResultOfTestPolicy < ApplicationPolicy
 
   def show?
     return false unless exist?
-    super? || mentor? && result_of_my_client? || local_admin? && result_of_my_mentors_client? || client? && me?
+    super? || mentor? && result_of_my_client? || local_admin? && result_of_my_mentors_client? || client? && my_result?
   end
 
   def index?
     return false unless exist?
-    super? || mentor? && my_client? || local_admin? && client_of_my_mentor? || client? && me?
+    super? || mentor? && my_client? || local_admin? && client_of_my_mentor? || client? && my_result?
   end
 
   def destroy?
@@ -31,12 +31,14 @@ class ResultOfTestPolicy < ApplicationPolicy
 
   private
     def result_of_my_client?
-      client = record.client
-      my_client?(client: client)
+      my_client?
     end
 
     def result_of_my_mentors_client?
-      client = record.client
-      client_of_my_mentor?(client: client)
+      client_of_my_mentor?
+    end
+
+    def my_result?
+      user.client.id == record.client_id
     end
 end

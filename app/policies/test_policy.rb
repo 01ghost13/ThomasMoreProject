@@ -27,6 +27,6 @@ class TestPolicy < ApplicationPolicy
   end
 
   def index?
-    super? || record[:id].present?
+    super?
   end
 end

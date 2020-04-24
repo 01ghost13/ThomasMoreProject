@@ -103,17 +103,10 @@ class TestsController < AdminController
 
   def index
     #Only super admin has access to aitscore\tests
-    authorize!(params)
+    authorize!
 
     @tests = Test.all.map(&:show_short)
     @tests = Kaminari.paginate_array(@tests).page(params[:page]).per(10)
-
-    if params[:id].present?
-      @not_finished_tests = ResultOfTest
-        .joins(client: :user)
-        .where('users.id': params[:id], is_ended: false)
-        .order(created_at: :desc)
-    end
   end
 
   private

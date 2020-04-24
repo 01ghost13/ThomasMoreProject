@@ -47,7 +47,7 @@ Rails.application.routes.draw do
   resources :clients, concerns: :group_result do
     member do
       #Adding testing pages
-      get 'tests' => 'tests#index', as: 'tests'
+      get 'tests' => 'testing_process#index', as: 'tests'
       get 'edit/update_mentors' => 'clients#update_mentors'
       get 'mode_settings' => 'clients#mode_settings'
       patch 'mode_settings' => 'clients#update_mode_settings'

@@ -147,13 +147,13 @@ class ResultOfTestsController < AdminController
       #Cant find test or client
       flash[:danger] = "Can't find client" if @client.blank?
       flash[:danger] = "Can't find test" if @test.blank?
-      redirect_back fallback_location: current_user and return
+      redirect_back fallback_location: show_path_resolver(current_user) and return
     end
 
     #Checking questions in test
     if @test.questions.blank?
       flash[:danger] = 'Test is empty!'
-      redirect_back fallback_location: current_user and return
+      redirect_back fallback_location: show_path_resolver(current_user) and return
     end
 
     #Filling first question
