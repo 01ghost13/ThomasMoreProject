@@ -84,7 +84,7 @@ class User < ActiveRecord::Base
     end
 
     def clients_of_mentor(mentor_id)
-      all_clients_ransack.where('mentor_id = ?', mentor_id)
+      all_clients_ransack.where('clients.employee_id = ?', mentor_id)
     end
 
     def all_clients_ransack
@@ -92,7 +92,7 @@ class User < ActiveRecord::Base
         .all_mentors
         .select(
           'employees.name as mentor_name, employees.last_name as mentor_last_name,
-           employees.id as id, employees.employee_id as admin_id, users.id as m_id'
+           employees.id as m_id, employees.employee_id as admin_id, users.id as mentor_user_id'
         )
         .joins(:employee)
         .to_sql
@@ -110,10 +110,11 @@ class User < ActiveRecord::Base
         .select(
           'users.id as id, clients.code_name as code_name, t.mentor_name as mentor_name, t.m_id as mentor_id,
           t.mentor_last_name as mentor_last_name, a.admin_name as admin_name, a.admin_last_name as admin_last_name,
-          a.organisation as organisation, t.admin_id as administrator_id, clients.employee_id, users.is_active, admin_user_id'
+          a.organisation as organisation, t.admin_id as administrator_id, clients.employee_id, users.is_active,
+          admin_user_id, mentor_user_id'
         )
         .joins(:client)
-        .joins("JOIN (#{mentors}) as t on clients.employee_id = t.id")
+        .joins("JOIN (#{mentors}) as t on clients.employee_id = t.m_id")
         .joins("JOIN (#{administrators}) as a on t.admin_id = a.a_id")
     end
   end
