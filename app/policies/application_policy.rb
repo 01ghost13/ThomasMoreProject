@@ -71,11 +71,11 @@ class ApplicationPolicy < ActionPolicy::Base
       user.employee.id == record.employee.try(:employee_id)
     end
 
-    def my_client?
-      user.employee.id == record.employee_id
+    def my_client?(client: record)
+      user.employee.id == client.client.employee_id
     end
 
-    def client_of_my_mentor?
-      user.employee.id == record.employee.employee_id
+    def client_of_my_mentor?(client: record)
+      user.employee.id == client.client.employee.employee_id
     end
 end
