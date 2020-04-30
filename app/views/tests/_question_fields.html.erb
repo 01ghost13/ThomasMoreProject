@@ -1,3 +1,4 @@
+<%# @deprecated %>
 <div class="row col-sm-offset-2 form-group nested-fields">
   <div class="row col-sm-offset-3 form-group" id="image">
     <% if @dummy.image.attachment.present? %>
@@ -6,10 +7,16 @@
   </div>
 
   <div class="row">
-    <%= questions_form.label :pictures_id, 'Picture', class: 'col-sm-2 control-label' %>
+    <%= questions_form.label :pictures_id,
+                             tf('entities.pictures.fields.picture'),
+                             class: 'col-sm-2 control-label'
+    %>
     <div class="col-sm-4">
-      <%= questions_form.select(:picture_id, options_for_select(@pictures, questions_form.object.picture_id),{},
-                                {class: 'form-control question_selection'}) %>
+      <%= questions_form.select :picture_id,
+                                options_for_select(@pictures, questions_form.object.picture_id),
+                                {},
+                                { class: 'form-control question_selection' }
+      %>
     </div>
     <div class="col-sm-4">
       <%#= link_to_remove_association 'Remove question', questions_form, class: 'btn btn-warning' %>

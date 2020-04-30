@@ -9,13 +9,13 @@
     <!--Code Name-->
     <div class="row col-sm-offset-2 form-group">
       <%= ff.label :code_name,
-                   'Code name of client',
+                   tf('entities.clients.fields.code_name'),
                    class: 'col-sm-2 control-label'
       %>
       <div class="col-sm-4">
         <%= ff.text_field :code_name,
                           class: 'form-control',
-                          placeholder: 'Codename'
+                          placeholder: tf('entities.clients.fields.code_name')
         %>
       </div>
     </div>
@@ -23,15 +23,12 @@
     <!--Gender-->
     <div class="row col-sm-offset-2 form-group">
       <%= ff.label :gender,
+                   tf('entities.clients.fields.gender'),
                    class: 'col-sm-2 control-label'
       %>
       <div class="col-sm-4">
         <%= ff.select :gender,
-                      options_for_select([
-                        ['Unknown', 1],
-                        ['Male', 2],
-                        ['Female', 3]
-                      ], ff.object.gender),
+                      options_for_select(Client.genders_list, ff.object.gender),
                       {},
                       { class: 'form-control' }
         %>
@@ -42,7 +39,7 @@
     <div class="row col-sm-offset-2 form-group">
       <div class="col-sm-2">
         <%= ff.label :is_current_in_school,
-                     'Is current in school?'
+                     tf('entities.clients.fields.gender')
         %>
       </div>
       <div class="col-sm-2">
@@ -57,7 +54,7 @@
         <!-- Choosing adm -->
         <div class="row col-sm-offset-2 form-group">
           <%= label_tag :administrator_id,
-                        'Choose local administrator',
+                        tf('entities.clients.choose_admin'),
                         class: 'col-sm-2 control-label'
           %>
           <div class="col-sm-4">
@@ -75,7 +72,7 @@
       <!-- Choosing mentor-->
       <div class="row col-sm-offset-2 form-group">
         <%= ff.label :employee_id,
-                     'Choose Mentor',
+                     tf('entities.mentors.mentor'),
                      class: 'col-sm-2 control-label'
         %>
         <div class="col-sm-4">
@@ -102,7 +99,7 @@
 
   <div class="row col-sm-offset-2 form-group">
     <div class="col-sm-offset-2 col-sm-2">
-      <%= client_form.submit 'Confirm',
+      <%= client_form.submit tf('common.forms.confirm'),
                              class: 'btn btn-primary'
       %>
     </div>

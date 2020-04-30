@@ -1,4 +1,4 @@
-<% provide(:title,'New client') %>
+<% provide(:title, tf('entities.clients.create')) %>
 <%= javascript_include_tag 'clients' %>
-<h1 class="row col-sm-offset-4">Create client</h1>
+<h1 class="row col-sm-offset-4"><%= tf('entities.clients.create') %></h1>
 <%= render partial: 'clients/form' %>

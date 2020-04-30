@@ -3,23 +3,23 @@
 %>
 <!--Password-->
 <div class="row col-sm-offset-2 form-group">
-  <%= f.label :password, class: 'col-sm-2 control-label' %>
+  <%= f.label :password, tf('entities.users.fields.password'), class: 'col-sm-2 control-label' %>
   <div class="col-sm-4">
     <%= f.password_field :password,
                          class: 'form-control',
-                         placeholder: f.object.new_record? ? 'Password' : 'Leave empty for saving old'
+                         placeholder: f.object.new_record? ? tf('entities.users.fields.password') : tf('entities.users.password_prompt')
     %>
   </div>
 </div>
 <div class="row col-sm-offset-2 form-group">
   <%= f.label :password_confirmation,
-              'Confirmation',
+              tf('entities.users.fields.confirmation'),
               class: 'col-sm-2 control-label'
   %>
   <div class="col-sm-4">
     <%= f.password_field :password_confirmation,
                          class: 'form-control',
-                         placeholder: 'Confirm your password'
+                         placeholder: tf('entities.users.confirmation_prompt')
     %>
   </div>
 </div>
@@ -28,13 +28,13 @@
   <!--Mail(Login)-->
   <div class="row col-sm-offset-2 form-group">
     <%= f.label :email,
-                'Email',
+                tf('entities.users.fields.email'),
                 class: 'col-sm-2 control-label'
     %>
     <div class="col-sm-4">
       <%= f.email_field :email,
                         class: 'form-control',
-                        placeholder: 'Email'
+                        placeholder: tf('entities.users.fields.email')
       %>
     </div>
   </div>

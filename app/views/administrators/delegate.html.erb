@@ -1,6 +1,6 @@
-<% provide(:title,'Delete administrator') %>
-<h1 class="row col-sm-offset-4">Delete administrator</h1>
-<h3 class="row col-sm-offset-2">For deletion you must choose new Administrator for associated mentors.</h3>
+<% provide(:title, tf('entities.local_administrators.delete')) %>
+<h1 class="row col-sm-offset-4"><%= tf('entities.local_administrators.delete') %></h1>
+<h3 class="row col-sm-offset-2"><%= tf('entities.local_administrators.delegate_prompt') %></h3>
 <%= render 'shared/error_message' %>
 
 <%= form_for @administrator.employee,
@@ -13,8 +13,8 @@
     <!-- Choosing new admin-->
     <div class="row col-sm-offset-2 form-group">
       <%= ff.label :employee_id,
-                  "Choose Administrator for #{ff.object.last_name}",
-                  class: 'col-sm-4 control-label'
+                   tf('entities.local_administrators.delegate_prompt', options: { for: ff.object.last_name }),
+                   class: 'col-sm-4 control-label'
       %>
       <div class="col-sm-4">
         <%= ff.select :employee_id,
@@ -28,8 +28,8 @@
 
   <div class="row col-sm-offset-2 form-group">
       <div class="col-sm-offset-2 col-sm-2">
-        <%= f.submit 'Delete administrator',
-                      data: { confirm: 'Are you sure?' },
+        <%= f.submit tf('common.forms.delete'),
+                      data: { confirm: tf('common.forms.delete_confirm') },
                       class: 'btn btn-danger'
         %>
       </div>

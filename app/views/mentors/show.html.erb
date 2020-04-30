@@ -4,8 +4,8 @@
 <% if is_super? || current_user.local_admin? && @user.employee.try(:employee_id) == current_user.role_model.id %>
 	<div class="row">
 		<div class="btn-group col-sm-4" role="group" aria-label="...">
-			<%= link_to("Edit", edit_mentor_path(params[:id]), class: "btn btn-warning") %>
-			<%= link_to("Delete", delete_mentor_path(params[:id]), class: "btn btn-danger") %>
+			<%= link_to(tf('common.forms.edit'), edit_mentor_path(params[:id]), class: "btn btn-warning") %>
+			<%= link_to(tf('common.forms.delete'), delete_mentor_path(params[:id]), class: "btn btn-danger") %>
 		</div>
 	</div>
 <% end %>

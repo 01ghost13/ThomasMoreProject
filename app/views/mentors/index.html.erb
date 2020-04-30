@@ -1,34 +1,34 @@
-<% provide(:title,"Mentors List") %>
-<h1 class="col-sm-12">All mentors</h1>
+<% provide(:title, tf('entities.mentors.all_mentors')) %>
+<h1 class="col-sm-12"><%= tf('entities.mentors.all_mentors') %></h1>
 <div>
   <%= search_form_for @q, url: mentors_path do |f| %>
       <div class="form-group col-sm-4">
         <%= f.label :full_name_cont,
-                    'Search',
+                    tf('common.forms.search'),
                     class: 'sr-only'
         %>
         <%= f.search_field :full_name_cont,
                            {
-                               placeholder: 'Enter name or last name here...',
+                               placeholder: tf('entities.mentors.search_prompt'),
                                class: 'form-control'
                            }
         %>
       </div>
-      <%= f.submit 'Search', class: 'btn btn-primary col-sm-1' %>
+      <%= f.submit tf('common.forms.search'), class: 'btn btn-primary col-sm-1' %>
   <% end %>
 </div>
 <div class="col-sm-12">
 	<table class="table table-hover">
     <thead>
     <tr>
-      <td><%= sort_link @q, 'employees.last_name', 'Last name'%></td>
-      <td><%= sort_link @q, 'employees.name', 'Name' %></td>
-      <td><%= sort_link @q, 'employees.organisation', 'Organisation' %></td>
+      <td><%= sort_link @q, 'employees.last_name', tf('entities.employees.fields.last_name') %></td>
+      <td><%= sort_link @q, 'employees.name', tf('entities.employees.fields.name') %></td>
+      <td><%= sort_link @q, 'employees.organisation', tf('entities.employees.fields.organisation') %></td>
       <%# TODO administrator name sort %>
-      <td>Administrator</td>
-      <td>Profile</td>
-      <td>Edit</td>
-      <td>Delete</td>
+      <td><%= tf('entities.local_administrators.administrator') %></td>
+      <td><%= tf('common.menu.profile') %></td>
+      <td><%= tf('common.forms.edit') %></td>
+      <td><%= tf('common.forms.delete') %></td>
     </tr>
     </thead>
 		<% @mentors.each do |mentor| %>
@@ -53,9 +53,9 @@
         <td></td>
         <td></td>
         <% end %>
-        <td><%= link_to('Profile', mentor_path(mentor[:id]), class: 'btn btn-default') %></td>
-        <td><%= link_to('Edit', edit_mentor_path(mentor[:id]), class: 'btn btn-warning') %></td>
-        <td><%= link_to('Delete', delete_mentor_path(mentor[:id]), class: 'btn btn-danger') %></td>
+        <td><%= link_to(tf('common.menu.profile'), mentor_path(mentor[:id]), class: 'btn btn-default') %></td>
+        <td><%= link_to(tf('common.forms.edit'), edit_mentor_path(mentor[:id]), class: 'btn btn-warning') %></td>
+        <td><%= link_to(tf('common.forms.delete'), delete_mentor_path(mentor[:id]), class: 'btn btn-danger') %></td>
 			</tr>
 		<% end %>
 	</table>
