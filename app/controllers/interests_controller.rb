@@ -1,11 +1,16 @@
 class InterestsController < AdminController
+  translations_for_preload %i[
+    common.flash.interest_created
+    common.flash.interest_updated
+    common.flash.interest_deleted
+  ]
 
   #Action for creation Interest
   def create
     authorize!
     @interest = Interest.new(interest_params)
     if @interest.save
-      flash[:success] = 'Interest added!'
+      flash[:success] = translate_field('common.flash.interest_created')
       redirect_to interests_path
     else
       load_info_for_page(@interest, false)
@@ -17,7 +22,7 @@ class InterestsController < AdminController
     interest = Interest.find(params[:interest][:id])
     authorize!(interest)
     if interest.update(interest_params)
-      flash[:success] = 'Interest updated!'
+      flash[:success] = translate_field('common.flash.interest_updated')
       redirect_to interests_path
     else
       load_info_for_page(interest, true)
@@ -28,7 +33,7 @@ class InterestsController < AdminController
     interest = Interest.find(params[:id])
     authorize!(interest)
     if interest.destroy
-      flash[:success] = 'Interest deleted!'
+      flash[:success] = translate_field('common.flash.interest_deleted')
       redirect_to interests_path
     else
       load_info_for_page(interest, true)

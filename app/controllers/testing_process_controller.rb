@@ -1,4 +1,7 @@
 class TestingProcessController < AdminController
+  translations_for_preload %i[
+  ]
+
   before_action :preload_entity
 
   #Updates picture in /testing process

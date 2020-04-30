@@ -1,4 +1,11 @@
 class MentorsController < AdminController
+  translations_for_preload %i[
+    common.flash.account_created
+    common.flash.update_complete
+    common.flash.mentor_deleted
+    common.flash.no_access
+  ]
+
   before_action :preload_entity, only: %i[edit update show delete delegate]
   before_action :info_for_forms, only: %i[new create edit update]
 
@@ -15,7 +22,7 @@ class MentorsController < AdminController
     @user.userable = @user.build_employee(mentor_params[:employee_attributes])
     
     if @user.save
-      flash[:success] = 'Account created! Confirmation of account was sent to email.'
+      flash[:success] = translate_field('common.flash.account_created')
       redirect_to mentor_path(@user)
     else
       render :new
@@ -30,7 +37,7 @@ class MentorsController < AdminController
     authorize!(@user)
     #If mentor exit and data - OK, changing
     if @user.update(mentor_params)
-      flash[:success] = 'Update Complete'
+      flash[:success] = translate_field('common.flash.update_complete')
       redirect_to mentor_path(@user)
     else
       render :edit
@@ -83,7 +90,7 @@ class MentorsController < AdminController
 
     if employee.clients.empty? || employee.update(delete_mentor_params)
       if @mentor.reload.destroy
-        flash[:success] = 'Mentor was deleted!'
+        flash[:success] = translate_field('common.flash.mentor_deleted')
         redirect_to mentors_path and return
       end
     end
@@ -115,7 +122,7 @@ class MentorsController < AdminController
     # It is my mentor?
     is_my_mentor = (current_user.local_admin? && user.employee.employee_id == current_user.role_model.id)
     unless is_i || is_super? || is_my_mentor
-      flash[:danger] = 'You have no access to this page.'
+      flash[:danger] = translate_field('common.flash.no_access')
       redirect_to show_path_resolver(current_user)
     end
   end
@@ -134,7 +141,7 @@ class MentorsController < AdminController
 
     #checking rights
     unless is_my_adm
-      flash[:danger] = 'You have no access to this page.'
+      flash[:danger] = translate_field('common.flash.no_access')
       redirect_to show_path_resolver(current_user)
     end
   end

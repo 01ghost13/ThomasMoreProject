@@ -1,4 +1,9 @@
 class PicturesController < AdminController
+  translations_for_preload %i[
+    common.flash.picture_created
+    common.flash.picture_updated
+    common.flash.picture_deleted
+  ]
 
   #Page of list of pictures
   def index
@@ -26,8 +31,13 @@ class PicturesController < AdminController
     respond_to do |types|
       types.json do
         if @picture.save
-          flash[:success] = 'Picture created!'
-          render json: { response: { type: :success, message: 'Picture created!' } }, status: :ok
+          flash[:success] = translate_field('common.flash.picture_created')
+          render json: {
+            response: {
+              type: :success,
+              message: translate_field('common.flash.picture_created')
+            }
+          }, status: :ok
         else
           render json: {
               response: {
@@ -63,7 +73,7 @@ class PicturesController < AdminController
     respond_to do |types|
       types.json do
         if @picture.update(picture_params)
-          flash[:success] = 'Picture updated!'
+          flash[:success] = translate_field('common.flash.picture_updated')
           render json: { response: { type: :success } }, status: :ok
         else
           render json: {
@@ -83,7 +93,7 @@ class PicturesController < AdminController
     picture = Picture.find(params[:id])
     authorize!(picture)
     if picture.destroy
-      flash[:success] = 'Picture deleted!'
+      flash[:success] = translate_field('common.flash.picture_deleted')
     else
       @user = picture
     end

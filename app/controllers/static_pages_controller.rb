@@ -6,6 +6,7 @@ class StaticPagesController < ApplicationController
   end
 
   #Page about project
+  # @deprecated
   def about
     added = %w(
     All\ pictures\ should\ have\ text\ description
@@ -40,6 +41,7 @@ class StaticPagesController < ApplicationController
   end
 
   #Page with contacts
+  # @deprecated
   def contacts
   end
 

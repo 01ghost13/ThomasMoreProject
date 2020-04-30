@@ -1,4 +1,15 @@
 class ClientsController < AdminController
+  translations_for_preload %i[
+    common.flash.client_created
+    common.flash.client_hided_or_recovered
+    common.flash.cant_hide_client
+    common.flash.client_deleted
+    common.flash.client_cant_be_deleted
+    common.flash.update_complete
+    common.flash.client_was_deactivated
+    common.flash.update_complete
+  ]
+
   before_action :preload_entity, only: %i[edit update destroy show mode_settings update_mode_settings]
   before_action :info_for_new_page, only: %i[create new]
 
@@ -15,7 +26,7 @@ class ClientsController < AdminController
     @user.userable = @user.build_client(client_params[:client_attributes])
 
     if @user.save
-      flash[:success] = 'Account created!'
+      flash[:success] = translate_field('common.flash.client_created')
       redirect_to client_path(@user)
     else
       render :new
@@ -28,16 +39,16 @@ class ClientsController < AdminController
 
     if params[:paranoic] == 'true' || params[:paranoic] == nil
       if client.hide
-        flash[:success] = 'Client was hided/recovered.'
+        flash[:success] = translate_field('common.flash.client_hided_or_recovered')
       else
-        flash[:warning] = "Can't hide/recover client"
+        flash[:warning] = translate_field('common.flash.cant_hide_client')
       end
     elsif params[:paranoic] == 'false' && is_super?
       # True deleting
       if client.destroy
-        flash[:success] = 'Client was deleted.'
+        flash[:success] = translate_field('common.flash.client_deleted')
       else
-        flash[:danger] = "You can't delete this client"
+        flash[:danger] = translate_field('common.flash.client_cant_be_deleted')
       end
     end
 
@@ -52,7 +63,7 @@ class ClientsController < AdminController
   def update
     authorize!(@user)
     if @user.update(client_params)
-      flash[:success] = 'Update Complete'
+      flash[:success] = translate_field('common.flash.update_complete')
       redirect_to client_path(@user)
     else
       info_for_edit_page
@@ -70,7 +81,7 @@ class ClientsController < AdminController
 
     unless @user.is_active
       # Client is inactive
-      flash[:warning] = 'Client was deactivated in: ' + @user.date_off.to_s
+      flash[:warning] = translate_field('common.flash.client_was_deactivated', options: { time: @user.date_off.to_s })
       unless is_super?
         redirect_to clients_path
         return
@@ -97,10 +108,7 @@ class ClientsController < AdminController
 
   def index
     authorize!
-    if current_user.client?
-      flash[:danger] = 'You have no access to this page!'
-      redirect_to show_path_resolver(current_user) and return
-    end
+
     @is_super_adm = is_super?
     @q =
         if @is_super_adm
@@ -113,7 +121,6 @@ class ClientsController < AdminController
     @q = @q.ransack(params[:q])
     @clients = params[:q] && params[:q][:s] ? @q.result.order(params[:q][:s]) : @q.result
     @clients = @clients.page(params[:page]).per(5)
-    # @clients = @clients.includes(:client, client: [:employee, employee: :user]).page(params[:page]).per(5)
   end
 
   # Page for editing modes
@@ -125,15 +132,13 @@ class ClientsController < AdminController
   def update_mode_settings
     authorize!(@user)
     if @user.update(mode_params)
-      flash[:success] = 'Update Complete'
+      flash[:success] = translate_field('common.flash.update_complete')
       redirect_to tests_client_path(params[:id])
     else
       render :mode_settings
     end
   end
 
-  ##########################################################
-  #Private methods
   private
 
     def preload_entity
