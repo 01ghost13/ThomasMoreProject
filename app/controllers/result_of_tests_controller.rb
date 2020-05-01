@@ -15,7 +15,7 @@ class ResultOfTestsController < AdminController
     @user = @result
     #Only finished results are editable
     unless @result.is_ended
-	    flash[:warning] = translate_field('common.flash.test_unfinished')
+	    flash[:warning] = tf('common.flash.test_unfinished')
       redirect_back fallback_location: client_path(params[:client_id])
     end
   end
@@ -25,7 +25,7 @@ class ResultOfTestsController < AdminController
     authorize!(@result)
     @user = @result
     if @result.update(result_params)
-      flash[:success] = translate_field('common.flash.update_complete')
+      flash[:success] = tf('common.flash.update_complete')
       redirect_to(client_result_of_test_path(params[:client_id], params[:result_id]))
     else
       render :edit
@@ -38,7 +38,7 @@ class ResultOfTestsController < AdminController
 
     #If test was changed, results are outdated
     if result.is_outdated?
-      flash.now[:danger] = translate_field('common.flash.test_result_outdated')
+      flash.now[:danger] = tf('common.flash.test_result_outdated')
     end
 
     avg_time_per_interest = {}
@@ -136,7 +136,7 @@ class ResultOfTestsController < AdminController
     authorize!(result)
 
     if result.destroy
-      flash[:success] = translate_field('common.flash.test_result_deleted')
+      flash[:success] = tf('common.flash.test_result_deleted')
       redirect_to client_result_of_tests_path(params[:client_id])
     else
       @user = result
@@ -154,14 +154,14 @@ class ResultOfTestsController < AdminController
 
     if @test.blank? || @client.blank?
       #Cant find test or client
-      flash[:danger] = translate_field('common.flash.cant_find_client') if @client.blank?
-      flash[:danger] = translate_field('common.flash.cant_find_test') if @test.blank?
+      flash[:danger] = tf('common.flash.cant_find_client') if @client.blank?
+      flash[:danger] = tf('common.flash.cant_find_test') if @test.blank?
       redirect_back fallback_location: show_path_resolver(current_user) and return
     end
 
     #Checking questions in test
     if @test.questions.blank?
-      flash[:danger] = translate_field('common.flash.empty_test')
+      flash[:danger] = tf('common.flash.empty_test')
       redirect_back fallback_location: show_path_resolver(current_user) and return
     end
 

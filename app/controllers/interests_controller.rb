@@ -22,7 +22,7 @@ class InterestsController < AdminController
     interest = Interest.find(params[:interest][:id])
     authorize!(interest)
     if interest.update(interest_params)
-      flash[:success] = translate_field('common.flash.interest_updated')
+      flash[:success] = tf('common.flash.interest_updated')
       redirect_to interests_path
     else
       load_info_for_page(interest, true)
@@ -33,7 +33,7 @@ class InterestsController < AdminController
     interest = Interest.find(params[:id])
     authorize!(interest)
     if interest.destroy
-      flash[:success] = translate_field('common.flash.interest_deleted')
+      flash[:success] = tf('common.flash.interest_deleted')
       redirect_to interests_path
     else
       load_info_for_page(interest, true)

@@ -22,7 +22,7 @@ class MentorsController < AdminController
     @user.userable = @user.build_employee(mentor_params[:employee_attributes])
     
     if @user.save
-      flash[:success] = translate_field('common.flash.account_created')
+      flash[:success] = tf('common.flash.account_created')
       redirect_to mentor_path(@user)
     else
       render :new
@@ -37,7 +37,7 @@ class MentorsController < AdminController
     authorize!(@user)
     #If mentor exit and data - OK, changing
     if @user.update(mentor_params)
-      flash[:success] = translate_field('common.flash.update_complete')
+      flash[:success] = tf('common.flash.update_complete')
       redirect_to mentor_path(@user)
     else
       render :edit
@@ -90,7 +90,7 @@ class MentorsController < AdminController
 
     if employee.clients.empty? || employee.update(delete_mentor_params)
       if @mentor.reload.destroy
-        flash[:success] = translate_field('common.flash.mentor_deleted')
+        flash[:success] = tf('common.flash.mentor_deleted')
         redirect_to mentors_path and return
       end
     end
@@ -122,7 +122,7 @@ class MentorsController < AdminController
     # It is my mentor?
     is_my_mentor = (current_user.local_admin? && user.employee.employee_id == current_user.role_model.id)
     unless is_i || is_super? || is_my_mentor
-      flash[:danger] = translate_field('common.flash.no_access')
+      flash[:danger] = tf('common.flash.no_access')
       redirect_to show_path_resolver(current_user)
     end
   end
@@ -141,7 +141,7 @@ class MentorsController < AdminController
 
     #checking rights
     unless is_my_adm
-      flash[:danger] = translate_field('common.flash.no_access')
+      flash[:danger] = tf('common.flash.no_access')
       redirect_to show_path_resolver(current_user)
     end
   end

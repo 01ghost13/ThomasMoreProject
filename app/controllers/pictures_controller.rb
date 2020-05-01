@@ -31,11 +31,11 @@ class PicturesController < AdminController
     respond_to do |types|
       types.json do
         if @picture.save
-          flash[:success] = translate_field('common.flash.picture_created')
+          flash[:success] = tf('common.flash.picture_created')
           render json: {
             response: {
               type: :success,
-              message: translate_field('common.flash.picture_created')
+              message: tf('common.flash.picture_created')
             }
           }, status: :ok
         else
@@ -73,7 +73,7 @@ class PicturesController < AdminController
     respond_to do |types|
       types.json do
         if @picture.update(picture_params)
-          flash[:success] = translate_field('common.flash.picture_updated')
+          flash[:success] = tf('common.flash.picture_updated')
           render json: { response: { type: :success } }, status: :ok
         else
           render json: {
@@ -93,7 +93,7 @@ class PicturesController < AdminController
     picture = Picture.find(params[:id])
     authorize!(picture)
     if picture.destroy
-      flash[:success] = translate_field('common.flash.picture_deleted')
+      flash[:success] = tf('common.flash.picture_deleted')
     else
       @user = picture
     end

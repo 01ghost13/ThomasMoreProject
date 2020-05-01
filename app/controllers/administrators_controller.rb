@@ -22,7 +22,7 @@ class AdministratorsController < AdminController
     @user.userable = @user.build_employee(administrator_params[:employee_attributes])
 
     if @user.save
-      flash[:success] = translate_field('common.flash.account_created')
+      flash[:success] = tf('common.flash.account_created')
 
       redirect_to administrator_path(@user)
     else
@@ -45,7 +45,7 @@ class AdministratorsController < AdminController
     authorize!(@user)
 
     if @user.update(administrator_params)
-      flash[:success] = translate_field('common.flash.update_complete')
+      flash[:success] = tf('common.flash.update_complete')
       redirect_to administrator_path(@user)
     else
       render :edit
@@ -81,7 +81,7 @@ class AdministratorsController < AdminController
     # Admin can be deleted only if hasn't mentors
     if employee.employees.empty? || employee.update(delete_administrator_params)
       if @administrator.reload.destroy
-        flash[:success] = translate_field('common.flash.administrator_deleted')
+        flash[:success] = tf('common.flash.administrator_deleted')
         redirect_to administrators_path and return
       end
     end
@@ -107,7 +107,7 @@ class AdministratorsController < AdminController
       administrator = User.find(params[:id])
       #Blocking a deletion of super administrator
       if administrator.super_admin?
-        flash[:danger] = translate_field('common.flash.administrator_cant_be_deleted')
+        flash[:danger] = tf('common.flash.administrator_cant_be_deleted')
         redirect_to show_path_resolver(current_user)
       end
       administrator
@@ -138,7 +138,7 @@ class AdministratorsController < AdminController
     def check_rights
       #Only SA or user can edit/delete their accounts
       unless is_super? || current_user.local_admin? && current_user.id == params[:id].to_i
-        flash[:danger] = translate_field('common.flash.no_access')
+        flash[:danger] = tf('common.flash.no_access')
         #Redirect
         redirect_to show_path_resolver(current_user)
       end
@@ -148,7 +148,7 @@ class AdministratorsController < AdminController
     # @deprecated
     def check_type_rights
       unless current_user.local_admin? || is_super?
-        flash[:danger] = translate_field('common.flash.no_access')
+        flash[:danger] = tf('common.flash.no_access')
         redirect_to show_path_resolver(current_user)
       end
     end

@@ -10,7 +10,7 @@ class AdminController < ApplicationController
       Backtrace: #{ex.backtrace}
     TEXT
 
-    flash[:danger] = translate_field('common.flash.no_access')
+    flash[:danger] = tf('common.flash.no_access')
     redirect_to show_path_resolver(current_user)
   end
 
@@ -20,7 +20,7 @@ class AdminController < ApplicationController
     return if current_user.client?
 
     unless current_user.confirmed?
-      flash[:danger] = translate_field('common.flash.unconfirmed_mail')
+      flash[:danger] = tf('common.flash.unconfirmed_mail')
       redirect_to :root
     end
   end
@@ -30,7 +30,7 @@ class AdminController < ApplicationController
     if class_ref.exists?(id)
       true
     else
-      flash[:danger] = translate_field('common.flash.does_not_exist', options: { class_name: class_ref.to_s.downcase })
+      flash[:danger] = tf('common.flash.does_not_exist', options: { class_name: class_ref.to_s.downcase })
       false
     end
   end
@@ -38,7 +38,7 @@ class AdminController < ApplicationController
   # @deprecated
   def check_super_admin
     unless is_super?
-      flash[:danger] = translate_field('common.flash.no_access')
+      flash[:danger] = tf('common.flash.no_access')
       redirect_to show_path_resolver(current_user)
     end
   end

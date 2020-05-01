@@ -31,10 +31,10 @@ class TestsController < AdminController
       @picture << Picture.find(q.picture_id)
     end
     unless params[:test][:questions_attributes]
-      @test.errors.add(:questions, :invalid, message: translate_field('common.flash.empty_test'))
+      @test.errors.add(:questions, :invalid, message: tf('common.flash.empty_test'))
     end
     if params[:test][:questions_attributes] && @test.save
-      flash[:success] = translate_field('common.flash.test_created')
+      flash[:success] = tf('common.flash.test_created')
       render json: {}, status: :created
     else
       @user = @test
@@ -70,11 +70,11 @@ class TestsController < AdminController
 
     empty_list = all_questions_destroy?(test_params[:questions_attributes].to_hash)
     if !params[:test].nil? && !empty_list && @test.update(test_params)
-      flash[:success] = translate_field('common.flash.test_created')
+      flash[:success] = tf('common.flash.test_created')
       render json: {}, status: :ok
     else
       if params[:test].nil? || empty_list
-        @test.errors.add(:questions, :invalid, message: translate_field('common.flash.empty_test'))
+        @test.errors.add(:questions, :invalid, message: tf('common.flash.empty_test'))
       end
       @picture = []
       #Loading questions
@@ -101,9 +101,9 @@ class TestsController < AdminController
     authorize!(test)
 
     if test.destroy
-      flash[:success] = translate_field('common.flash.test_deleted')
+      flash[:success] = tf('common.flash.test_deleted')
     else
-      flash[:danger] = translate_field('common.flash.test_cant_be_deleted')
+      flash[:danger] = tf('common.flash.test_cant_be_deleted')
     end
     redirect_to tests_path
   end

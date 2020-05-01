@@ -26,7 +26,7 @@ class ClientsController < AdminController
     @user.userable = @user.build_client(client_params[:client_attributes])
 
     if @user.save
-      flash[:success] = translate_field('common.flash.client_created')
+      flash[:success] = tf('common.flash.client_created')
       redirect_to client_path(@user)
     else
       render :new
@@ -39,16 +39,16 @@ class ClientsController < AdminController
 
     if params[:paranoic] == 'true' || params[:paranoic] == nil
       if client.hide
-        flash[:success] = translate_field('common.flash.client_hided_or_recovered')
+        flash[:success] = tf('common.flash.client_hided_or_recovered')
       else
-        flash[:warning] = translate_field('common.flash.cant_hide_client')
+        flash[:warning] = tf('common.flash.cant_hide_client')
       end
     elsif params[:paranoic] == 'false' && is_super?
       # True deleting
       if client.destroy
-        flash[:success] = translate_field('common.flash.client_deleted')
+        flash[:success] = tf('common.flash.client_deleted')
       else
-        flash[:danger] = translate_field('common.flash.client_cant_be_deleted')
+        flash[:danger] = tf('common.flash.client_cant_be_deleted')
       end
     end
 
@@ -63,7 +63,7 @@ class ClientsController < AdminController
   def update
     authorize!(@user)
     if @user.update(client_params)
-      flash[:success] = translate_field('common.flash.update_complete')
+      flash[:success] = tf('common.flash.update_complete')
       redirect_to client_path(@user)
     else
       info_for_edit_page
@@ -132,7 +132,7 @@ class ClientsController < AdminController
   def update_mode_settings
     authorize!(@user)
     if @user.update(mode_params)
-      flash[:success] = translate_field('common.flash.update_complete')
+      flash[:success] = tf('common.flash.update_complete')
       redirect_to tests_client_path(params[:id])
     else
       render :mode_settings
