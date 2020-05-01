@@ -150,6 +150,7 @@ class AdministratorsController < AdminController
           :email,
           :password,
           :password_confirmation,
+          :language_id,
           employee_attributes: %i[id organisation phone organisation_address last_name name]
         )
         .tap do |p|

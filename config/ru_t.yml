@@ -215,6 +215,7 @@ entities:
     all_translations: Все переводы
   languages:
     create: Добавить язык
+    language: Язык
     fields:
       name: Аббравиатура
 

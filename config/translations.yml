@@ -216,6 +216,7 @@ entities:
     all_translations: All translations
   languages:
     create: Create language
+    language: Language
     fields:
       name: Abbreviation
 

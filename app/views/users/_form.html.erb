@@ -1,6 +1,18 @@
 <%
   show_email = true if show_email.nil?
 %>
+<!--Language-->
+<div class="row col-sm-offset-2 form-group">
+  <%= f.label :language_id, tf('entities.languages.language'), class: 'col-sm-2 control-label' %>
+  <div class="col-sm-4">
+    <%= f.select :language_id,
+                 options_from_collection_for_select(Language.all, :id, :name, f.object.language_id),
+                 {},
+                 { class: 'form-control question_selection' }
+    %>
+  </div>
+</div>
+
 <!--Password-->
 <div class="row col-sm-offset-2 form-group">
   <%= f.label :password, tf('entities.users.fields.password'), class: 'col-sm-2 control-label' %>

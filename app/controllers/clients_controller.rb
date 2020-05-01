@@ -185,6 +185,7 @@ class ClientsController < AdminController
       .permit(
         :password,
         :password_confirmation,
+        :language_id,
         client_attributes: %i[id code_name employee_id gender is_current_in_school],
       )
       .tap do |p|
