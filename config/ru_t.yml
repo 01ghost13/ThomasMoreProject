@@ -1,0 +1,220 @@
+common:
+  flash:
+    account_created: Аккаунт создан! Подтверждение аккаунта отправлено на почту.
+    client_created: Клиент создан!
+    update_complete: Обновление завершено
+    administrator_deleted: Администратор удален!
+    administrator_cant_be_deleted: Вы не можете удалить этого администратора!
+    no_access: У вас нет доступа к этой странице
+    client_hided_or_recovered: Клиент был скрыт / восстановлен.
+    cant_hide_client: Невозможно скрыть / восстановить клиента
+    client_deleted: Клиент был удален.
+    client_cant_be_deleted: Вы не можете удалить этот клиент
+    client_was_deactivated: 'Клиент был деактивирован через:% {время}'
+    unconfirmed_mail: Вы не подтвердили свою почту! Пожалуйста, подтвердите вашу почту.
+    does_not_exist: 'Этот% {class_name} не существует.'
+    interest_created: Интерес добавлен!
+    interest_updated: Интерес обновлен!
+    interest_deleted: Интерес удален!
+    mentor_deleted: Наставник был удален!
+    picture_created: Картинка создана!
+    picture_updated: Картинка обновлена!
+    picture_deleted: Картинка удалена!
+    test_unfinished: Тест не закончен
+    test_result_outdated: Тест был отредактирован. Очки за интересы устарели!
+    test_result_deleted: Результат удален!
+    cant_find_client: Не могу найти клиента
+    cant_find_test: Не могу найти тест
+    empty_test: Тест пуст!
+    test_created: Тест создан!
+    test_updated: Тест обновлен!
+    test_deleted: Тест удален!
+    test_cant_be_deleted: Этот тест имеет связанные результаты, пожалуйста, сначала удалите их.
+  gender:
+    man: мужчина
+    woman: Женщина
+    unknown: неизвестный
+  boolean:
+    'yes': 'Да'
+    'no': 'Нет'
+    true: 'Да'
+    false: 'Нет'
+  forms:
+    search: Поиск
+    confirm: Подтвердить
+    add: Добавить
+    delete: Удалить
+    edit: Редактировать
+    hide: Скрыть
+    recover: Показать
+    delete_confirm: Вы уверены?
+  menu:
+    home: Дом
+    settings: Настройки
+    my_profile: Мой профайл
+    log_out: Выйти
+    all: Все
+    profile: Профиль
+    create: Создать
+    edit_profile: Редактировать профиль
+  devise:
+    resend_confirmations: Отправить подтверждение инструкции
+    confirm_instructions: Вы можете подтвердить адрес электронной почты своей учетной записи по ссылке ниже
+    reset_instructions: Отправьте мне инструкции по сбросу пароля
+    password_reset: Кто-то запросил ссылку для изменения вашего пароля. Вы можете сделать это по ссылке ниже.
+    ignore_reset_request: Если вы не просили об этом, пожалуйста, игнорируйте это письмо.
+    password_stays_unchanged: Ваш пароль не изменится, пока вы не перейдете по ссылке выше и не создадите новый.
+    confirm_account: Подтвердите мой аккаунт
+    forgot_password: Забыли Ваш пароль?
+    change_password: Изменить пароль
+    new_password: Новый пароль
+    confirm_new_password: Подтвердите новый пароль
+    change_your_password: Измените свой пароль
+    regards: С уважением, AitScore.
+    greetings: Приветствую
+    log_in: Авторизоваться
+    remember_me: Запомни меня
+    didnt_received_confirm: Не получили подтверждение инструкции?
+  kaminari:
+    next: Следующая
+    previous: Предыдущая
+    first: Первая
+    last: Прошлая
+  unions:
+    and: и
+entities:
+  interests:
+    index: Интересы
+    interest: Интерес
+    create_interest: Создать интерес
+    all_interests: Все интересы
+    search_prompt: Введите название интереса
+    delete_confirm: Удаление повлияет на результаты. Вы уверены?
+    fields:
+      name: Название
+  pictures:
+    index: Картинки
+    update: Редактировать картинку
+    create: Создать картинку
+    all_pictures: Все картинки
+    search_prompt: Введите описание изображения
+    related_interests: Смежные интересы
+    delete_confirm: Удаление повлияет на результаты. Вы уверены?
+    fields:
+      picture: Картинка
+      description: Описание
+  tests:
+    index: Тесты
+    all_tests: Все тесты
+    update: Редактировать тест
+    create: Создать тест
+    choosing_test: Выбор теста
+    back_to_profile: Вернуться к профилю
+    count_of_questions: Количество вопросов
+    delete_confirm: Удаление уничтожит все результаты этого теста. Ты уверен?
+    start: Начните
+    progress: Прогресс
+    continue: Продолжить
+    choose_test: Выбор теста
+    started_tests: Начались тесты
+    no_started_tests: Там нет запущенных тестов
+    fields:
+      test_name: Название теста
+      version: Версия
+      description: Описание
+  users:
+    password_prompt: Оставьте пустым для сохранения старого
+    confirmation_prompt: Подтвердите ваш пароль
+    fields:
+      email: Имейл
+      password: пароль
+      confirmation: Подтверждение пароля
+  clients:
+    index: Клиенты
+    create: Создать клиента
+    choose_admin: Выберите локального администратора
+    choose_mentor: Выберите наставника
+    search_prompt: Введите кодовое имя
+    all_clients: Все клиенты
+    delete_confirm: Удаление клиента приведет к удалению его результатов. Вы уверены?
+    latest_results: Последние результаты тестирования
+    fields:
+      code_name: Кодовое имя
+      gender: Пол
+      mentor: Наставник
+      is_current_in_school: Ходит в школу?
+  mentors:
+    index: Наставники
+    mentor: Наставник
+    all_mentors: Все наставники
+    search_prompt: Введите имя или фамилию здесь
+    create: Создать наставника
+    delete: Удалить наставника
+    update: Обновление наставника
+    choose_admin: Выберите локального администратора
+    choose_mentor: 'Выберите наставника для %{for}'
+    delegate_prompt: Для удаления вы должны выбрать нового наставника для связанных клиентов
+  local_administrators:
+    administrator: Администратор
+    index: Местные администраторы
+    create: Создать локального администратора
+    all_administrators: Все администраторы
+    search_prompt: Введите имя или фамилию здесь
+    update: Обновление администратора
+    delete: Удалить администратора
+    delegate_prompt: Для удаления вы должны выбрать нового Администратора для ассоциированных наставников.
+    choose_admin: 'Выберите администратора для %{for}'
+  employees:
+    phone_prompt: Оставьте пустым, если у вас нет телефона
+    fields:
+      name: имя
+      last_name: Фамилия
+      phone: Телефон
+      organisation: организация
+      organisation_address: Адрес организации
+  result_of_tests:
+    update: Обновить результат
+    index: Результаты теста
+    all_results_of: Все результаты
+    results_of: Результаты
+    result: Результат
+    result_outdated: Этот результат устарел
+    interest_points: Интересы очков
+    average_answer: Среднее время ответа на поле интереса
+    timeline: Лента новостей
+    average_answer_short: Среднее время ответа (сек)
+    attending_at_the_moment: Участие в момент тестирования
+    time_of_answer: Время ответа
+    time_of_answer_short: Время ответа (сек)
+    heatmap: Показать карту тепла
+    download_as: Скачать как
+    question_deleted: Этот вопрос был удален из теста
+    earned_points: Заработанные очки интересов
+    summary: Резюме
+    edit_request: Если вы хотите редактировать результаты, спросите своего наставника.
+    maximum_interest_point: Максимальное количество баллов в тесте
+    was_checked:
+      thumbs_up: Понравилось
+      thumbs_down: Не понравилось
+      question_mark: Не знаю
+    fields:
+      test_name: Название теста
+      start_date: Дата начала
+      end_date: Дата окончания
+      ended: Закончилось
+      question_number: Номер вопроса
+      time: Время
+      answer: Ответ
+      was_rewrited: Был переписан
+  questions:
+    index: Вопросы
+
+static:
+  home:
+    first_line: Тест на трудовые интересы (AIT) был разработан MPI Oosterlo, Thomas More Kempen и Волгоградским государственным техническим университетом. Хорошее соответствие между человеком и работой, где работа соответствует интересам и возможностям, значительно увеличивает удовлетворенность людей с ограниченными интеллектуальными возможностями. AIT был разработан, чтобы показать интерес к определенным областям работы без учета компетенций.
+    second_line: AIT был разработан как визуальный тест, который можно сдать в режиме онлайн. AIT рисует картину рабочих областей, в которых испытуемый хочет работать или нет, и предоставляет информацию, дополняющую другие методологии, которые измеряют интерес к труду. Пользователю показывается одна фотография за раз, а затем он может указать свои предпочтения, выбрав красную (отрицательную) или зеленую (положительную) кнопку. Если у пользователя нет мнения о фотографии, он может пропустить эту фотографию.
+    third_line: 'Фотографии разделены на различные рабочие области (например: работа по приготовлению пищи, работа, ориентированная на клиента, административная работа и т. Д.). После завершения теста результаты показывают, какие рабочие области предпочтительнее для пользователя '
+    fourth_line: Цель AIT - регулярно проверять интересы нашей целевой группы для работы.
+    fives_line: AIT доступен для организаций, которые работают с людьми с ограниченными интеллектуальными возможностями.
+    six_line: Вы заинтересованы в бесплатном тестировании? Пожалуйста, отправьте письмо на
+    seven_line: У вас уже есть аккаунт?
