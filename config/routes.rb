@@ -73,4 +73,11 @@ Rails.application.routes.draw do
 
   #Picture pages
   resources :pictures, except: [:show]
+
+  # Translations
+  resources :translations, only: %i[index update create] do
+    collection do
+      post :create_language, to: 'translations#create_language'
+    end
+  end
 end

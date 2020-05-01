@@ -10,4 +10,6 @@
 
 class Translation < ActiveRecord::Base
   belongs_to :language
+
+  validates_presence_of :value, :field
 end

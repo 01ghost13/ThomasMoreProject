@@ -30,6 +30,8 @@ common:
     test_updated: Test updated!
     test_deleted: Test deleted!
     test_cant_be_deleted: This test has associated results, please, delete them first.
+    language_created: Language created!
+    translation_updated: Translation updated!
   gender:
     man: Man
     woman: Woman
@@ -82,6 +84,7 @@ common:
     last: Last
   unions:
     and: and
+
 entities:
   interests:
     index: Interests
@@ -208,6 +211,13 @@ entities:
       was_rewrited: Was rewrited
   questions:
     index: Questions
+  translations:
+    index: Translations
+    all_translations: All translations
+  languages:
+    create: Create language
+    fields:
+      name: Abbreviation
 
 static:
   home:

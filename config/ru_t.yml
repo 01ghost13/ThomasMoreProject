@@ -30,6 +30,8 @@ common:
     test_updated: Тест обновлен!
     test_deleted: Тест удален!
     test_cant_be_deleted: Этот тест имеет связанные результаты, пожалуйста, сначала удалите их.
+    language_created: Язык создан!
+    translation_updated: Перевод обновлен!
   gender:
     man: мужчина
     woman: Женщина
@@ -208,6 +210,13 @@ entities:
       was_rewrited: Был переписан
   questions:
     index: Вопросы
+  translations:
+    index: Переводы
+    all_translations: Все переводы
+  languages:
+    create: Добавить язык
+    fields:
+      name: Аббравиатура
 
 static:
   home:

@@ -8,4 +8,6 @@
 
 class Language < ActiveRecord::Base
   has_many :translations, dependent: :destroy
+
+  validates_presence_of :name
 end

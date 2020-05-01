@@ -1,0 +1,21 @@
+<div class="row form-group">
+  <%= form_for language, url: create_language_translations_path do |lang_form| %>
+    <h4>
+      <%= lang_form.label :name,
+                          tf('entities.languages.create'),
+                          class: 'col-sm-offset-5 col-sm-2 control-label'
+      %>
+    </h4>
+
+    <div class="col-sm-4">
+      <%= lang_form.text_field :name,
+                               class: 'form-control',
+                               placeholder: tf('entities.languages.fields.name')
+      %>
+    </div>
+
+    <%= lang_form.submit tf('common.forms.add'),
+                         class: 'col-sm-1 btn btn-primary'
+    %>
+  <% end %>
+</div>

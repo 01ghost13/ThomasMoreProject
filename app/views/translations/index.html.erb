@@ -1,0 +1,53 @@
+<% provide :title, tf('entities.translations.index') %>
+<%= render 'shared/error_message' %>
+
+<%= render partial: 'translations/language_form',
+           locals: {
+             language: @language
+           }
+%>
+
+<h1><%= tf('entities.translations.all_translations') %></h1>
+
+<div class="row col-sm-12">
+
+  <!-- Lang tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <% @translations_presenter.languages.each.with_index do |lang, i| %>
+      <%
+        tab_class = active_tab?(lang.id, i) ? 'active' : ''
+      %>
+      <li role="presentation"
+          class="<%= tab_class %>"
+      >
+        <a href="#<%= lang.name %>"
+           aria-controls="<%= lang.name %>"
+           role="tab"
+           data-toggle="tab"
+        >
+          <%= lang.name %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content row col-sm-offset-2" style="margin-top: 20px">
+    <% @translations_presenter.grouped.each.with_index do |lang, i| %>
+      <%
+        tab_class = active_tab?(lang.id, i) ? 'active' : ''
+      %>
+      <div role="tabpanel"
+           class="tab-pane col-sm-12 <%= tab_class %>"
+           id="<%= lang.name %>"
+      >
+        <% lang.translations.each do |translation| %>
+          <%= render partial: 'translations/form',
+                     locals: { lang: lang, translation: translation }
+          %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+</div>

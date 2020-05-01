@@ -12,21 +12,23 @@ def create_hash_translations(hash)
     memo
   end
 end
-# lang = 'RU'
-lang = 'EN'
-en_lang = Language.find_by(name: lang)
+langs = {
+  EN: 'config/translations.yml',
+  RU: 'config/ru_t.yml',
+}
 
-if en_lang.blank?
-  en_lang = Language.create!(name: lang)
-end
+langs.each do |lang, path|
+  cur_lang = Language.find_by(name: lang)
 
-trans_path_path = Rails.root.join('config/translations.yml')
-# trans_path_path = Rails.root.join('config/ru_t.yml')
-translations = YAML::load(File.open(trans_path_path))
-translation_hash = create_hash_translations(translations)
+  if cur_lang.blank?
+    cur_lang = Language.create!(name: lang)
+  end
 
-Translation.where(language_id: en_lang.id).destroy_all
+  trans_path_path = Rails.root.join(path)
+  translations = YAML::load(File.open(trans_path_path))
+  translation_hash = create_hash_translations(translations)
 
-translation_hash.each do |field_name, translation|
-  Translation.create!(field: field_name, value: translation, language_id: en_lang.id)
+  translation_hash.each do |field_name, translation|
+    Translation.find_or_create_by!(field: field_name, value: translation, language_id: cur_lang.id)
+  end
 end
