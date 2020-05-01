@@ -1,5 +1,6 @@
 # Taken from https://github.com/heartcombo/devise/wiki/How-To:-Use-custom-mailer
 class AitscoreDeviseMailer < Devise::Mailer
+  include MailerTranslationModule
   include SendGrid
   include Devise::Controllers::UrlHelpers
 
@@ -8,26 +9,31 @@ class AitscoreDeviseMailer < Devise::Mailer
   default from: 'no-reply@aitscore.com'
 
   def confirmation_instructions(record, token, opts={})
+    init_translation(record)
     return if confirm_client(record)
     super
   end
 
   def reset_password_instructions(record, token, opts={})
+    init_translation(record)
     return if confirm_client(record)
     super
   end
 
   def unlock_instructions(record, token, opts={})
+    init_translation(record)
     return if confirm_client(record)
     super
   end
 
   def email_changed(record, opts={})
+    init_translation(record)
     return if confirm_client(record)
     super
   end
 
   def password_change(record, opts={})
+    init_translation(record)
     return if confirm_client(record)
     super
   end
