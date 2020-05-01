@@ -1,10 +1,40 @@
 class AdministratorsController < AdminController
   translations_for_preload %i[
     common.flash.account_created
-    common.flash.update_complete
-    common.flash.administrator_deleted
     common.flash.administrator_cant_be_deleted
+    common.flash.administrator_deleted
     common.flash.no_access
+    common.flash.update_complete
+    common.forms.confirm
+    common.forms.delete
+    common.forms.edit
+    common.kaminari.first
+    common.kaminari.last
+    common.kaminari.next
+    common.kaminari.previous
+    common.menu.all
+    common.menu.create
+    common.menu.log_out
+    common.menu.my_profile
+    common.menu.profile
+    common.menu.settings
+    entities.clients.create
+    entities.clients.index
+    entities.employees.fields.last_name
+    entities.employees.fields.name
+    entities.employees.fields.organisation
+    entities.employees.fields.organisation_address
+    entities.employees.fields.phone
+    entities.employees.phone_prompt
+    entities.interests.index
+    entities.local_administrators.create
+    entities.local_administrators.index
+    entities.local_administrators.update
+    entities.mentors.create
+    entities.mentors.index
+    entities.pictures.index
+    entities.tests.index
+    entities.users.fields.email
   ]
 
   before_action :preload_entity, only: %i[edit update show delete delegate]
@@ -55,7 +85,7 @@ class AdministratorsController < AdminController
   def show
     authorize!(@user)
     # TODO Make presenter
-    @user_info = @user.show.to_a
+    @user_info = translate_hash(@user.show_nested)
   end
 
   def delegate

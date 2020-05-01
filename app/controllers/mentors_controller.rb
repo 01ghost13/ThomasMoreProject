@@ -66,7 +66,7 @@ class MentorsController < AdminController
   def show
     authorize!(@user)
     # TODO Make presenter
-    @user_info = @user.show.to_a
+    @user_info = translate_hash(@user.show_nested)
   end
 
   def delegate

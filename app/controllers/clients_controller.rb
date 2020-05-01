@@ -1,13 +1,47 @@
 class ClientsController < AdminController
   translations_for_preload %i[
-    common.flash.client_created
-    common.flash.client_hided_or_recovered
     common.flash.cant_hide_client
-    common.flash.client_deleted
     common.flash.client_cant_be_deleted
-    common.flash.update_complete
+    common.flash.client_created
+    common.flash.client_deleted
+    common.flash.client_hided_or_recovered
     common.flash.client_was_deactivated
     common.flash.update_complete
+    common.flash.update_complete
+    common.forms.confirm
+    common.forms.delete
+    common.forms.delete_confirm
+    common.forms.edit
+    common.forms.hide
+    common.forms.search
+    common.kaminari.last
+    common.kaminari.next
+    common.menu.all
+    common.menu.create
+    common.menu.edit_profile
+    common.menu.log_out
+    common.menu.my_profile
+    common.menu.profile
+    common.menu.settings
+    entities.clients.all_clients
+    entities.clients.choose_admin
+    entities.clients.create
+    entities.local_administrators.administrator
+    entities.clients.fields.code_name
+    entities.clients.fields.gender
+    entities.clients.fields.is_current_in_school
+    entities.mentors.mentor
+    entities.clients.index
+    entities.clients.search_prompt
+    entities.employees.fields.organisation
+    entities.interests.index
+    entities.local_administrators.create
+    entities.local_administrators.index
+    entities.mentors.create
+    entities.mentors.index
+    entities.pictures.index
+    entities.tests.index
+    entities.users.fields.email
   ]
 
   before_action :preload_entity, only: %i[edit update destroy show mode_settings update_mode_settings]
@@ -81,14 +115,14 @@ class ClientsController < AdminController
 
     unless @user.is_active
       # Client is inactive
-      flash[:warning] = translate_field('common.flash.client_was_deactivated', options: { time: @user.date_off.to_s })
+      flash[:warning] = tf('common.flash.client_was_deactivated', options: { time: @user.date_off.to_s })
       unless is_super?
         redirect_to clients_path
         return
       end
     end
 
-    @user_info = @user.show.to_a
+    @user_info = translate_hash(@user.show_nested)
     # Loading all test results
     @test_results = []
     ResultOfTest.order(:created_at).reverse_order.where(client_id: client.id).limit(5).each do |res|

@@ -45,8 +45,13 @@ class QuestionResult < ActiveRecord::Base
 
   #Shows question result
   def show
-    {start: self.start, end: self.end, was_rewrited: self.was_rewrited, was_checked: self.was_checked,
-     question_id: self.question_id }
+    {
+      start: self.start,
+      end: self.end,
+      was_rewrited: self.was_rewrited,
+      was_checked: self.was_checked,
+      question_id: self.question_id
+    }
   end
 
   def human_was_checked
@@ -61,6 +66,10 @@ class QuestionResult < ActiveRecord::Base
   def get_plausible_emotion_states
     return [] if emotion_state_result.blank?
     emotion_state_result.plausible_emotion_states_list
+  end
+
+  def total_time
+    self.end - self.start
   end
 
   private :setup_fields

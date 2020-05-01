@@ -46,6 +46,16 @@ class Client < ActiveRecord::Base
 
   scope :all_clients, ->() {all}
 
+  class << self
+    def genders_list
+      [
+          ['Unknown', 1],
+          ['Male', 2],
+          ['Female', 3]
+      ]
+    end
+  end
+
   #Setups default fields
   def setup_fields
     self.is_active = true
@@ -58,26 +68,38 @@ class Client < ActiveRecord::Base
   def email
     'Does not have any'
   end
+
   
   def show
-    user_info = {Codename: self.code_name}
+    user_info = {
+      code_name: self.code_name
+    }
     #Adding gender
     if self.gender == 1
       #dunno
-      user_info[:Gender] = 'Unknown'
+      user_info[:gender] = :unknown
     elsif self.gender == 2
       #men
-      user_info[:Gender] = 'Man'
+      user_info[:gender] = :man
     else
       #women
-      user_info[:Gender] = 'Woman'
+      user_info[:gender] = :woman
     end
 
-    user_info[:Mentor] = "#{employee.last_name} #{employee.name}"
-    user_info[:Current_in_school] = self.is_current_in_school ? 'Yes' : 'No'
+    user_info[:mentor] = "#{employee.last_name} #{employee.name}"
+    user_info[:is_current_in_school] = self.is_current_in_school ? :yes : :no
     user_info
   end
 
+  def show_nested
+    {
+      clients: {
+        **show
+      }
+    }
+  end
+
+  # @deprecated
   def show_short
     user_info = {code_name: self.code_name}
     mentor = Mentor.find(self.mentor_id)

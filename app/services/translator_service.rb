@@ -13,28 +13,35 @@ class TranslatorService
       end
   end
 
-  def translate(translation_name)
-    if cache.has_key?(translation_name)
-      cache[translation_name]
-    else
-      tt = translation_scope(translation_name).last
+  def translate_field(translation_name, options: nil)
+    translated_value =
+      if cache.has_key?(translation_name)
+        cache[translation_name]
+      else
+        tt = translation_scope(translation_name).last
 
-      if tt.blank?
-        error = "translation #{translation_name} not found"
-        Rails.logger.error(error)
-        return error
+        if tt.blank?
+          error = "translation #{translation_name} not found"
+          Rails.logger.error(error)
+          return error
+        end
+
+        save_cache!(tt)
       end
 
-      save_cache!(tt)
+    if options.present?
+      translated_value % options
+    else
+      translated_value
     end
   end
+  alias :tf :translate_field
 
   private
 
     def translation_scope(translation_names)
       Translation
-        .joins(:languages)
-        .where('languages.id': lang_id)
+        .where(language_id: lang_id)
         .where('translations.field': translation_names)
     end
 

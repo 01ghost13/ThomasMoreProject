@@ -1,4 +1,22 @@
 class StaticPagesController < ApplicationController
+  translations_for_preload %i[
+    common.menu.all
+    common.menu.create
+    common.menu.home
+    common.menu.log_out
+    common.menu.my_profile
+    common.menu.profile
+    common.menu.settings
+    entities.clients.create
+    entities.clients.index
+    entities.interests.index
+    entities.local_administrators.create
+    entities.local_administrators.index
+    entities.mentors.create
+    entities.mentors.index
+    entities.pictures.index
+    entities.tests.index
+  ]
 
   #Log in page
   # @deprecated

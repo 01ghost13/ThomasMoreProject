@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   include ApplicationHelper
-  include TranslationHelper
+  include TranslationModule
 
   protect_from_forgery with: :exception
 end

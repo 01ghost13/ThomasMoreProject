@@ -53,4 +53,12 @@ class Employee < ActiveRecord::Base
     user_info[:phone] = self.phone
     user_info
   end
+
+  def show_nested
+    {
+      employees: {
+        **show
+      }
+    }
+  end
 end

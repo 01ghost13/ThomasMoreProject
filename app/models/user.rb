@@ -134,6 +134,15 @@ class User < ActiveRecord::Base
     user_info
   end
 
+  def show_nested
+    {
+      users: {
+        email: email
+      },
+      **role_model.show_nested
+    }
+  end
+
   def local_admin?
     role == 'local_admin' || super_admin?
   end
