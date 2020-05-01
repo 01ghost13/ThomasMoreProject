@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_27_075026) do
+ActiveRecord::Schema.define(version: 2020_04_30_092706) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -195,8 +195,9 @@ ActiveRecord::Schema.define(version: 2020_04_27_075026) do
   create_table "translations", force: :cascade do |t|
     t.string "field", null: false
     t.string "value", null: false
-    t.bigint "languages_id", null: false
-    t.index ["languages_id"], name: "index_translations_on_languages_id"
+    t.bigint "language_id", null: false
+    t.index ["field", "language_id"], name: "index_translations_on_field_and_language_id", unique: true
+    t.index ["language_id"], name: "index_translations_on_language_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -215,8 +216,10 @@ ActiveRecord::Schema.define(version: 2020_04_27_075026) do
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
+    t.bigint "language_id", default: 1, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["language_id"], name: "index_users_on_language_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["userable_type", "userable_id"], name: "index_users_on_userable_type_and_userable_id"
   end

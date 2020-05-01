@@ -17,6 +17,7 @@
 #  userable_type          :string           not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  language_id            :bigint           default(1), not null
 #  userable_id            :bigint           not null
 #
 
@@ -47,6 +48,8 @@ class User < ActiveRecord::Base
   belongs_to :employee, foreign_key: 'userable_id', optional: true
 
   belongs_to :userable, polymorphic: true, optional: true, dependent: :destroy
+
+  belongs_to :language
 
   accepts_nested_attributes_for :administrator
   accepts_nested_attributes_for :mentor
