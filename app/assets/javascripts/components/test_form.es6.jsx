@@ -289,7 +289,7 @@ class TestForm extends React.Component {
 
           <div className="row form-group">
             <label className="col-sm-2 control-label">
-              {tf('entities.pictures.fields.picture')}
+              {tf('entities.pictures.fields.image')}
             </label>
             <div className="col-sm-4">
               <select className="form-control"

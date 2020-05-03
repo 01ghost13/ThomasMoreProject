@@ -7,7 +7,7 @@ class PicturesController < AdminController
     entities.interests.interest
     entities.pictures.add_interest
     entities.pictures.fields.description
-    entities.pictures.fields.picture
+    entities.pictures.fields.image
     entities.pictures.fields.weight
     entities.pictures.remove_interest
   ]

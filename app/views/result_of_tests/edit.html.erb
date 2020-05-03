@@ -28,7 +28,11 @@
       %>
 			<div class="col-sm-4">
 				<%= question_form.select :was_checked,
-                                 options_for_select(Question.question_list, question_form.object.was_checked),
+                                 options_for_select([
+                                   [tf('entities.result_of_tests.was_checked.thumbs_down'), 1],
+                                   [tf('entities.result_of_tests.was_checked.question_mark'), 2],
+                                   [tf('entities.result_of_tests.was_checked.thumbs_up'), 3]
+                                 ], question_form.object.was_checked),
                                  {},
                                  { class: 'form-control' }
 				 %>

@@ -118,7 +118,7 @@ class PictureForm extends React.Component {
     return(
       <div>
         <div className="row col-sm-offset-2 form-group">
-          <label className="col-sm-2 control-label">{tf('entities.pictures.fields.picture')}</label>
+          <label className="col-sm-2 control-label">{tf('entities.pictures.fields.image')}</label>
           <div className="col-sm-4">
             <input type="file"
                    className="form-control"

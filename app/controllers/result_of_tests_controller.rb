@@ -34,6 +34,8 @@ class ResultOfTestsController < AdminController
 
   def show
     result = ResultOfTest.result_page.find_by(id: params[:result_id])
+    result.language_id = current_user.language_id
+
     authorize!(result)
 
     #If test was changed, results are outdated

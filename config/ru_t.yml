@@ -106,7 +106,7 @@ entities:
     add_interest: Добавить интерес
     remove_interest: Удалить интерес
     fields:
-      picture: Картинка
+      image: Картинка
       description: Описание
       weight: Значимость
   tests:
@@ -227,6 +227,9 @@ entities:
     language: Язык
     fields:
       name: Аббравиатура
+  picture_interests:
+    fields:
+      picture: Link
 
 static:
   home:
@@ -248,3 +251,8 @@ errors:
   invalid: неверно
   confirmation: не совпало с указаным паролем
   not_found: запись с таким значением не найдена
+  attachment_invalid: Неверное приложение, оно должно быть картинкой или анимацией
+  attachment_too_big: Приложение слишком большое
+  no_questions: Тест пустой
+  testing_ended: Тест завершен
+  link_pattern: Wrong youtube link. It should be https://youtu.be/<ID>, https://m.youtube.com/watch?v=<ID> or https://www.youtube.com/watch?v=<ID>

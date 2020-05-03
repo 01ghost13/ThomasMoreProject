@@ -55,7 +55,7 @@ class YoutubeLink < ActiveRecord::Base
 
       regex = /https:\/\/(www\.)?(((m\.)?youtube\.com\/watch\?v=[\w-]+)|(youtu\.be\/[\w-]+))\/?$/
       unless regex =~ link
-        errors.add(:link, 'Wrong youtube link. It should be https://youtu.be/<ID>, https://m.youtube.com/watch?v=<ID> or https://www.youtube.com/watch?v=<ID>')
+        errors.add(:link, :link_pattern)
       end
     end
 end

@@ -54,10 +54,6 @@ class QuestionResult < ActiveRecord::Base
     }
   end
 
-  def human_was_checked
-    Array["Don't like", 'Skipped', 'Liked'][self.was_checked - 1]
-  end
-
   def get_emotion_lists
     return {} if emotion_state_result.blank?
     emotion_state_result.emotion_lists

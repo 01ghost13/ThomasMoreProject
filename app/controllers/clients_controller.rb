@@ -50,12 +50,14 @@ class ClientsController < AdminController
   def new
     authorize!
     @user = User.new
+    @user.language_id = current_user.language_id
     @user.build_client
   end
   
   def create
     authorize!
     @user = User.new(client_params)
+    @user.language_id = current_user.language_id
     @user.role = :client
     @user.userable = @user.build_client(client_params[:client_attributes])
 
@@ -108,6 +110,7 @@ class ClientsController < AdminController
   def show
     authorize!(@user)
     client = @user.role_model
+    client.language_id = current_user.language_id
 
     @is_super_adm = is_super?
     @is_my_client = current_user.mentor? && client.employee_id == current_user.role_model.id

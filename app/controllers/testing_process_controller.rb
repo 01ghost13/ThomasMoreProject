@@ -12,7 +12,7 @@ class TestingProcessController < AdminController
     manager = TestingManager.new(params[:result_of_test_id])
 
     unless manager.valid?
-      flash[:danger] = manager.errors.values.last
+      flash[:danger] = tf("errors.#{manager.errors.last}")
       render json: {
         result_url: show_path_resolver(current_user)
       }
@@ -52,7 +52,7 @@ class TestingProcessController < AdminController
     manager = TestingManager.new(params[:result_of_test_id])
 
     unless manager.valid?
-      flash[:danger] = manager.errors.values.last
+      flash[:danger] = tf("errors.#{manager.errors.last}")
       redirect_back fallback_location: show_path_resolver(current_user)
       return
     end

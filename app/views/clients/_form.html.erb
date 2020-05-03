@@ -28,7 +28,11 @@
       %>
       <div class="col-sm-4">
         <%= ff.select :gender,
-                      options_for_select(Client.genders_list, ff.object.gender),
+                      options_for_select([
+                        [tf('common.gender.unknown'), 1],
+                        [tf('common.gender.man'), 2],
+                        [tf('common.gender.woman'), 3]
+                      ], ff.object.gender),
                       {},
                       { class: 'form-control' }
         %>

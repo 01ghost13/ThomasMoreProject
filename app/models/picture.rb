@@ -71,13 +71,13 @@ class Picture < ActiveRecord::Base
       if image.attached?
         unless image.blob.content_type.starts_with?('image/')
           image.purge
-          errors[:base] << 'Attachment must be image or gif'
+          errors.add(:image, :attachment_invalid)
         end
-        max_size = 15
+        max_size = 1
 
         if image.blob.byte_size > max_size.megabytes
           image.purge
-          errors[:base] << "Attachment is too big. Maximum is #{max_size} mb"
+          errors.add(:image, :attachment_too_big)
         end
       end
     end

@@ -13,7 +13,7 @@ class TestsController < AdminController
     entities.tests.remove_question
     entities.tests.fields.youtube_link
     entities.tests.fields.youtube_video
-    entities.pictures.fields.picture
+    entities.pictures.fields.image
     common.forms.confirm
   ]
 

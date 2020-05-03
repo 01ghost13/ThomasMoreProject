@@ -20,6 +20,8 @@
 #
 
 class Client < ActiveRecord::Base
+  include TranslatableModels
+
   before_validation :setup_fields, on: :create
 
   # @deprecated
@@ -46,16 +48,6 @@ class Client < ActiveRecord::Base
 
   scope :all_clients, ->() {all}
 
-  class << self
-    def genders_list
-      [
-          ['Unknown', 1],
-          ['Male', 2],
-          ['Female', 3]
-      ]
-    end
-  end
-
   #Setups default fields
   def setup_fields
     self.is_active = true
@@ -77,17 +69,17 @@ class Client < ActiveRecord::Base
     #Adding gender
     if self.gender == 1
       #dunno
-      user_info[:gender] = :unknown
+      user_info[:gender] = tf('common.gender.unknown')
     elsif self.gender == 2
       #men
-      user_info[:gender] = :man
+      user_info[:gender] = tf('common.gender.man')
     else
       #women
-      user_info[:gender] = :woman
+      user_info[:gender] = tf('common.gender.woman')
     end
 
     user_info[:mentor] = "#{employee.last_name} #{employee.name}"
-    user_info[:is_current_in_school] = self.is_current_in_school ? :yes : :no
+    user_info[:is_current_in_school] = tf("common.boolean.#{self.is_current_in_school}")
     user_info
   end
 

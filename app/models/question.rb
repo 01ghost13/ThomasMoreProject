@@ -25,16 +25,6 @@ class Question < ActiveRecord::Base
 
   accepts_nested_attributes_for :youtube_link
 
-  class << self
-    def question_list
-      [
-          ['Thumbs down', 1],
-          ['Question mark', 2],
-          ['Thumbs up', 3]
-      ]
-    end
-  end
-
   def youtube?
     youtube_link_id.present?
   end

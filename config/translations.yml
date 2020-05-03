@@ -106,7 +106,7 @@ entities:
     add_interest: Add interest
     remove_interest: Remove interest
     fields:
-      picture: Picture
+      image: Picture
       description: Description
       weight: Weight
   tests:
@@ -227,6 +227,9 @@ entities:
     language: Language
     fields:
       name: Abbreviation
+  picture_interests:
+    fields:
+      picture: Link
 
 static:
   home:
@@ -248,3 +251,9 @@ errors:
   invalid: is invalid
   confirmation: is not matches with password
   not_found: record with such value was not found
+  attachment_invalid: Attachment must be image or gif
+  attachment_too_big: Attachment is too big
+  link_error: You need specify either picture or youtube link
+  no_questions: Test is empty
+  testing_ended: Testing is ended
+  link_pattern: Wrong youtube link. It should be https://youtu.be/<ID>, https://m.youtube.com/watch?v=<ID> or https://www.youtube.com/watch?v=<ID>
