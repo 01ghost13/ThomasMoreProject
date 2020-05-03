@@ -1,8 +1,15 @@
 class PicturesController < AdminController
   translations_for_preload %i[
     common.flash.picture_created
-    common.flash.picture_updated
     common.flash.picture_deleted
+    common.flash.picture_updated
+    common.forms.confirm
+    entities.interests.interest
+    entities.pictures.add_interest
+    entities.pictures.fields.description
+    entities.pictures.fields.picture
+    entities.pictures.fields.weight
+    entities.pictures.remove_interest
   ]
 
   #Page of list of pictures
@@ -43,7 +50,7 @@ class PicturesController < AdminController
               response: {
                   type: :error,
                   fields: @picture.errors.messages,
-                  full_messages: @picture.errors.full_messages
+                  full_messages: translate_errors(@picture.errors, @picture)
               }
           }, status: :unprocessable_entity
         end
@@ -80,7 +87,7 @@ class PicturesController < AdminController
               response: {
                   type: :error,
                   errors: @picture.errors.messages,
-                  full_messages: @picture.errors.full_messages
+                  full_messages: translate_errors(@picture.errors, @picture)
               }
           }, status: :unprocessable_entity
         end

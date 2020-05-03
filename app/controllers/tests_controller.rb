@@ -5,6 +5,16 @@ class TestsController < AdminController
     common.flash.empty_test
     common.flash.test_deleted
     common.flash.test_cant_be_deleted
+    entities.tests.fields.name
+    entities.tests.fields.version
+    entities.tests.fields.description
+    entities.tests.add_picture
+    entities.tests.add_youtube_video
+    entities.tests.remove_question
+    entities.tests.fields.youtube_link
+    entities.tests.fields.youtube_video
+    entities.pictures.fields.picture
+    common.forms.confirm
   ]
 
   def new
@@ -45,7 +55,7 @@ class TestsController < AdminController
           response: {
               type: :error,
               fields: @test.errors.messages,
-              full_messages: @test.errors.full_messages
+              full_messages: translate_errors(@test.errors, @test)
           }
       }, status: :unprocessable_entity
     end
@@ -90,14 +100,14 @@ class TestsController < AdminController
           response: {
               type: :error,
               fields: @test.errors.messages,
-              full_messages: @test.errors.full_messages
+              full_messages: translate_errors(@test.errors, @test)
           }
       }, status: :unprocessable_entity
     end
   end
 
   def destroy
-    test = Test.find_by(params[:id])
+    test = Test.find_by(id: params[:id])
     authorize!(test)
 
     if test.destroy

@@ -103,9 +103,12 @@ entities:
     search_prompt: Введите описание изображения
     related_interests: Смежные интересы
     delete_confirm: Удаление повлияет на результаты. Вы уверены?
+    add_interest: Добавить интерес
+    remove_interest: Удалить интерес
     fields:
       picture: Картинка
       description: Описание
+      weight: Значимость
   tests:
     index: Тесты
     all_tests: Все тесты
@@ -121,10 +124,15 @@ entities:
     choose_test: Выбор теста
     started_tests: Начались тесты
     no_started_tests: Там нет запущенных тестов
+    add_picture: Добавить вопрос с картинкой
+    add_youtube_video: Добавить вопрос с видео ютуба
+    remove_question: Удалить вопрос
     fields:
-      test_name: Название теста
+      name: Название теста
       version: Версия
       description: Описание
+      youtube_link: Ссылка на ютуб
+      youtube_video: Ютуб видео
   users:
     password_prompt: Оставьте пустым для сохранения старого
     confirmation_prompt: Подтвердите ваш пароль

@@ -103,9 +103,12 @@ entities:
     search_prompt: Enter picture description
     related_interests: Related Interests
     delete_confirm: Deleting will affect on results. Are you sure?
+    add_interest: Add interest
+    remove_interest: Remove interest
     fields:
       picture: Picture
       description: Description
+      weight: Weight
   tests:
     index: Tests
     all_tests: All tests
@@ -121,10 +124,15 @@ entities:
     started_tests: Started tests
     choose_test: Choose test
     no_started_tests: There are no started tests
+    add_picture: Add question with picture
+    add_youtube_video: Add question with Youtube video
+    remove_question: Remove question
     fields:
-      test_name: Test name
+      name: Test name
       version: version
       description: Description
+      youtube_link: Youtube link
+      youtube_video: Youtube video
   users:
     password_prompt: Leave empty for saving old
     confirmation_prompt: Confirm your password
