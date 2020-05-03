@@ -84,6 +84,7 @@ common:
     last: Прошлая
   unions:
     and: и
+
 entities:
   interests:
     index: Интересы
@@ -130,7 +131,7 @@ entities:
     fields:
       email: Имейл
       password: пароль
-      confirmation: Подтверждение пароля
+      password_confirmation: Подтверждение пароля
   clients:
     index: Клиенты
     create: Создать клиента
@@ -228,3 +229,14 @@ static:
     fives_line: AIT доступен для организаций, которые работают с людьми с ограниченными интеллектуальными возможностями.
     six_line: Вы заинтересованы в бесплатном тестировании? Пожалуйста, отправьте письмо на
     seven_line: У вас уже есть аккаунт?
+
+errors:
+  field: Поле
+  taken: уже существует
+  too_short: слишком короткое
+  blank: пустое
+  not_a_number: не является числом
+  less_than: слишком маленькое
+  invalid: неверно
+  confirmation: не совпало с указаным паролем
+  not_found: запись с таким значением не найдена

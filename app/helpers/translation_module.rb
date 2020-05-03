@@ -4,7 +4,7 @@ module TranslationModule
   included do
     before_action :preload_translations
 
-    helper_method :tf, :translate_field
+    helper_method :tf, :translate_field, :translate_errors
 
     class_attribute :translate_fields
 
@@ -35,5 +35,10 @@ module TranslationModule
     if translate_fields.present?
       translation_service.preload(translate_fields)
     end
+  end
+
+  def translate_errors(errors, entity)
+    entity_name = entity.class.to_s.pluralize.downcase
+    ErrorsTranslator.translate_errors(errors.details, entity_name, translation_service)
   end
 end

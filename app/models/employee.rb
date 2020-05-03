@@ -32,6 +32,13 @@ class Employee < ActiveRecord::Base
   validates_presence_of :name,
                         :last_name
 
+  validates :name, presence: true, length: { within: 3..20 }
+  validates :last_name, presence: true, length: { within: 3..30 }
+  validates :phone,
+            length: {minimum: 6},
+            format: {with: /[-0-9)(+]/, message: 'only numbers, plus, minus signs, brackets'},
+            unless: ->{ phone.blank? }
+
   def show
     user_info = {}
     user_info[:last_name] = self.last_name
