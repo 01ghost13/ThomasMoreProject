@@ -4,7 +4,10 @@ module TranslationModule
   included do
     before_action :preload_translations
 
-    helper_method :tf, :translate_field, :translate_errors
+    helper_method :tf,
+                  :translate_field,
+                  :translate_errors,
+                  :cache_json
 
     class_attribute :translate_fields
 
@@ -21,7 +24,7 @@ module TranslationModule
 
   attr_reader :translation_service
 
-  delegate :translate_field, :tf, to: :translation_service
+  delegate :translate_field, :tf, :cache_json, to: :translation_service
 
   def preload_translations
     lang_id =

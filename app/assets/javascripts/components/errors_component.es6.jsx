@@ -11,7 +11,6 @@ class ErrorsComponent extends React.Component {
       <div className="row">
         <div className="col-sm-offset-2 col-sm-6">
           <div className="alert alert-danger" role="alert">
-            The form contains {errors_length} {this.pluralizeError(errors_length)}.
 			    <ul>
             {errors_list}
 			    </ul>
@@ -25,15 +24,6 @@ class ErrorsComponent extends React.Component {
     return (
       <li key={index}>{message}</li>
     );
-  }
-
-  pluralizeError(number) {
-    if(number === 1) {
-      return 'error'
-    }
-    else {
-      return 'errors'
-    }
   }
 }
 

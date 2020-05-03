@@ -11,6 +11,7 @@ class TranslatorService
       .each do |t|
         save_cache!(t)
       end
+    @cache
   end
 
   def translate_field(translation_name, options: nil)
@@ -36,6 +37,10 @@ class TranslatorService
     end
   end
   alias :tf :translate_field
+
+  def cache_json
+    @cache.to_json
+  end
 
   private
 
