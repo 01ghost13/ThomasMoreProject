@@ -15,6 +15,8 @@ end
 langs = {
   EN: 'config/translations.yml',
   RU: 'config/ru_t.yml',
+  FR: 'config/fr_t.yml',
+  DUTCH: 'config/du_t.yml',
 }
 
 langs.each do |lang, path|

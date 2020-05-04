@@ -37,8 +37,6 @@ common:
     woman: Woman
     unknown: Unknown
   boolean:
-    'yes': 'Yes'
-    'no': 'No'
     true: 'Yes'
     false: 'No'
   forms:

@@ -1,0 +1,257 @@
+common:
+  flash:
+    account_created: Account aangemaakt! Bevestiging van account is naar e-mail gestuurd.
+    client_created: Klant gemaakt!
+    update_complete: Update compleet
+    administrator_deleted: Beheerder is verwijderd!
+    administrator_cant_be_deleted: U kunt deze beheerder niet verwijderen!
+    no_access: U heeft geen toegang tot deze pagina
+    client_hided_or_recovered: Klant is verborgen / hersteld.
+    cant_hide_client: Kan client niet verbergen / herstellen
+    client_deleted: Client is verwijderd.
+    client_cant_be_deleted: Je kunt deze client niet verwijderen
+    client_was_deactivated: 'Client is gedeactiveerd in:% {time}'
+    unconfirmed_mail: Je hebt je e-mail niet bevestigd! Bevestig uw e-mail.
+    does_not_exist: 'Deze% {class_name} bestaat niet.'
+    interest_created: Interesse toegevoegd!
+    interest_updated: Interesse bijgewerkt!
+    interest_deleted: Rente verwijderd!
+    mentor_deleted: Mentor is verwijderd!
+    picture_created: Foto gemaakt!
+    picture_updated: Foto bijgewerkt!
+    picture_deleted: Foto verwijderd!
+    test_unfinished: Test is niet voltooid
+    test_result_outdated: De test is bewerkt. Punten voor interesses zijn verouderd!
+    test_result_deleted: Resultaat verwijderd!
+    cant_find_client: Kan klant niet vinden
+    cant_find_test: Kan test niet vinden
+    empty_test: Test is leeg!
+    test_created: Test gemaakt!
+    test_updated: Test bijgewerkt!
+    test_deleted: Test verwijderd!
+    test_cant_be_deleted: Deze test heeft bijbehorende resultaten, verwijder ze eerst.
+    language_created: Taal gemaakt!
+    translation_updated: Vertaling bijgewerkt!
+  gender:
+    man: Mens
+    woman: Vrouw
+    unknown: Onbekend
+  boolean:
+    true: 'Ja'
+    false: 'Nee'
+  forms:
+    search: Zoeken
+    confirm: Bevestigen
+    add: Toevoegen
+    delete: Verwijderen
+    edit: Bewerk
+    hide: Zich verstoppen
+    recover: Herstellen
+    delete_confirm: Weet je het zeker?
+  menu:
+    home: Huis
+    settings: Instellingen
+    my_profile: Mijn profiel
+    log_out: Uitloggen
+    all: Allemaal
+    profile: Profiel
+    create: Creëer
+    edit_profile: Bewerk profiel
+  devise:
+    resend_confirmations: Verzend de bevestigingsinstructies opnieuw
+    confirm_instructions: U kunt de e-mail van uw account bevestigen via de onderstaande link
+    reset_instructions: Stuur mij instructies voor het opnieuw instellen van het wachtwoord
+    password_reset: Iemand heeft een link aangevraagd om uw wachtwoord te wijzigen. Dit kunt u doen via onderstaande link.
+    ignore_reset_request: Negeer deze e-mail als je hier niet om hebt gevraagd.
+    password_stays_unchanged: Uw wachtwoord verandert niet totdat u op de bovenstaande link klikt en een nieuwe aanmaakt.
+    confirm_account: Bevestig mijn account
+    forgot_password: Je wachtwoord vergeten?
+    change_password: Verander mijn wachtwoord
+    new_password: Nieuw paswoord
+    confirm_new_password: Bevestig nieuw wachtwoord
+    change_your_password: Verander uw wachtwoord
+    regards: Met vriendelijke groet, AitScore.
+    greetings: Groeten
+    log_in: Log in
+    remember_me: Onthoud me
+    didnt_received_confirm: Geen bevestigingsinstructies ontvangen?
+  kaminari:
+    next: De volgende
+    previous: Vorige
+    first: Eerste
+    last: Laatste
+  unions:
+    and: en
+
+entities:
+  interests:
+    index: Belangen
+    interest: Interesseren
+    create_interest: Interesse creëren
+    all_interests: Alle belangen
+    search_prompt: Voer de interessenaam in
+    delete_confirm: Het verwijderen heeft invloed op de resultaten. Weet je het zeker?
+    fields:
+      name: Naam
+  pictures:
+    index: Afbeeldingen
+    update: Foto bewerken
+    create: Maak een foto
+    all_pictures: Alle foto's
+    search_prompt: Voer een fotobeschrijving in
+    related_interests: Gerelateerde interesses
+    delete_confirm: Het verwijderen heeft invloed op de resultaten. Weet je het zeker?
+    add_interest: Interesse toevoegen
+    remove_interest: Interesse verwijderen
+    fields:
+      image: Afbeelding
+      description: Omschrijving
+      weight: Gewicht
+  tests:
+    index: Tests
+    all_tests: Alle tests
+    update: Test bewerken
+    create: Test maken
+    choosing_test: Test kiezen
+    back_to_profile: Terug naar profiel
+    count_of_questions: Aantal vragen
+    delete_confirm: Als u deze verwijdert, worden alle resultaten van deze test vernietigd. Weet je het zeker?
+    start: Begin
+    progress: Vooruitgang
+    continue: Doorgaan met
+    started_tests: Gestarte tests
+    choose_test: Kies test
+    no_started_tests: Er zijn geen gestarte tests
+    add_picture: Vraag toevoegen met afbeelding
+    add_youtube_video: Vraag toevoegen met YouTube-video
+    remove_question: Vraag verwijderen
+    fields:
+      name: Test naam
+      version: versie
+      description: Omschrijving
+      youtube_link: YouTube-link
+      youtube_video: Youtube video
+  users:
+    password_prompt: Leeg laten om oud te bewaren
+    confirmation_prompt: Bevestig je wachtwoord
+    fields:
+      email: E-mail
+      password: Wachtwoord
+      password_confirmation: Wachtwoordbevestiging
+  clients:
+    index: Klanten
+    create: Klant aanmaken
+    choose_admin: Kies een lokale beheerder
+    choose_mentor: Kies Mentor
+    search_prompt: Voer codenaam in
+    all_clients: Alle klanten
+    delete_confirm: Als u de klant verwijdert, worden ook al zijn resultaten verwijderd. Weet je het zeker?
+    latest_results: Laatste testresultaten
+    fields:
+      code_name: Codenaam
+      gender: Geslacht
+      mentor: Mentor
+      is_current_in_school: Is het actueel op school?
+  mentors:
+    index: Mentoren
+    mentor: Mentor
+    all_mentors: Alle mentoren
+    search_prompt: Voer hier de naam of achternaam in
+    create: Maak mentor
+    delete: Mentor verwijderen
+    update: Mentor bijwerken
+    choose_admin: Kies een lokale beheerder
+    choose_mentor: 'Kies mentor voor %{for}'
+    delegate_prompt: Voor verwijdering moet u een nieuwe mentor kiezen voor geassocieerde klanten
+  local_administrators:
+    administrator: Beheerder
+    index: Lokale beheerders
+    all_administrators: Alle beheerders
+    search_prompt: Voer hier de naam of achternaam in
+    create: Maak een lokale beheerder
+    update: Beheerder bijwerken
+    delete: Beheerder verwijderen
+    delegate_prompt: Om te verwijderen, moet u een nieuwe beheerder kiezen voor geassocieerde mentoren.
+    choose_admin: 'Kies beheerder voor %{for}'
+  employees:
+    phone_prompt: Laat leeg als u geen telefoon heeft
+    fields:
+      name: Naam
+      last_name: Achternaam
+      phone: Telefoon
+      organisation: Organisatie
+      organisation_address: Adres van de organisatie
+  result_of_tests:
+    update: Resultaat bijwerken
+    index: Resultaten van de test
+    all_results_of: Alle resultaten van
+    results_of: Resultaten van
+    result: Resultaat
+    result_outdated: Dit resultaat is verouderd
+    interest_points: Interessespunten
+    average_answer: Gemiddeld antwoordtijd op interesseveld
+    timeline: Tijdlijn
+    average_answer_short: Gem. Tijd van antwoord (sec)
+    attending_at_the_moment: Bijwonen op het moment van testen
+    time_of_answer: Tijd van antwoord
+    time_of_answer_short: Tijd van antwoord (sec)
+    heatmap: Heatmap weergeven
+    download_as: Download als
+    question_deleted: Deze vraag is verwijderd uit de test
+    earned_points: Verdiende interessepunten
+    summary: Overzicht
+    edit_request: Vraag uw mentor als u de resultaten wilt bewerken.
+    maximum_interest_point: Maximale punten in test
+    was_checked:
+      thumbs_up: Duimen omhoog
+      thumbs_down: Duimen omlaag
+      question_mark: Vraagteken
+    fields:
+      test_name: Test naam
+      start_date: Startdatum
+      end_date: Einddatum
+      ended: Beëindigd
+      question_number: Vraag nummer
+      time: Tijd
+      answer: Antwoord
+      was_rewrited: Is herschreven
+  questions:
+    index: Vragen
+  translations:
+    index: Vertalingen
+    all_translations: Alle vertalingen
+  languages:
+    create: Maak taal
+    language: Taal
+    fields:
+      name: Afkorting
+  picture_interests:
+    fields:
+      picture: Koppeling
+
+static:
+  home:
+    first_line: De ArbeidsInteresse Test (AIT) is ontwikkeld door MPI Oosterlo, Thomas More Kempen en Volgograd State Technical University. Een goede match tussen persoon en job, waarbij de functie aansluit bij de interesses en mogelijkheden, verhoogt de arbeidssatisfactie van mensen met een verstandelijke beperking aanzienlijk. De AIT is ontwikkeld om de interesse in bepaalde werkgebieden te tonen zonder rekening te houden met de competenties
+    second_line: De AIT is ontwikkeld als een visuele test die online kan worden afgelegd. De AIT schetst een beeld van de werkgebieden waarin de testpersoon wil werken of niet en levert informatie die aanvullend is bij andere methodieken die peilen naar arbeidsinteresse.  De gebruiker krijgt één foto tegelijk te zien en kan vervolgens zijn / haar voorkeur aangeven door de rode (negatieve) of groene (positieve) knop te selecteren. Als de gebruiker geen mening heeft over een foto, kan hij / zij deze foto overslaan
+    third_line: "De foto's zijn verdeeld in verschillende werkgebieden (bijvoorbeeld: voedselbereidingswerk, klantgericht werk, administratief werk, enz.). Na het beëindigen van de test, tonen de resultaten aan welke werkgebieden de voorkeur van de gebruiker heeft."
+    fourth_line: Het doel van de AIT is om de interesses voor werk van onze doelgroep regelmatig te screenen.
+    fives_line: De AIT is beschikbaar voor organisaties die werken met mensen met een verstandelijke beperking.
+    six_line: Heb je interesse om de test gratis uit te proberen? Stuur dan een mailtje naar
+    seven_line: Heb je al een account?
+
+errors:
+  field: Veld
+  taken: bestaat al
+  too_short: te kort
+  blank: is leeg
+  not_a_number: geen nummer
+  less_than: het is te klein
+  invalid: is ongeldig
+  confirmation: komt niet overeen met wachtwoord
+  not_found: record met een dergelijke waarde is niet gevonden
+  attachment_invalid: Bijlage moet afbeelding of gif zijn
+  attachment_too_big: Bijlage is te groot
+  link_error: U moet een afbeelding of een YouTube-link specificeren
+  no_questions: Test is leeg
+  testing_ended: Het testen is beëindigd
+  link_pattern: Verkeerde YouTube-link. Het moet https://youtu.be/ <ID>, https://m.youtube.com/watch?v= <ID> of https://www.youtube.com/watch?v= <ID> zijn.
