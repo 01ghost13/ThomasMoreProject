@@ -7,7 +7,8 @@ module TranslationModule
     helper_method :tf,
                   :translate_field,
                   :translate_errors,
-                  :cache_json
+                  :cache_json,
+                  :wrap_language
 
     class_attribute :translate_fields
 
@@ -43,5 +44,9 @@ module TranslationModule
   def translate_errors(errors, entity)
     entity_name = entity.class.to_s.pluralize.downcase
     ErrorsTranslator.translate_errors(errors.details, entity_name, translation_service)
+  end
+
+  def wrap_language(array)
+    Translatable.wrap_language(array, current_user.language_id)
   end
 end

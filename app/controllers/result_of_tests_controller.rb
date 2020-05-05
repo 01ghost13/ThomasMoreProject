@@ -63,7 +63,7 @@ class ResultOfTestsController < AdminController
             else
               q.picture
             end
-
+        wrap_language(attachment)
         related_i = attachment.related_interests if q.number == r.number
       end
       related_i.each_key do |interest|

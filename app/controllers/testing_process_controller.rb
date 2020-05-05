@@ -36,7 +36,7 @@ class TestingProcessController < AdminController
       return
     end
 
-    @description = @question.attachment_description
+    @description = wrap_language(@question.attachment)&.description || ''
 
     respond_to do |format|
       format.json do
@@ -64,7 +64,7 @@ class TestingProcessController < AdminController
     #Filling first question
     @question = @res.last_question
     @previous_question = @res.previous_question
-    @description = @question.attachment_description
+    @description = wrap_language(@question.attachment)&.description || ''
     @image = @question.picture&.middle_variant
 
     render layout: 'testing_layout'
@@ -92,7 +92,7 @@ class TestingProcessController < AdminController
   def index
     authorize!(@user, with: TestProccessPolicy)
 
-    @tests = Test.all.map(&:show_short)
+    @tests = wrap_language(Test.all).map(&:show_short)
     @tests = Kaminari.paginate_array(@tests).page(params[:page]).per(10)
 
     @not_finished_tests = ResultOfTest

@@ -11,6 +11,11 @@
 #
 
 class Test < ActiveRecord::Base
+  include TranslatableModels
+  include Translatable
+
+  define_translatable_columns %i[name description]
+
   after_save :set_outdated
 
   has_many :questions, inverse_of: :test, dependent: :destroy

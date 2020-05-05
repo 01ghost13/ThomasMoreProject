@@ -122,7 +122,7 @@ class TestsController < AdminController
     #Only super admin has access to aitscore\tests
     authorize!
 
-    @tests = Test.all.map(&:show_short)
+    @tests = wrap_language(Test.all).map(&:show_short)
     @tests = Kaminari.paginate_array(@tests).page(params[:page]).per(10)
   end
 

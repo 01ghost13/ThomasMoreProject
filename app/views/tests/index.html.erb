@@ -86,7 +86,7 @@
           <% @not_finished_tests.each do |result_of_test| %>
             <tr>
               <td><h4><%= date_to_local result_of_test.created_at %></h4></td>
-              <td><h4><%= result_of_test.test.name %></h4></td>
+              <td><h4><%= wrap_language(result_of_test.test).name %></h4></td>
               <td><h4><%= result_of_test.progress.join('/') %></h4></td>
               <td>
                 <%= link_to tf('entities.tests.continue'),

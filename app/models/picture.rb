@@ -9,6 +9,11 @@
 #
 
 class Picture < ActiveRecord::Base
+  include TranslatableModels
+  include Translatable
+
+  define_translatable_columns %i[description]
+
   has_many :picture_interests, inverse_of: :picture, dependent: :destroy
   has_many :interests, :through => :picture_interests
   has_many :questions, dependent: :destroy
@@ -25,7 +30,8 @@ class Picture < ActiveRecord::Base
     links = PictureInterest.where(picture_id: self.id)
     result = {}
     links.each do |link|
-      result[Interest.find(link.interest_id).name] = link.earned_points
+      interest = Translatable.wrap_language(Interest.find(link.interest_id), language_id)
+      result[interest.name] = link.earned_points
     end
     result
   end
