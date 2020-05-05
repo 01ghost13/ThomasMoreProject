@@ -20,6 +20,8 @@
 #
 
 class Client < ActiveRecord::Base
+  include TranslatableModels
+
   before_validation :setup_fields, on: :create
 
   # @deprecated
@@ -58,26 +60,38 @@ class Client < ActiveRecord::Base
   def email
     'Does not have any'
   end
+
   
   def show
-    user_info = {Codename: self.code_name}
+    user_info = {
+      code_name: self.code_name
+    }
     #Adding gender
     if self.gender == 1
       #dunno
-      user_info[:Gender] = 'Unknown'
+      user_info[:gender] = tf('common.gender.unknown')
     elsif self.gender == 2
       #men
-      user_info[:Gender] = 'Man'
+      user_info[:gender] = tf('common.gender.man')
     else
       #women
-      user_info[:Gender] = 'Woman'
+      user_info[:gender] = tf('common.gender.woman')
     end
 
-    user_info[:Mentor] = "#{employee.last_name} #{employee.name}"
-    user_info[:Current_in_school] = self.is_current_in_school ? 'Yes' : 'No'
+    user_info[:mentor] = "#{employee.last_name} #{employee.name}"
+    user_info[:is_current_in_school] = tf("common.boolean.#{self.is_current_in_school}")
     user_info
   end
 
+  def show_nested
+    {
+      clients: {
+        **show
+      }
+    }
+  end
+
+  # @deprecated
   def show_short
     user_info = {code_name: self.code_name}
     mentor = Mentor.find(self.mentor_id)

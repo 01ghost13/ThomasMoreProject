@@ -1,40 +1,60 @@
-<% provide(:title,'Results of test') %>
-<h1>All results of <%= link_to @code_name, client_path(params[:client_id]) %></h1>
+<% provide(:title, tf('entities.result_of_tests.index')) %>
+
+<h1><%= tf('entities.result_of_tests.all_results_of') %> <%= link_to @code_name, client_path(params[:client_id]) %></h1>
+
 <!-- Results index -->
 <div class="col-sm-12">
   <table class="table table-hover">
     <thead>
     <tr>
-      <td>Test name</td>
-      <td>Start date</td>
-      <td>Ended</td>
-      <td>End date</td>
-      <td>Result</td>
+      <td><%= tf('entities.result_of_tests.fields.test_name') %></td>
+      <td><%= tf('entities.result_of_tests.fields.start_date') %></td>
+      <td><%= tf('entities.result_of_tests.fields.ended') %></td>
+      <td><%= tf('entities.result_of_tests.fields.end_date') %></td>
+      <td><%= tf('entities.result_of_tests.result') %></td>
       <% unless current_user.client? %>
-        <td>Edit</td>
-        <td>Delete</td>
+        <td><%= tf('common.forms.edit') %></td>
+        <td><%= tf('common.forms.delete') %></td>
       <% end %>
     </tr>
     </thead>
     <% @results.each do |result| %>
       <% if result[:is_outdated] %>
-          <tr class="danger" title="This result is outdated">
+          <tr class="danger" title="<%= tf('entities.result_of_tests.result_outdated') %>">
         <% else %>
           <tr>
       <% end %>
-        <td><h4><%= link_to "#{result[:name_of_test].titleize}",
-                            test_path(result[:test_id]) %></h4></td>
+        <td>
+          <h4>
+            <%= link_to "#{result[:name_of_test].titleize}",
+                        test_path(result[:test_id])
+            %>
+          </h4>
+        </td>
         <td><h4><%= date_to_local result[:date_of_start] %></h4></td>
-        <td><h4><%= t result[:is_ended].class %></h4></td>
+        <td><h4><%= tf("common.boolean.#{result[:is_ended]}") %></h4></td>
         <td><h4><%= date_to_local result[:date_of_end] %></h4></td>
-        <td><%= link_to('Result', client_result_of_test_path(params[:client_id], result[:id]),
-                        class: 'btn btn-default') %></td>
+        <td>
+          <%= link_to tf('entities.result_of_tests.result'),
+                      client_result_of_test_path(params[:client_id], result[:id]),
+                      class: 'btn btn-default'
+          %>
+        </td>
         <% unless current_user.client? %>
-          <td><%= link_to('Edit', edit_client_result_of_test_path(params[:client_id], result[:id]),
-                        class: 'btn btn-warning') %></td>
-          <td><%= link_to('Delete', client_result_of_test_path(params[:client_id], result[:id]), method: :delete,
-                        data: { confirm: 'Are you sure?' },
-                        class: 'btn btn-danger') %></td>
+          <td>
+            <%= link_to tf('common.forms.edit'),
+                        edit_client_result_of_test_path(params[:client_id], result[:id]),
+                        class: 'btn btn-warning'
+            %>
+          </td>
+          <td>
+            <%= link_to tf('common.forms.delete'),
+                        client_result_of_test_path(params[:client_id], result[:id]),
+                        method: :delete,
+                        data: { confirm: tf('common.forms.delete_confirm') },
+                        class: 'btn btn-danger'
+            %>
+          </td>
         <% end %>
       </tr>
     <% end %>
@@ -43,15 +63,16 @@
 <div class="col-sm-12">
   <%= paginate @results %>
 </div>
+
 <!-- Graphs -->
 <div class="row">
   <div class="col-sm-12">
     <ul class="nav nav-tabs">
       <li class="active">
-        <a href="#interests_points" data-toggle="tab">Interests points</a>
+        <a href="#interests_points" data-toggle="tab"><%= tf('entities.result_of_tests.interest_points') %></a>
       </li>
       <li>
-        <a href="#avg_interests" data-toggle="tab">Average answer time to interest field</a>
+        <a href="#avg_interests" data-toggle="tab"><%= tf('entities.result_of_tests.average_answer') %></a>
       </li>
     </ul>
     <div class="tab-content">
@@ -59,8 +80,13 @@
         <%= pie_chart @interest_points, download: true %>
       </div>
       <div class="tab-pane fade" id="avg_interests">
-        <%= column_chart @avg_time, id: 'avg_interests_chart', xtitle: 'Interest', ytitle: 'Avg time of answer(sec)',
-                         download: true, discrete: true %>
+        <%= column_chart @avg_time,
+                         id: 'avg_interests_chart',
+                         xtitle: tf('entities.interests.interest'),
+                         ytitle: tf('entities.result_of_tests.average_answer_short'),
+                         download: true,
+                         discrete: true
+        %>
       </div>
     </div>
   </div>

@@ -10,6 +10,11 @@
 #
 
 class YoutubeLink < ActiveRecord::Base
+  include TranslatableModels
+  include Translatable
+
+  define_translatable_columns %i[description]
+
   has_many :picture_interests, inverse_of: :picture, dependent: :destroy
   has_many :interests, :through => :picture_interests
   has_many :questions
@@ -44,7 +49,8 @@ class YoutubeLink < ActiveRecord::Base
     links = PictureInterest.where(youtube_link_id: id)
     result = {}
     links.each do |link|
-      result[Interest.find(link.interest_id).name] = link.earned_points
+      interest = Translatable.wrap_language(Interest.find(link.interest_id), language_id)
+      result[interest.name] = link.earned_points
     end
     result
   end
@@ -55,7 +61,7 @@ class YoutubeLink < ActiveRecord::Base
 
       regex = /https:\/\/(www\.)?(((m\.)?youtube\.com\/watch\?v=[\w-]+)|(youtu\.be\/[\w-]+))\/?$/
       unless regex =~ link
-        errors.add(:link, 'Wrong youtube link. It should be https://youtu.be/<ID>, https://m.youtube.com/watch?v=<ID> or https://www.youtube.com/watch?v=<ID>')
+        errors.add(:link, :link_pattern)
       end
     end
 end

@@ -1,4 +1,13 @@
 class ResultOfTestsController < AdminController
+  translations_for_preload %i[
+    common.flash.test_unfinished
+    common.flash.update_complete
+    common.flash.test_result_outdated
+    common.flash.test_result_deleted
+    common.flash.cant_find_client
+    common.flash.cant_find_test
+    common.flash.empty_test
+  ]
 
   def edit
     @result = ResultOfTest.find_by(id: params[:result_id])
@@ -6,7 +15,7 @@ class ResultOfTestsController < AdminController
     @user = @result
     #Only finished results are editable
     unless @result.is_ended
-	    flash[:warning] = 'Test is not finished'
+	    flash[:warning] = tf('common.flash.test_unfinished')
       redirect_back fallback_location: client_path(params[:client_id])
     end
   end
@@ -16,7 +25,7 @@ class ResultOfTestsController < AdminController
     authorize!(@result)
     @user = @result
     if @result.update(result_params)
-      flash[:success] = 'Update Complete'
+      flash[:success] = tf('common.flash.update_complete')
       redirect_to(client_result_of_test_path(params[:client_id], params[:result_id]))
     else
       render :edit
@@ -25,11 +34,13 @@ class ResultOfTestsController < AdminController
 
   def show
     result = ResultOfTest.result_page.find_by(id: params[:result_id])
+    result.language_id = current_user.language_id
+
     authorize!(result)
 
     #If test was changed, results are outdated
     if result.is_outdated?
-      flash.now[:danger] = 'The test was edited. Points for interests are outdated!'
+      flash.now[:danger] = tf('common.flash.test_result_outdated')
     end
 
     avg_time_per_interest = {}
@@ -52,7 +63,7 @@ class ResultOfTestsController < AdminController
             else
               q.picture
             end
-
+        wrap_language(attachment)
         related_i = attachment.related_interests if q.number == r.number
       end
       related_i.each_key do |interest|
@@ -127,7 +138,7 @@ class ResultOfTestsController < AdminController
     authorize!(result)
 
     if result.destroy
-      flash[:success] = 'Result deleted!'
+      flash[:success] = tf('common.flash.test_result_deleted')
       redirect_to client_result_of_tests_path(params[:client_id])
     else
       @user = result
@@ -145,14 +156,14 @@ class ResultOfTestsController < AdminController
 
     if @test.blank? || @client.blank?
       #Cant find test or client
-      flash[:danger] = "Can't find client" if @client.blank?
-      flash[:danger] = "Can't find test" if @test.blank?
+      flash[:danger] = tf('common.flash.cant_find_client') if @client.blank?
+      flash[:danger] = tf('common.flash.cant_find_test') if @test.blank?
       redirect_back fallback_location: show_path_resolver(current_user) and return
     end
 
     #Checking questions in test
     if @test.questions.blank?
-      flash[:danger] = 'Test is empty!'
+      flash[:danger] = tf('common.flash.empty_test')
       redirect_back fallback_location: show_path_resolver(current_user) and return
     end
 

@@ -1,0 +1,36 @@
+<%
+  url =
+    if translation.id.present?
+      translation_path(translation.id)
+    else
+      translations_path
+    end
+%>
+<%= form_for translation.this, url: url do |f| %>
+  <div class="row">
+    <%= f.label "#{lang.name}.#{translation.field}",
+                translation.value_en,
+                class: 'col-sm-4 control-label'
+    %>
+    <div class="col-sm-6">
+      <% if translation.text_area? %>
+        <%= f.text_area :value,
+                        class: 'form-control',
+                        id: "#{lang.name}.#{translation.field}",
+                        rows: 10
+        %>
+      <% else %>
+          <%= f.text_field :value,
+                           class: 'form-control',
+                           id: "#{lang.name}.#{translation.field}"
+          %>
+      <% end %>
+    </div>
+
+    <%= f.hidden_field :id %>
+    <%= f.hidden_field :language_id %>
+    <%= f.hidden_field :field %>
+
+    <%= f.submit tf('common.forms.edit'), class: 'col-sm-2 btn btn-warning' %>
+  </div>
+<% end %>

@@ -1,0 +1,97 @@
+<% provide :title, tf('entities.translations.index') %>
+<%= render 'shared/error_message' %>
+
+<%= render partial: 'translations/language_form',
+           locals: {
+             language: @language
+           }
+%>
+
+<h1><%= tf('entities.translations.all_translations') %></h1>
+
+<div class="row col-sm-12">
+
+  <!-- Lang tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <% @translations_presenter.languages.each.with_index do |lang, i| %>
+      <%
+        tab_class = active_tab?(lang.id, i) ? 'active' : ''
+      %>
+      <li role="presentation"
+          class="<%= tab_class %>"
+      >
+        <a href="#<%= lang.name %>"
+           aria-controls="<%= lang.name %>"
+           role="tab"
+           data-toggle="tab"
+        >
+          <%= lang.name %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content row col-sm-offset-2 margin-top-20">
+    <% @translations_presenter.grouped.each.with_index do |lang, i| %>
+      <%
+        tab_class = active_tab?(lang.id, i) ? 'active' : ''
+      %>
+      <div role="tabpanel"
+           class="tab-pane col-sm-12 <%= tab_class %>"
+           id="<%= lang.name %>"
+      >
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation"
+              class="active"
+          >
+            <a href="#<%= lang.name %>_literals"
+               aria-controls="<%= lang.name %>_literals"
+               role="tab"
+               data-toggle="tab"
+            >
+              Website
+            </a>
+          </li>
+          <li role="presentation"
+              class=""
+          >
+            <a href="#<%= lang.name %>_content"
+               aria-controls="<%= lang.name %>_content"
+               role="tab"
+               data-toggle="tab"
+            >
+              Content
+            </a>
+          </li>
+        </ul>
+
+        <div class="tab-content margin-top-20">
+
+          <div role="tabpanel"
+               class="tab-pane col-sm-12 active"
+               id="<%= lang.name %>_literals"
+          >
+            <% lang.translations.each do |translation| %>
+              <%= render partial: 'translations/form',
+                         locals: { lang: lang, translation: translation }
+              %>
+            <% end %>
+          </div>
+
+          <div role="tabpanel"
+               class="tab-pane col-sm-12"
+               id="<%= lang.name %>_content"
+          >
+            <% lang.translated_columns.each do |translation| %>
+              <%= render partial: 'translations/translated_columns_form',
+                         locals: { lang: lang, translation: translation }
+              %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+</div>

@@ -1,29 +1,33 @@
-<% provide(:title,'Pictures List') %>
-<h1>All pictures</h1>
+<% provide(:title, tf('entities.pictures.all_pictures')) %>
+
+<h1><%= tf('entities.pictures.all_pictures') %></h1>
+
 <div class="row">
   <%= search_form_for @q do |f|%>
     <div class="form-group col-sm-4">
-      <%= f.label :description_cont, 'Search', class: 'sr-only' %>
+      <%= f.label :description_cont, tf('common.forms.search'), class: 'sr-only' %>
       <%= f.search_field :description_cont, {
-          placeholder: 'Enter description...',
+          placeholder: tf('entities.pictures.search_prompt'),
           class: 'form-control'
       } %>
     </div>
-    <%= f.submit 'Search', class: 'btn btn-primary col-sm-1' %>
+    <%= f.submit tf('common.forms.search'), class: 'btn btn-primary col-sm-1' %>
   <% end %>
 </div>
+
 <div class="row">
-  <%= link_to('Add picture', new_picture_path, class: 'btn btn-primary') %>
+  <%= link_to(tf('entities.pictures.create'), new_picture_path, class: 'btn btn-primary') %>
 </div>
+
 <div class="col-sm-12">
   <table class="table table-hover">
     <thead>
     <tr>
-      <td>Picture</td>
-      <td><%= sort_link @q, :description, 'Description' %></td>
-      <td>Related interests</td>
-      <td>Edit</td>
-      <td>Delete</td>
+      <td><%= tf('entities.pictures.fields.image') %></td>
+      <td><%= sort_link @q, :description, tf('entities.pictures.fields.description') %></td>
+      <td><%= tf('entities.pictures.related_interests') %></td>
+      <td><%= tf('common.forms.edit') %></td>
+      <td><%= tf('common.forms.delete') %></td>
     </tr>
     </thead>
     <% @pictures.each do |picture| %>
@@ -33,12 +37,29 @@
               <%= image_tag url_for(picture.small_variant) %>
             <% end %>
           </td>
-          <td class="col-sm-3"><h4><%= picture.description %></h4></td>
-          <td class="col-sm-3"><h4><%= picture.related_interests.keys.join(', ') %></h4></td>
-          <td class="col-sm-1"><%= link_to('Edit', edit_picture_path(picture.id), class: 'btn btn-warning') %></td>
-          <td class="col-sm-1"><%= link_to('Delete', picture_path(picture.id), method: :delete,
-                                           data: { confirm: "Deleting will affect on results.\n Are you sure?" },
-                                           class: 'btn btn-danger') %></td>
+          <td class="col-sm-3">
+            <h4>
+              <%= picture.description %>
+            </h4>
+          </td>
+          <td class="col-sm-3">
+            <h4>
+              <%= picture.related_interests.keys.join(', ') %>
+            </h4>
+          </td>
+          <td class="col-sm-1">
+            <%= link_to(tf('common.forms.edit'), edit_picture_path(picture.id), class: 'btn btn-warning') %>
+          </td>
+          <td class="col-sm-1">
+            <%= link_to tf('common.forms.delete'),
+                        picture_path(picture.id),
+                        method: :delete,
+                        data: {
+                          confirm: tf('entities.pictures.delete_confirm')
+                        },
+                        class: 'btn btn-danger'
+            %>
+          </td>
         </tr>
     <% end %>
   </table>

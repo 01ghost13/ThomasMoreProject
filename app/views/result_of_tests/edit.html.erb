@@ -1,23 +1,40 @@
-<% provide(:title,"Edit result") %>
+<% provide(:title, tf('entities.result_of_tests.update')) %>
+
 <%= render 'shared/error_message' %>
-<h1 class="row col-sm-offset-4">Update result of test</h1>
-<%= form_for @result,class: "form-horizontal", url: client_result_of_test_path(params[:client_id],params[:result_id]) do |result_form| %>
+
+<h1 class="row col-sm-offset-4"><%= tf('entities.result_of_tests.update') %></h1>
+
+<%= form_for @result,
+             class: "form-horizontal",
+             url: client_result_of_test_path(params[:client_id], params[:result_id]) do |result_form|
+%>
 	<%= result_form.fields_for :question_results do |question_form| %>
 		<div class="row col-sm-offset-2">
-			<h4 class="col-sm-4">Question #<%=question_form.object.number%></h4>
+			<h4 class="col-sm-4">
+        <%= tf('entities.result_of_tests.fields.question_number') %>#<%= question_form.object.number %>
+      </h4>
 		</div>
+
 		<div class="row col-sm-offset-2">
-			<h4 class="col-sm-4">Time: <%=question_form.object.end - question_form.object.start %></h4>
+			<h4 class="col-sm-4">
+        <%= tf('entities.result_of_tests.fields.time') %>: <%= question_form.object.total_time %>
+      </h4>
 		</div>
+
 		<div class="row col-sm-offset-2 form-group">
-			<%= question_form.label :was_checked,'Answer',class: "col-sm-2 control-label" %>
+			<%= question_form.label :was_checked,
+                              tf('entities.result_of_tests.fields.answer'),
+                              class: 'col-sm-2 control-label'
+      %>
 			<div class="col-sm-4">
-				<%= question_form.select(:was_checked, options_for_select(
-				  [
-				    ['Thumbs down', 1],
-				    ['Question mark', 2],
-				    ['Thumbs up', 3]
-				  ],question_form.object.was_checked),{},{class: 'form-control'}) 
+				<%= question_form.select :was_checked,
+                                 options_for_select([
+                                   [tf('entities.result_of_tests.was_checked.thumbs_down'), 1],
+                                   [tf('entities.result_of_tests.was_checked.question_mark'), 2],
+                                   [tf('entities.result_of_tests.was_checked.thumbs_up'), 3]
+                                 ], question_form.object.was_checked),
+                                 {},
+                                 { class: 'form-control' }
 				 %>
 			 </div>
 		</div>
@@ -25,7 +42,7 @@
 	
 	<div class="row col-sm-offset-2 form-group">
 		<div class="col-sm-offset-2 col-sm-2">
-			<%= result_form.submit "Confirm", class: "btn btn-primary" %>
+			<%= result_form.submit tf('common.forms.confirm'), class: 'btn btn-primary' %>
 		</div>
 	</div>
 <% end %>

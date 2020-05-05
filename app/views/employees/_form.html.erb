@@ -3,11 +3,11 @@
 %>
 <!--Name -->
 <div class="row col-sm-offset-2 form-group">
-  <%= f.label :name, class: 'col-sm-2 control-label' %>
+  <%= f.label :name, tf('entities.employees.fields.name'), class: 'col-sm-2 control-label' %>
   <div class="col-sm-4">
     <%= f.text_field :name,
                      class: 'form-control',
-                     placeholder: 'Name'
+                     placeholder: tf('entities.employees.fields.name')
     %>
   </div>
 </div>
@@ -15,12 +15,13 @@
 <!--LastName -->
 <div class="row col-sm-offset-2 form-group">
   <%= f.label :last_name,
+              tf('entities.employees.fields.last_name'),
               class: 'col-sm-2 control-label'
   %>
   <div class="col-sm-4">
     <%= f.text_field :last_name,
                      class: 'form-control',
-                     placeholder: 'Last name'
+                     placeholder: tf('entities.employees.fields.last_name')
     %>
   </div>
 </div>
@@ -28,12 +29,13 @@
 <!--Phone-->
 <div class="row col-sm-offset-2 form-group">
   <%= f.label :phone,
+              tf('entities.employees.fields.phone'),
               class: 'col-sm-2 control-label'
   %>
   <div class="col-sm-4">
     <%= f.text_field :phone,
                      class: 'form-control',
-                     placeholder: "Leave blank if you don't have phone"
+                     placeholder: tf('entities.employees.phone_prompt')
     %>
   </div>
 </div>
@@ -41,12 +43,13 @@
   <!--Organisation -->
   <div class="row col-sm-offset-2 form-group">
     <%= f.label :organisation,
+                tf('entities.employees.fields.organisation'),
                 class: 'col-sm-2 control-label'
     %>
     <div class="col-sm-4">
       <%= f.text_field :organisation,
                        class: 'form-control',
-                       placeholder: 'Organisation'
+                       placeholder: tf('entities.employees.fields.organisation')
       %>
     </div>
   </div>
@@ -54,12 +57,13 @@
   <!--Organisation address -->
   <div class="row col-sm-offset-2 form-group">
     <%= f.label :organisation_address,
+                tf('entities.employees.fields.organisation_address'),
                 class: 'col-sm-2 control-label'
     %>
     <div class="col-sm-4">
       <%= f.text_field :organisation_address,
                        class: 'form-control',
-                       placeholder: 'Address of organisation'
+                       placeholder: tf('entities.employees.fields.organisation_address')
       %>
     </div>
   </div>

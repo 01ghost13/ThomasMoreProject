@@ -4,13 +4,13 @@ class AdminController < ApplicationController
   verify_authorized
 
   rescue_from ActionPolicy::Unauthorized do |ex|
-    Rails.logger.error <<-TEXT
+    Rails.logger.warn <<-TEXT
       User #{current_user.id}(#{current_user.role}) failed authorization.
       Stage: #{ex.result.reasons.details}
       Backtrace: #{ex.backtrace}
     TEXT
 
-    flash[:danger] = ex.result.reasons.full_messages
+    flash[:danger] = tf('common.flash.no_access')
     redirect_to show_path_resolver(current_user)
   end
 
@@ -20,7 +20,7 @@ class AdminController < ApplicationController
     return if current_user.client?
 
     unless current_user.confirmed?
-      flash[:danger] = "You haven't confirmed your mail!\n Please, confirm your mail."
+      flash[:danger] = tf('common.flash.unconfirmed_mail')
       redirect_to :root
     end
   end
@@ -30,7 +30,7 @@ class AdminController < ApplicationController
     if class_ref.exists?(id)
       true
     else
-      flash[:danger] = "This #{class_ref.to_s.downcase} does not exist."
+      flash[:danger] = tf('common.flash.does_not_exist', options: { class_name: class_ref.to_s.downcase })
       false
     end
   end
@@ -38,7 +38,7 @@ class AdminController < ApplicationController
   # @deprecated
   def check_super_admin
     unless is_super?
-      flash[:danger] = 'You have no access to this page!'
+      flash[:danger] = tf('common.flash.no_access')
       redirect_to show_path_resolver(current_user)
     end
   end

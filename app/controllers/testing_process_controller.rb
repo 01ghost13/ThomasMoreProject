@@ -1,4 +1,7 @@
 class TestingProcessController < AdminController
+  translations_for_preload %i[
+  ]
+
   before_action :preload_entity
 
   #Updates picture in /testing process
@@ -9,7 +12,7 @@ class TestingProcessController < AdminController
     manager = TestingManager.new(params[:result_of_test_id])
 
     unless manager.valid?
-      flash[:danger] = manager.errors.values.last
+      flash[:danger] = tf("errors.#{manager.errors.last}")
       render json: {
         result_url: show_path_resolver(current_user)
       }
@@ -33,7 +36,7 @@ class TestingProcessController < AdminController
       return
     end
 
-    @description = @question.attachment_description
+    @description = wrap_language(@question.attachment)&.description || ''
 
     respond_to do |format|
       format.json do
@@ -49,7 +52,7 @@ class TestingProcessController < AdminController
     manager = TestingManager.new(params[:result_of_test_id])
 
     unless manager.valid?
-      flash[:danger] = manager.errors.values.last
+      flash[:danger] = tf("errors.#{manager.errors.last}")
       redirect_back fallback_location: show_path_resolver(current_user)
       return
     end
@@ -61,7 +64,7 @@ class TestingProcessController < AdminController
     #Filling first question
     @question = @res.last_question
     @previous_question = @res.previous_question
-    @description = @question.attachment_description
+    @description = wrap_language(@question.attachment)&.description || ''
     @image = @question.picture&.middle_variant
 
     render layout: 'testing_layout'
@@ -89,7 +92,7 @@ class TestingProcessController < AdminController
   def index
     authorize!(@user, with: TestProccessPolicy)
 
-    @tests = Test.all.map(&:show_short)
+    @tests = wrap_language(Test.all).map(&:show_short)
     @tests = Kaminari.paginate_array(@tests).page(params[:page]).per(10)
 
     @not_finished_tests = ResultOfTest

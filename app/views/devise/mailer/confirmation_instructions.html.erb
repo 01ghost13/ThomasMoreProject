@@ -1,8 +1,8 @@
 <% employee = @user.employee %>
-<p>Greetings <%= employee.last_name.titleize %> <%= employee.name.titleize %>,</p>
+<p><%= tf('common.devise.greetings') %> <%= employee.last_name.titleize %> <%= employee.name.titleize %>,</p>
 
-<p>You can confirm your account email through the link below:</p>
+<p><%= tf('common.devise.confirm_instructions') %></p>
 
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p>
+<p><%= link_to tf('common.devise.confirm_account'), confirmation_url(@resource, confirmation_token: @token) %></p>
 
-<p>With regards, AitScore.</p>
+<p><%= tf('common.devise.regards') %></p>

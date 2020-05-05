@@ -39,6 +39,10 @@ class Question < ActiveRecord::Base
     end
   end
 
+  def attachment
+    picture || youtube_link
+  end
+
   private
     def on_destroy
       #Changes number of questions

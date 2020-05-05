@@ -15,6 +15,8 @@
 #
 
 class ResultOfTest < ActiveRecord::Base
+  include TranslatableModels
+
   before_validation :setup_fields, on: :create
 
   belongs_to :test
@@ -86,8 +88,14 @@ class ResultOfTest < ActiveRecord::Base
     timeline = []
     duration = 0
     results = QuestionResult.order(:number).where(result_of_test_id: self.id)
+    states = [
+      tf('entities.result_of_tests.was_checked.thumbs_down'),
+      tf('entities.result_of_tests.was_checked.question_mark'),
+      tf('entities.result_of_tests.was_checked.thumbs_up')
+    ]
     results.each do |r|
-      timeline << [r.human_was_checked, duration, duration + (r.end - r.start)]
+      human_was_checked = states[r.was_checked - 1]
+      timeline << [human_was_checked, duration, duration + (r.end - r.start)]
       duration += r.end - r.start
     end
     timeline

@@ -1,4 +1,4 @@
-<h1>Resend confirmation instructions</h1>
+<h1><%= tf('common.devise.resend_confirmations') %></h1>
 
 <%= form_for(resource,
              as: resource_name,
@@ -8,7 +8,7 @@
   <%= render "devise/shared/error_messages", resource: resource %>
 
   <div class="row col-sm-offset-2 form-group">
-    <%= f.label :email, "Email", class: "col-sm-2 control-label" %>
+    <%= f.label :email, tf('entities.users.fields.email'), class: "col-sm-2 control-label" %>
     <div class="col-sm-4">
       <%= f.text_field :email,
                        autofocus: true,
@@ -21,7 +21,7 @@
 
   <div class="row col-sm-offset-2 form-group">
     <div class="col-sm-offset-2 col-sm-4">
-      <%= f.submit 'Resend confirmation instructions', class: 'btn btn-primary' %>
+      <%= f.submit tf('common.devise.resend_confirmations'), class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>

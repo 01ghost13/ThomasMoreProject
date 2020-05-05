@@ -1,4 +1,42 @@
 class AdministratorsController < AdminController
+  translations_for_preload %i[
+    common.flash.account_created
+    common.flash.administrator_cant_be_deleted
+    common.flash.administrator_deleted
+    common.flash.no_access
+    common.flash.update_complete
+    common.forms.confirm
+    common.forms.delete
+    common.forms.edit
+    common.kaminari.first
+    common.kaminari.last
+    common.kaminari.next
+    common.kaminari.previous
+    common.menu.all
+    common.menu.create
+    common.menu.log_out
+    common.menu.my_profile
+    common.menu.profile
+    common.menu.settings
+    entities.clients.create
+    entities.clients.index
+    entities.employees.fields.last_name
+    entities.employees.fields.name
+    entities.employees.fields.organisation
+    entities.employees.fields.organisation_address
+    entities.employees.fields.phone
+    entities.employees.phone_prompt
+    entities.interests.index
+    entities.local_administrators.create
+    entities.local_administrators.index
+    entities.local_administrators.update
+    entities.mentors.create
+    entities.mentors.index
+    entities.pictures.index
+    entities.tests.index
+    entities.users.fields.email
+  ]
+
   before_action :preload_entity, only: %i[edit update show delete delegate]
 
   def new
@@ -14,7 +52,7 @@ class AdministratorsController < AdminController
     @user.userable = @user.build_employee(administrator_params[:employee_attributes])
 
     if @user.save
-      flash[:success] = 'Account created! Confirmation of account was sent to email.'
+      flash[:success] = tf('common.flash.account_created')
 
       redirect_to administrator_path(@user)
     else
@@ -37,7 +75,7 @@ class AdministratorsController < AdminController
     authorize!(@user)
 
     if @user.update(administrator_params)
-      flash[:success] = 'Update Complete'
+      flash[:success] = tf('common.flash.update_complete')
       redirect_to administrator_path(@user)
     else
       render :edit
@@ -47,7 +85,7 @@ class AdministratorsController < AdminController
   def show
     authorize!(@user)
     # TODO Make presenter
-    @user_info = @user.show.to_a
+    @user_info = translate_hash(@user.show_nested)
   end
 
   def delegate
@@ -73,7 +111,7 @@ class AdministratorsController < AdminController
     # Admin can be deleted only if hasn't mentors
     if employee.employees.empty? || employee.update(delete_administrator_params)
       if @administrator.reload.destroy
-        flash[:success] = 'Administrator was deleted!'
+        flash[:success] = tf('common.flash.administrator_deleted')
         redirect_to administrators_path and return
       end
     end
@@ -99,7 +137,7 @@ class AdministratorsController < AdminController
       administrator = User.find(params[:id])
       #Blocking a deletion of super administrator
       if administrator.super_admin?
-        flash[:danger] = "You can't delete this administrator!"
+        flash[:danger] = tf('common.flash.administrator_cant_be_deleted')
         redirect_to show_path_resolver(current_user)
       end
       administrator
@@ -112,6 +150,7 @@ class AdministratorsController < AdminController
           :email,
           :password,
           :password_confirmation,
+          :language_id,
           employee_attributes: %i[id organisation phone organisation_address last_name name]
         )
         .tap do |p|
@@ -130,7 +169,7 @@ class AdministratorsController < AdminController
     def check_rights
       #Only SA or user can edit/delete their accounts
       unless is_super? || current_user.local_admin? && current_user.id == params[:id].to_i
-        flash[:danger] = 'You have no access to this page.'
+        flash[:danger] = tf('common.flash.no_access')
         #Redirect
         redirect_to show_path_resolver(current_user)
       end
@@ -140,7 +179,7 @@ class AdministratorsController < AdminController
     # @deprecated
     def check_type_rights
       unless current_user.local_admin? || is_super?
-        flash[:danger] = 'You have no access to this page!'
+        flash[:danger] = tf('common.flash.no_access')
         redirect_to show_path_resolver(current_user)
       end
     end

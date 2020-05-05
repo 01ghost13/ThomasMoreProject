@@ -1,25 +1,45 @@
 wb = xlsx_package.workbook
 
-wb.add_worksheet(name: 'Questions') do |sheet|
-  sheet.add_row ['#', 'Start', 'End', 'Time of answer (sec)', 'Flag of re answered question', 'Answer']
+wb.add_worksheet(name: tf('entities.questions.index')) do |sheet|
+  sheet.add_row [
+    '#',
+    tf('entities.result_of_tests.fields.start_date'),
+    tf('entities.result_of_tests.fields.end'),
+    tf('entities.result_of_tests.time_of_answer_short'),
+    tf('entities.result_of_tests.fields.was_rewrited'),
+    tf('entities.result_of_tests.fields.answer')
+  ]
   @list_timestamps.each_with_index do |element, i|
-    row = [i + 1, element[:start].to_datetime, element[:end].to_datetime,
-           ('%0.2f s'%[element[:end] - element[:start]]).to_f, element[:was_rewrited]]
+    row = [
+      i + 1,
+      element[:start].to_datetime,
+      element[:end].to_datetime,
+      ('%0.2f s'%[element[:end] - element[:start]]).to_f,
+      element[:was_rewrited]
+    ]
     if element[:was_checked] == 3
-      row << 'Thumbs up'
+      row << tf('entities.result_of_tests.was_checked.thumbs_up')
     elsif element[:was_checked] == 1
-      row << 'Thumbs down'
+      row << tf('entities.result_of_tests.was_checked.thumbs_down')
     else
-      row << 'Question mark'
+      row << tf('entities.result_of_tests.was_checked.question_mark')
     end
     sheet.add_row row
   end
 end
 
-wb.add_worksheet(name: 'Interests') do |sheet|
-  sheet.add_row ['Interest', 'Points', 'Maximum points in test']
+wb.add_worksheet(name: tf('entities.interests.index')) do |sheet|
+  sheet.add_row [
+    tf('entities.interests.interest'),
+    tf('entities.result_of_tests.earned_points'),
+    tf('entities.result_of_tests.maximum_interest_point')
+  ]
   @list_interests.each do |element|
-    row = [element[0].to_s.humanize, element[1], @list_interests_max[element[0]]]
+    row = [
+      element[0].to_s.humanize,
+      element[1],
+      @list_interests_max[element[0]]
+    ]
     sheet.add_row row
   end
 end

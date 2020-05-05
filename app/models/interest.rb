@@ -9,10 +9,15 @@
 #
 
 class Interest < ActiveRecord::Base
+  include TranslatableModels
+  include Translatable
+
+  define_translatable_columns %i[name]
+
   has_many :picture_interests
   has_many :pictures, :through => :picture_interests
 
-  validates :name, uniqueness: true, presence: true, length: {in: 2..25}
+  validates :name, uniqueness: true, presence: true, length: { in: 5..100 }
 
   before_destroy do
     #delete all entries in picture_interests

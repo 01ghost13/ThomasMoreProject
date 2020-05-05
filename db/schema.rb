@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_09_103750) do
+ActiveRecord::Schema.define(version: 2020_05_04_082752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,6 +110,10 @@ ActiveRecord::Schema.define(version: 2020_04_09_103750) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "languages", force: :cascade do |t|
+    t.string "name", null: false
+  end
+
   create_table "mentors", id: :serial, force: :cascade do |t|
     t.integer "info_id"
     t.integer "administrator_id"
@@ -188,6 +192,26 @@ ActiveRecord::Schema.define(version: 2020_04_09_103750) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "translated_columns", force: :cascade do |t|
+    t.string "target_column", null: false
+    t.string "translation", null: false
+    t.string "translatable_type"
+    t.bigint "translatable_id"
+    t.bigint "language_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["language_id"], name: "index_translated_columns_on_language_id"
+    t.index ["translatable_type", "translatable_id"], name: "translatable_index"
+  end
+
+  create_table "translations", force: :cascade do |t|
+    t.string "field", null: false
+    t.string "value", null: false
+    t.bigint "language_id", null: false
+    t.index ["field", "language_id"], name: "index_translations_on_field_and_language_id", unique: true
+    t.index ["language_id"], name: "index_translations_on_language_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.integer "role", null: false
     t.string "userable_type", null: false
@@ -204,8 +228,10 @@ ActiveRecord::Schema.define(version: 2020_04_09_103750) do
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
+    t.bigint "language_id", default: 1, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["language_id"], name: "index_users_on_language_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["userable_type", "userable_id"], name: "index_users_on_userable_type_and_userable_id"
   end

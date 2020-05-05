@@ -143,13 +143,13 @@ class TestForm extends React.Component {
   renderName() {
     return(
       <div className="row col-sm-offset-2 form-group">
-        <label className="col-sm-2 control-label">Name</label>
+        <label className="col-sm-2 control-label">{tf('entities.tests.fields.name')}</label>
         <div className="col-sm-4">
           <input className="form-control"
                  type="text"
                  value={this.state.name}
                  onChange={this.nameChanged}
-                 placeholder="Name"
+                 placeholder={tf('entities.tests.fields.name')}
           />
         </div>
       </div>
@@ -159,13 +159,13 @@ class TestForm extends React.Component {
   renderVersion() {
     return(
       <div className="row col-sm-offset-2 form-group">
-        <label className="col-sm-2 control-label">Version</label>
+        <label className="col-sm-2 control-label">{tf('entities.tests.fields.version')}</label>
         <div className="col-sm-4">
           <input className="form-control"
                  type="text"
                  value={this.state.version}
                  onChange={this.versionChanged}
-                 placeholder="Version"
+                 placeholder={tf('entities.tests.fields.version')}
           />
         </div>
       </div>
@@ -175,13 +175,13 @@ class TestForm extends React.Component {
   renderDescription() {
     return(
       <div className="row col-sm-offset-2 form-group">
-        <label className="col-sm-2 control-label">Description</label>
+        <label className="col-sm-2 control-label">{tf('entities.tests.fields.description')}</label>
         <div className="col-sm-4">
           <input className="form-control"
                  type="text"
                  value={this.state.description}
                  onChange={this.descriptionChanged}
-                 placeholder="Description"
+                 placeholder={tf('entities.tests.fields.description')}
           />
         </div>
       </div>
@@ -207,14 +207,14 @@ class TestForm extends React.Component {
           <a className="btn btn-primary col-sm-6"
              onClick={this.addQuestion}
           >
-            Add question with picture
+            {tf('entities.tests.add_picture')}
           </a>
         </div>
         <div className="row col-sm-offset-7 form-group">
           <a className="btn btn-primary col-sm-6"
              onClick={this.addQuestionYT}
           >
-            Add question with Youtube video
+            {tf('entities.tests.add_youtube_video')}
           </a>
         </div>
       </div>
@@ -242,13 +242,13 @@ class TestForm extends React.Component {
       >
         <div className="form-group">
           <label className="col-sm-2 control-label">
-            Youtube video
+            {tf('entities.tests.fields.youtube_video')}
           </label>
 
           <div className="col-sm-4">
             <input className="form-control"
                    type="text"
-                   placeholder="Youtube link"
+                   placeholder={tf('entities.tests.fields.youtube_link')}
                    onChange={(e) => this.linkChanged(e, index)}
                    value={question.youtube_link_attributes.link}
             />
@@ -257,7 +257,7 @@ class TestForm extends React.Component {
             <a className="btn btn-warning"
                onClick={() => this.removePicture(index)}
             >
-              Remove question
+              {tf('entities.tests.remove_question')}
             </a>
           </div>
         </div>
@@ -289,7 +289,7 @@ class TestForm extends React.Component {
 
           <div className="row form-group">
             <label className="col-sm-2 control-label">
-              Picture
+              {tf('entities.pictures.fields.image')}
             </label>
             <div className="col-sm-4">
               <select className="form-control"
@@ -303,7 +303,7 @@ class TestForm extends React.Component {
               <a className="btn btn-warning"
                  onClick={() => this.removePicture(index)}
               >
-                Remove question
+                {tf('entities.tests.remove_question')}
               </a>
             </div>
           </div>
@@ -320,7 +320,7 @@ class TestForm extends React.Component {
           <a className="btn btn-primary col-sm-6"
                   onClick={this.sendForm}
           >
-            Confirm
+            {tf('common.forms.confirm')}
           </a>
         </div>
       </div>
