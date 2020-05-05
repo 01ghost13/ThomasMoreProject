@@ -32,7 +32,7 @@
   </ul>
 
   <!-- Tab panes -->
-  <div class="tab-content row col-sm-offset-2" style="margin-top: 20px">
+  <div class="tab-content row col-sm-offset-2 margin-top-20">
     <% @translations_presenter.grouped.each.with_index do |lang, i| %>
       <%
         tab_class = active_tab?(lang.id, i) ? 'active' : ''
@@ -41,11 +41,55 @@
            class="tab-pane col-sm-12 <%= tab_class %>"
            id="<%= lang.name %>"
       >
-        <% lang.translations.each do |translation| %>
-          <%= render partial: 'translations/form',
-                     locals: { lang: lang, translation: translation }
-          %>
-        <% end %>
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation"
+              class="active"
+          >
+            <a href="#<%= lang.name %>_literals"
+               aria-controls="<%= lang.name %>_literals"
+               role="tab"
+               data-toggle="tab"
+            >
+              Website
+            </a>
+          </li>
+          <li role="presentation"
+              class=""
+          >
+            <a href="#<%= lang.name %>_content"
+               aria-controls="<%= lang.name %>_content"
+               role="tab"
+               data-toggle="tab"
+            >
+              Content
+            </a>
+          </li>
+        </ul>
+
+        <div class="tab-content margin-top-20">
+
+          <div role="tabpanel"
+               class="tab-pane col-sm-12 active"
+               id="<%= lang.name %>_literals"
+          >
+            <% lang.translations.each do |translation| %>
+              <%= render partial: 'translations/form',
+                         locals: { lang: lang, translation: translation }
+              %>
+            <% end %>
+          </div>
+
+          <div role="tabpanel"
+               class="tab-pane col-sm-12"
+               id="<%= lang.name %>_content"
+          >
+            <% lang.translated_columns.each do |translation| %>
+              <%= render partial: 'translations/translated_columns_form',
+                         locals: { lang: lang, translation: translation }
+              %>
+            <% end %>
+          </div>
+        </div>
       </div>
     <% end %>
   </div>

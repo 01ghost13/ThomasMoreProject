@@ -243,6 +243,7 @@ errors:
   field: "Champ"
   taken: "existe déjà"
   too_short: "trop court"
+  too_long: "trop long"
   blank: "est vide"
   not_a_number: "pas un nombre"
   less_than: "c'est trop petit"

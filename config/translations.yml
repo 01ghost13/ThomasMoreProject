@@ -243,6 +243,7 @@ errors:
   field: Field
   taken: already exist
   too_short: too short
+  too_long: too long
   blank: is blank
   not_a_number: not a number
   less_than: is too small

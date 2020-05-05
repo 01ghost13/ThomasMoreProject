@@ -14,4 +14,13 @@ class TranslationPolicy < ApplicationPolicy
   def create_language?
     super?
   end
+
+  def create_translated_columns?
+    super?
+  end
+
+  def update_translated_columns?
+    super?
+  end
+
 end

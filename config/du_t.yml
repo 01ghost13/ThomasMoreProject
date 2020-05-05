@@ -243,6 +243,7 @@ errors:
   field: Veld
   taken: bestaat al
   too_short: te kort
+  too_long: te lang
   blank: is leeg
   not_a_number: geen nummer
   less_than: het is te klein

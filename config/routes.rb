@@ -77,6 +77,8 @@ Rails.application.routes.draw do
   # Translations
   resources :translations, only: %i[index update create] do
     collection do
+      post :translated_columns, to: 'translations#create_translated_columns'
+      patch 'translated_columns/:id', to: 'translations#update_translated_columns'
       post :create_language, to: 'translations#create_language'
     end
   end

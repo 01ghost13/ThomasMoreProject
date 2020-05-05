@@ -81,7 +81,49 @@ class TranslationsController < AdminController
     end
   end
 
+  def create_translated_columns
+    authorize!
+
+    @translation = TranslatedColumn.new(translated_column_params)
+
+    if @translation.save
+      flash[:success] = tf('common.flash.translation_updated')
+
+      redirect_to translations_path(active_tab: @translation.language_id)
+    else
+      index_initialize
+      @user = @translation
+      @active_tab_id = @translation.language_id
+
+      render :index
+    end
+  end
+
+  def update_translated_columns
+    authorize!
+
+    @translation = Translation.find(params[:id])
+
+    if @translation.update(translated_column_params)
+      flash[:success] = tf('common.flash.translation_updated')
+
+      redirect_to translations_path(active_tab: @translation.language_id)
+    else
+      index_initialize
+      @user = @translation
+      @active_tab_id = @translation.language_id
+
+      render :index
+    end
+  end
+
   private
+
+    def translated_column_params
+      params
+        .require(:translated_column)
+        .permit(TranslatedColumn.attribute_names)
+    end
 
     def translation_params
       params
