@@ -1,11 +1,11 @@
-<% provide(:title,'Choosing test') %>
-<h1>All tests</h1>
+<% provide(:title, tf('entities.tests.choosing_test')) %>
+<h1><%= tf('entities.tests.all_tests') %></h1>
 <div class="row">
   <div class="col-sm-2">
     <% if params[:id].nil? %>
-      <%= link_to('Create Test', new_test_path, class: 'btn btn-primary') %>
+      <%= link_to(tf('entities.tests.create'), new_test_path, class: 'btn btn-primary') %>
     <% else %>
-        <%= link_to('Back to profile', client_path(params[:id]), class: 'btn btn-primary') %>
+        <%= link_to(tf('entities.tests.back_to_profile'), client_path(params[:id]), class: 'btn btn-primary') %>
 
       <%# unless current_user.is_a?(Client) %>
           <%#= link_to('Edit mode settings', mode_settings_client_path(params[:id]), class: 'btn btn-default') %>
@@ -19,13 +19,13 @@
 		<table class="table table-hover">
       <thead>
       <tr>
-        <td>Test name and version</td>
-        <td>Description</td>
-        <td>Count of questions</td>
+        <td><%= "#{tf('entities.tests.fields.name')} #{tf('common.unions.and')} #{tf('entities.tests.fields.version')}" %></td>
+        <td><%= tf('entities.tests.fields.description') %></td>
+        <td><%= tf('entities.tests.count_of_questions') %></td>
         <% if params[:id].nil? %>
             <!--<td>Show</td>-->
-            <td>Edit</td>
-            <td>Delete</td>
+            <td><%= tf('common.forms.edit') %></td>
+            <td><%= tf('common.forms.delete') %></td>
         <% else %>
             <td></td>
         <% end %>
@@ -37,16 +37,23 @@
 				<td><h4><%= test[:description] %></h4></td>
 				<td><h4><%= test[:question_count] %></h4></td>
         <% if params[:id].nil? %>
-            <td><%= link_to('Edit', edit_test_path(test[:id]), class: 'btn btn-warning') %></td>
-            <td><%= link_to('Delete', test_path(test[:id]), method: :delete,
-                            data: { confirm: "Deleting will destroy all results of this test.\n Are you sure?" },
-                            class: 'btn btn-danger') %></td>
+            <td>
+              <%= link_to(tf('common.forms.edit'), edit_test_path(test[:id]), class: 'btn btn-warning') %>
+            </td>
+            <td>
+              <%= link_to tf('common.forms.delete'),
+                          test_path(test[:id]),
+                          method: :delete,
+                          data: { confirm: tf('entities.tests.delete_confirm') },
+                          class: 'btn btn-danger'
+              %>
+            </td>
         <% else %>
           <td>
-            <%= link_to('Start',
+            <%= link_to tf('entities.tests.start'),
                         testing_begin_path(params[:id], test[:id]),
                         method: :post,
-                        class: 'btn btn-success')
+                        class: 'btn btn-success'
             %>
           </td>
         <% end %>
@@ -60,18 +67,18 @@
 </div>
 
 <% if params[:id].present? %>
-  <h1>Started tests</h1>
+  <h1><%= tf('entities.tests.started_tests') %></h1>
   <div class="row">
     <div class="col-sm-12">
       <% if @not_finished_tests.empty? %>
-        <h2>There are no started tests</h2>
+        <h2><%= tf('entities.tests.no_started_tests') %></h2>
       <% else %>
         <table class="table table-hover">
           <thead>
           <tr>
-            <td>Start date</td>
-            <td>Test name and version</td>
-            <td>Progress</td>
+            <td><%= tf('entities.result_of_tests.fields.start_date') %></td>
+            <td><%= "#{tf('entities.tests.fields.name')} #{tf('common.unions.and')} #{tf('entities.tests.fields.version')}" %></td>
+            <td><%= tf('entities.tests.progress') %></td>
             <td></td>
           </tr>
           </thead>
@@ -79,13 +86,12 @@
           <% @not_finished_tests.each do |result_of_test| %>
             <tr>
               <td><h4><%= date_to_local result_of_test.created_at %></h4></td>
-              <td><h4><%= result_of_test.test.name %></h4></td>
+              <td><h4><%= wrap_language(result_of_test.test).name %></h4></td>
               <td><h4><%= result_of_test.progress.join('/') %></h4></td>
               <td>
-                <%= link_to('Continue',
+                <%= link_to tf('entities.tests.continue'),
                             testing_path(result_of_test.id),
                             class: 'btn btn-success'
-                    )
                 %>
               </td>
             </tr>

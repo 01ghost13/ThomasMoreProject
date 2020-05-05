@@ -9,7 +9,7 @@ class TestingManager
 
     @client = @result_of_test.client
     @test = @result_of_test.test
-    @errors = {}
+    @errors = []
 
     validate
   end
@@ -72,11 +72,11 @@ class TestingManager
 
   def validate
     if @test.questions.blank?
-      errors[:test] = 'Test is empty'
+      errors << :no_questions
     end
 
     if @result_of_test.is_ended?
-      errors[:testing] = 'Testing is ended'
+      errors << :testing_ended
     end
   end
 

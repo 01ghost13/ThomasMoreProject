@@ -69,3 +69,7 @@ p.big {
 .alert-alert {
   @include alert-variant($alert-warning-bg, $alert-warning-border, $alert-warning-text);
 }
+
+.margin-top-20 {
+  margin-top: 20px;
+}

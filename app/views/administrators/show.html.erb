@@ -4,8 +4,8 @@
 <% if is_super? and current_user.role_model.id != params[:id].to_i %>
 	<div class="row">
 		<div class="btn-group col-sm-4" role="group" aria-label="...">
-			<%= link_to("Edit", edit_administrator_path(params[:id]), class: "btn btn-warning") %>
-			<%= link_to('Delete', delete_administrator_path(params[:id]), class: 'btn btn-danger') %>
+			<%= link_to(tf('common.forms.edit'), edit_administrator_path(params[:id]), class: "btn btn-warning") %>
+			<%= link_to(tf('common.forms.delete'), delete_administrator_path(params[:id]), class: 'btn btn-danger') %>
 
 		</div>
 	</div>

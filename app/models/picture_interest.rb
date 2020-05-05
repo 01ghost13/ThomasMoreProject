@@ -27,7 +27,7 @@ class PictureInterest < ActiveRecord::Base
   private
     def belongings
       if picture.blank? && youtube_link.blank?
-        errors[:base] << 'You need specify either picture or youtube link'
+        errors.add(:picture, :link_error)
       end
     end
 end

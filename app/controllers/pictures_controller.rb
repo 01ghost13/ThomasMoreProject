@@ -1,4 +1,16 @@
 class PicturesController < AdminController
+  translations_for_preload %i[
+    common.flash.picture_created
+    common.flash.picture_deleted
+    common.flash.picture_updated
+    common.forms.confirm
+    entities.interests.interest
+    entities.pictures.add_interest
+    entities.pictures.fields.description
+    entities.pictures.fields.image
+    entities.pictures.fields.weight
+    entities.pictures.remove_interest
+  ]
 
   #Page of list of pictures
   def index
@@ -26,14 +38,19 @@ class PicturesController < AdminController
     respond_to do |types|
       types.json do
         if @picture.save
-          flash[:success] = 'Picture created!'
-          render json: { response: { type: :success, message: 'Picture created!' } }, status: :ok
+          flash[:success] = tf('common.flash.picture_created')
+          render json: {
+            response: {
+              type: :success,
+              message: tf('common.flash.picture_created')
+            }
+          }, status: :ok
         else
           render json: {
               response: {
                   type: :error,
                   fields: @picture.errors.messages,
-                  full_messages: @picture.errors.full_messages
+                  full_messages: translate_errors(@picture.errors, @picture)
               }
           }, status: :unprocessable_entity
         end
@@ -63,14 +80,14 @@ class PicturesController < AdminController
     respond_to do |types|
       types.json do
         if @picture.update(picture_params)
-          flash[:success] = 'Picture updated!'
+          flash[:success] = tf('common.flash.picture_updated')
           render json: { response: { type: :success } }, status: :ok
         else
           render json: {
               response: {
                   type: :error,
                   errors: @picture.errors.messages,
-                  full_messages: @picture.errors.full_messages
+                  full_messages: translate_errors(@picture.errors, @picture)
               }
           }, status: :unprocessable_entity
         end
@@ -83,7 +100,7 @@ class PicturesController < AdminController
     picture = Picture.find(params[:id])
     authorize!(picture)
     if picture.destroy
-      flash[:success] = 'Picture deleted!'
+      flash[:success] = tf('common.flash.picture_deleted')
     else
       @user = picture
     end

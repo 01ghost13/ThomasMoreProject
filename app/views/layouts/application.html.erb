@@ -11,20 +11,18 @@
 	<![endif]-->
 </head>
 <body>
+
+<%= render partial: 'shared/translations_import_js' %>
+
 <header class="navbar navbar-fixed-top navbar-inverse" id="header_id">
   <div class="container">
     <nav>
       <%= link_to 'Aitscore', root_path, class: 'navbar-brand' %>
     	<ul class="nav navbar-nav navbar-right">
     	<% if logged_in? %>
-        <% unless current_user.client? %>
-          <% unless current_user.confirmed? %>
-            <li><%= link_to 'Send confirmation again', send_confirmation_again_path(id: session[:user_id]) %></li>
-          <% end %>
-        <% end %>
     		<%= render settings_partial %>
     	<% else %>
-    		<li><%= link_to 'Log in', new_user_session_path %></li>
+    		<li><%= link_to tf('common.devise.log_in'), new_user_session_path %></li>
     	<% end %>
     	</ul>
     </nav>

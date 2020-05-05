@@ -1,4 +1,4 @@
-<h2>Change your password</h2>
+<h2><%= tf('common.devise.change_your_password') %></h2>
 
 <%= form_for(resource,
              as: resource_name,
@@ -9,21 +9,18 @@
   <%= f.hidden_field :reset_password_token %>
 
   <div class="row col-sm-offset-2 form-group">
-    <%= f.label :password, 'New password', class: 'col-sm-2 control-label' %>
+    <%= f.label :password, tf('common.devise.new_password'), class: 'col-sm-2 control-label' %>
     <div class="col-sm-4">
       <%= f.password_field :password,
                            autofocus: true,
                            autocomplete: 'new-password',
                            class: 'form-control'
       %>
-      <% if @minimum_password_length %>
-        <em>(<%= @minimum_password_length %> characters minimum)</em><br />
-      <% end %>
     </div>
   </div>
 
   <div class="row col-sm-offset-2 form-group">
-    <%= f.label :password_confirmation, 'Confirm new password', class: 'col-sm-2 control-label' %>
+    <%= f.label :password_confirmation, tf('common.devise.confirm_new_password'), class: 'col-sm-2 control-label' %>
     <div class="col-sm-4">
       <%= f.password_field :password_confirmation,
                            autocomplete: 'new-password',
@@ -34,7 +31,7 @@
 
   <div class="row col-sm-offset-2 form-group">
     <div class="col-sm-offset-2 col-sm-4">
-      <%= f.submit 'Change my password', class: 'btn btn-primary' %>
+      <%= f.submit tf('common.devise.change_password'), class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>

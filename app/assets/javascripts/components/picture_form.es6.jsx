@@ -101,13 +101,13 @@ class PictureForm extends React.Component {
   renderDescription() {
     return (
       <div className="row col-sm-offset-2 form-group">
-        <label className="col-sm-2 control-label">Description</label>
+        <label className="col-sm-2 control-label">{tf('entities.pictures.fields.description')}</label>
         <div className="col-sm-4">
           <input className="form-control"
                  type="text"
                  value={this.state.description || ''}
                  onChange={this.descriptionChanged}
-                 placeholder="Description of picture"
+                 placeholder={tf('entities.pictures.fields.description')}
           />
         </div>
       </div>
@@ -118,7 +118,7 @@ class PictureForm extends React.Component {
     return(
       <div>
         <div className="row col-sm-offset-2 form-group">
-          <label className="col-sm-2 control-label">Image</label>
+          <label className="col-sm-2 control-label">{tf('entities.pictures.fields.image')}</label>
           <div className="col-sm-4">
             <input type="file"
                    className="form-control"
@@ -159,7 +159,7 @@ class PictureForm extends React.Component {
             <a className="btn btn-primary"
                onClick={this.addInterest}
             >
-              Add interest
+              {tf('entities.pictures.add_interest')}
             </a>
           </div>
         </div>
@@ -181,7 +181,7 @@ class PictureForm extends React.Component {
     let options = _.map(this.props.interests_list, (interest) => this.interestOptions(interest));
     return(
       <div key={index} className="row col-sm-offset-2 form-group nested-fields">
-        <label className="col-sm-2 control-label">Interest</label>
+        <label className="col-sm-2 control-label">{tf('entities.interests.interest')}</label>
         <input type="hidden" value={picture_interest.id} />
         <div className="col-sm-4">
           <select className="form-control"
@@ -197,7 +197,7 @@ class PictureForm extends React.Component {
                  max={5}
                  step={1}
                  id="earned_points"
-                 placeholder="Weight"
+                 placeholder={tf('entities.pictures.fields.weight')}
                  className="form-control"
                  value={picture_interest.earned_points}
                  onChange={(e) => this.earnedPointsChanged(e, index)}
@@ -207,7 +207,7 @@ class PictureForm extends React.Component {
           <a className="btn btn-warning"
              onClick={() => this.removeInterest(index)}
           >
-            Remove interest
+            {tf('entities.pictures.remove_interest')}
           </a>
         </div>
       </div>
@@ -230,7 +230,7 @@ class PictureForm extends React.Component {
             <button className="btn btn-primary"
                     onClick={this.sendForm}
             >
-              Confirm
+              {tf('common.forms.confirm')}
             </button>
           </div>
         </div>

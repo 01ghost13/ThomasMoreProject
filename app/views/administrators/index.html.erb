@@ -1,33 +1,33 @@
-<% provide(:title,"Administrators List") %>
-<h1 class="col-sm-12">All administrators</h1>
+<% provide(:title, tf('entities.local_administrators.all_administrators')) %>
+<h1 class="col-sm-12"><%= tf('entities.local_administrators.all_administrators') %></h1>
 <div>
   <%= search_form_for @q, url: administrators_path do |f| %>
       <div class="form-group col-sm-4">
         <%= f.label :full_name_cont,
-                    'Search',
+                    tf('common.forms.search'),
                     class: 'sr-only'
         %>
         <%= f.search_field :full_name_cont,
                            {
-                             placeholder: 'Enter name or last name here...',
+                             placeholder: tf('entities.local_administrators.search_prompt'),
                              class: 'form-control'
                            }
         %>
       </div>
-      <%= f.submit 'Search', class: 'btn btn-primary col-sm-1' %>
+      <%= f.submit tf('common.forms.search'), class: 'btn btn-primary col-sm-1' %>
   <% end %>
 </div>
 <div class="col-sm-12">
 	<table class="table table-hover">
     <thead>
       <tr>
-        <td><%= sort_link @q, 'employees.last_name', 'Last name'%></td>
-        <td><%= sort_link @q, 'employees.name', 'Name' %></td>
-        <td><%= sort_link @q, 'employees.organisation', 'Organisation' %></td>
-        <td><%= sort_link @q, 'employees.organisation_address', 'Organisation address' %></td>
-        <td>Profile</td>
-        <td>Edit</td>
-        <td>Delete</td>
+        <td><%= sort_link @q, 'employees.last_name', tf('entities.employees.fields.last_name') %></td>
+        <td><%= sort_link @q, 'employees.name', tf('entities.employees.fields.name') %></td>
+        <td><%= sort_link @q, 'employees.organisation', tf('entities.employees.fields.organisation') %></td>
+        <td><%= sort_link @q, 'employees.organisation_address', tf('entities.employees.fields.organisation_address') %></td>
+        <td><%= tf('common.menu.profile') %></td>
+        <td><%= tf('common.forms.edit') %></td>
+        <td><%= tf('common.forms.delete') %></td>
       </tr>
     </thead>
 		<% @admins.each do |admin| %>
@@ -37,9 +37,9 @@
         <td><h4><%= employee[:name].titleize %></h4></td>
         <td><h4><small><%= employee[:organisation].titleize %></small></h4></td>
         <td><h4><small><%= employee[:organisation_address].titleize %></small></h4></td>
-        <td><%= link_to('Profile', administrator_path(admin[:id]), class: 'btn btn-default') %></td>
-				<td><%= link_to('Edit', edit_administrator_path(admin[:id]), class: 'btn btn-warning') %></td>
-        <td><%= link_to('Delete', delete_administrator_path(admin[:id]), class: 'btn btn-danger') %></td>
+        <td><%= link_to(tf('common.menu.profile'), administrator_path(admin[:id]), class: 'btn btn-default') %></td>
+				<td><%= link_to(tf('common.forms.edit'), edit_administrator_path(admin[:id]), class: 'btn btn-warning') %></td>
+        <td><%= link_to(tf('common.forms.delete'), delete_administrator_path(admin[:id]), class: 'btn btn-danger') %></td>
 			</tr>
 		<% end %>
 	</table>

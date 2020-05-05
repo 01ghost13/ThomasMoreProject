@@ -1,6 +1,9 @@
 <%= render 'shared/error_message' %>
 
-<%= form_for @user, url: @user.new_record? ? mentors_path : mentor_path(@user), class: 'form-horizontal' do |f| %>
+<%= form_for @user,
+             url: @user.new_record? ? mentors_path : mentor_path(@user),
+             class: 'form-horizontal' do |f|
+%>
 
   <%= f.fields_for :employee,
                    class: 'form-horizontal' do |ff|
@@ -16,7 +19,7 @@
       <!-- Local administrator -->
       <div class="row col-sm-offset-2 form-group">
         <%= ff.label :employee_id,
-                     'Choose local administrator',
+                     tf('entities.mentors.choose_admin'),
                      class: 'col-sm-2 control-label'
         %>
         <div class="col-sm-4">
@@ -38,7 +41,7 @@
 
   <div class="row col-sm-offset-2 form-group">
     <div class="col-sm-offset-2 col-sm-2">
-      <%= f.submit 'Confirm', class: 'btn btn-primary' %>
+      <%= f.submit tf('common.forms.confirm'), class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>

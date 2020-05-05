@@ -1,60 +1,63 @@
 <% if is_super? %>
   <li>
-    <%= link_to 'Interests', interests_path %>
+    <%= link_to tf('entities.translations.index'), translations_path %>
   </li>
   <li>
-    <%= link_to 'Pictures', pictures_path %>
+    <%= link_to tf('entities.interests.index'), interests_path %>
   </li>
   <li>
-    <%= link_to 'Tests', tests_path %>
+    <%= link_to tf('entities.pictures.index'), pictures_path %>
+  </li>
+  <li>
+    <%= link_to tf('entities.tests.index'), tests_path %>
   </li>
 <% end %>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Create <b class="caret"></b>
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <%= tf('common.menu.create') %> <b class="caret"></b>
   </a>
     <ul class="dropdown-menu">
       <li>
-        <%= link_to "Create client", new_client_path %>
+        <%= link_to tf('entities.clients.create'), new_client_path %>
       </li>
       <li>
-        <%= link_to "Create mentor", new_mentor_path %>
+        <%= link_to tf('entities.mentors.create'), new_mentor_path %>
       </li>
       <% if is_super? %>
-      <li>
-        <%= link_to("Create local administrator", new_administrator_path) %>
-      </li>
+        <li>
+          <%= link_to tf('entities.local_administrators.create'), new_administrator_path %>
+        </li>
       <% end %>
     </ul>
 </li>
 <li class="dropdown">
-<a href="#" class="dropdown-toggle" data-toggle="dropdown"> All <b class="caret"></b>
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"> <%= tf('common.menu.all') %> <b class="caret"></b>
 </a>
 	<ul class="dropdown-menu">
 		<li>
-			<%= link_to "Clients", clients_path %>
+			<%= link_to tf('entities.clients.index'), clients_path %>
 		</li>
     <li>
-      <%= link_to "Mentors", mentors_path %>
+      <%= link_to tf('entities.mentors.index'), mentors_path %>
     </li>
 		<% if is_super? %>
 		<li>
-			<%= link_to("Administrators", administrators_path) %>
+			<%= link_to tf('entities.local_administrators.index'), administrators_path %>
 		</li>
 		<% end %>
 	</ul>
 </li>
 <li class="dropdown">
-<a href="#" class="dropdown-toggle" data-toggle="dropdown"> Profile <b class="caret"></b>
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"> <%= tf('common.menu.profile') %> <b class="caret"></b>
 </a>
 	<ul class="dropdown-menu">
 		<li>
-			<%= link_to("Settings", edit_administrator_path(current_user)) %>
+			<%= link_to tf('common.menu.settings'), edit_administrator_path(current_user) %>
 		</li>
 		<li>
-			<%= link_to("My Profile", administrator_path(current_user)) %>
+			<%= link_to tf('common.menu.my_profile'), administrator_path(current_user) %>
 		</li>
 	</ul>
 </li>
 <li>
-  <%= link_to "Log out", destroy_user_session_path, method: "delete" %>
+  <%= link_to tf('common.menu.log_out'), destroy_user_session_path, method: "delete" %>
 </li>

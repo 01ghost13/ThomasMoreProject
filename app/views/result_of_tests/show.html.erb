@@ -1,73 +1,83 @@
-<% provide(:title,"Result") %>
+<% provide(:title, tf('entities.result_of_tests.result')) %>
 <%= javascript_include_tag 'https://www.gstatic.com/charts/loader.js' %>
 <div class= "row">
-	<h2>Results of <%= link_to @client, client_path(params[:client_id]) %></h2>
+	<h2><%= tf('entities.result_of_tests.results_of') %> <%= link_to @client, client_path(params[:client_id]) %></h2>
 </div>
 
 <div class= "row">
-  <h3>Attending at the moment of testing: <%= t @res[0].class %></h3>
+  <h3><%= tf('entities.result_of_tests.attending_at_the_moment') %>: <%= tf("common.boolean.#{@res[0]}") %></h3>
 </div>
+
 <!-- Add designed btn -->
 <div class="row">
   <%= link_to client_result_of_test_path(params[:client_id], params[:result_id], format: :xlsx),
-              data: {turbolinks: false}, class: 'btn btn-success' do  %>
-    <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>&#8194;Download as xlsx
+              data: { turbolinks: false },
+              class: 'btn btn-success' do
+  %>
+    <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>&#8194;<%= tf('entities.result_of_tests.download_as') %> xlsx
   <% end %>
+
   <% if @has_heatmap %>
-    <%= link_to 'Show heatmap',
+    <%= link_to tf('entities.result_of_tests.heatmap'),
                 client_heatmap_path(params[:client_id], params[:result_id]),
                 class: 'btn btn-success'
     %>
   <% end %>
 
 </div>
+
 <div class="row">
   <!-- Table Questions -->
 	<div class="col-sm-6 row">
 		  <table class="table table-hover">
       <thead>
-      <h1>Questions</h1>
+      <h1><%= tf('entities.questions.index') %></h1>
         <tr>
           <td><h4>#</h4></td>
-          <td><h4>Start</h4></td>
-          <td><h4>End</h4></td>
-          <td><h4>Time</h4></td>
-          <td><h4>Was rewrited</h4></td>
-          <td><h4>Answer</h4></td>
+          <td><h4><%= tf('entities.result_of_tests.fields.start_date') %></h4></td>
+          <td><h4><%= tf('entities.result_of_tests.fields.end_date') %></h4></td>
+          <td><h4><%= tf('entities.result_of_tests.fields.time') %></h4></td>
+          <td><h4><%= tf('entities.result_of_tests.fields.was_rewrited') %></h4></td>
+          <td><h4><%= tf('entities.result_of_tests.fields.answer') %></h4></td>
         </tr>
       </thead>
 			<% @list_timestamps.each_with_index do |element, i|%>
           <% if element[:question_id] == nil %>
-              <tr class="danger" title="This question was deleted from test">
+              <tr class="danger" title="<%= tf('entities.result_of_tests.question_deleted') %>">
           <% else %>
               <tr>
           <% end %>
-					<td class="col-sm-1"><h4><%= i+1 %></h4></td>
+					<td class="col-sm-1"><h4><%= i + 1 %></h4></td>
 					<td class="col-sm-3"><h4><small><%= date_to_local(element[:start]) %></small></h4></td>
 					<td class="col-sm-3"><h4><small><%= date_to_local(element[:end]) %></small></h4></td>
 					<td class="col-sm-2"><h4><small><%= '%0.2f s'%[element[:end] - element[:start]] %></small></h4></td>
-					<td class="col-sm-1"><h4><small><%= t element[:was_rewrited].class %></small></h4></td>
-					<td class="col-sm-3"><h4><small>
-						<% if element[:was_checked] == 3 %>
-						<div>Thumbs up</div>
-						<% elsif element[:was_checked] == 1 %>
-						<div>Thumbs down</div>
-						<% else %>
-						<div>Question mark</div>
-						<% end %>
-						</small></h4></td>
+					<td class="col-sm-1"><h4><small><%= tf("common.boolean.#{element[:was_rewrited]}") %></small></h4></td>
+					<td class="col-sm-3">
+            <h4>
+              <small>
+                <% if element[:was_checked] == 3 %>
+                  <div><%= tf('entities.result_of_tests.was_checked.thumbs_up') %></div>
+                <% elsif element[:was_checked] == 1 %>
+                  <div><%= tf('entities.result_of_tests.was_checked.thumbs_down') %></div>
+                <% else %>
+                  <div><%= tf('entities.result_of_tests.was_checked.question_mark') %></div>
+                <% end %>
+						  </small>
+            </h4>
+          </td>
 				</tr>
 			<% end %>
 		</table>
 	</div>
+
   <!-- Interests points -->
   <div class="col-sm-offset-1 col-sm-5">
     <table class="table table-hover">
       <thead>
-      <h1>Earned interests points</h1>
+      <h1><%= tf('entities.result_of_tests.earned_points') %></h1>
       <tr>
-        <td><h4>Interest</h4></td>
-        <td><h4>Summary</h4></td>
+        <td><h4><%= tf('entities.interests.interest') %></h4></td>
+        <td><h4><%= tf('entities.result_of_tests.summary') %></h4></td>
         <% if @has_heatmap %>
           <td><h4>With gaze analysis</h4></td>
         <% end %>
@@ -79,12 +89,12 @@
       <% @list_interests.each do |element|%>
           <tr>
             <td><h4><small><%= element[0].to_s.humanize %></small></h4></td>
-            <td><h4><small><%= element[1] %> of <%= @list_interests_max[element[0]] %></small></h4></td>
+            <td><h4><small><%= element[1] %>/<%= @list_interests_max[element[0]] %></small></h4></td>
             <% if @has_heatmap %>
               <td>
                 <h4>
                   <small>
-                    <%= @list_interests_with_gaze[element[0]].round(2) %> of <%= @list_interests_max[element[0]] %>
+                    <%= @list_interests_with_gaze[element[0]].round(2) %>/<%= @list_interests_max[element[0]] %>
                   </small>
                 </h4>
               </td>
@@ -93,7 +103,7 @@
               <td>
                 <h4>
                   <small>
-                    <%= @list_interests_with_emotions[element[0]].round(2) %> of <%= @list_interests_max[element[0]] %>
+                    <%= @list_interests_with_emotions[element[0]].round(2) %>/<%= @list_interests_max[element[0]] %>
                   </small>
                 </h4>
               </td>
@@ -107,9 +117,12 @@
 <!-- Edit btn -->
 <div class="row col-sm-4" style="margin-bottom: 15px;">
   <% unless @i_am_client %>
-      <%= link_to("Edit results", edit_client_result_of_test_path(params[:client_id],params[:result_id]), class: "btn btn-warning") %>
+      <%= link_to tf('entities.result_of_tests.update'),
+                  edit_client_result_of_test_path(params[:client_id],params[:result_id]),
+                  class: "btn btn-warning"
+      %>
   <% else %>
-      <h4>If you want to edit the results, ask your mentor.</h4>
+      <h4><%= tf('entities.result_of_tests.edit_request') %></h4>
   <% end %>
 </div>
 
@@ -118,16 +131,24 @@
   <div class="col-sm-12">
     <ul class="nav nav-tabs">
       <li class="active">
-        <a href="#answer_time" data-toggle="tab">Time of answer</a>
+        <a href="#answer_time" data-toggle="tab">
+          <%= tf('entities.result_of_tests.time_of_answer') %>
+        </a>
       </li>
       <li>
-        <a href="#interests_points" data-toggle="tab">Interests points</a>
+        <a href="#interests_points" data-toggle="tab">
+          <%= tf('entities.result_of_tests.interest_points') %>
+        </a>
       </li>
       <li>
-        <a href="#avg_interests" data-toggle="tab">Average answer time to interest field</a>
+        <a href="#avg_interests" data-toggle="tab">
+          <%= tf('entities.result_of_tests.average_answer') %>
+        </a>
       </li>
       <li>
-        <a href="#timeline" data-toggle="tab">Timeline</a>
+        <a href="#timeline" data-toggle="tab">
+          <%= tf('entities.result_of_tests.timeline') %>
+        </a>
       </li>
       <% if @has_emotion_track %>
         <li>
@@ -138,16 +159,16 @@
     <div class="tab-content">
       <div class="tab-pane fade in active" id="answer_time">
         <%= column_chart @res[1],
-                         xtitle: 'Question number',
-                         ytitle: 'Time of answer(sec)',
+                         xtitle: tf('entities.result_of_tests.fields.question_number'),
+                         ytitle: tf('entities.result_of_tests.time_of_answer_short'),
                          download: true
         %>
       </div>
       <div class="tab-pane fade" id="avg_interests">
         <%= column_chart @res[2],
                          id: 'avg_interests_chart',
-                         xtitle: 'Interest',
-                         ytitle: 'Avg time of answer(sec)',
+                         xtitle: tf('entities.interests.interest'),
+                         ytitle: tf('entities.result_of_tests.average_answer_short'),
                          download: true,
                          discrete: true
         %>
@@ -167,7 +188,7 @@
         <div class="tab-pane fade" id="emotion_dynamic">
           <%= scatter_chart @res[4].map { |k, v| { name: k, data: v } },
                             id: 'emotion_dynamic_chart',
-                            xtitle: 'Question number',
+                            xtitle: tf('entities.result_of_tests.fields.question_number'),
                             ytitle: 'Emotion score',
                             download: true,
                             library: {

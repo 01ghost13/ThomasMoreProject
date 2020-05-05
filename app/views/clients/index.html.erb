@@ -1,37 +1,37 @@
-<% provide(:title,"Clients List") %>
-<h1 class="col-sm-12">All Clients</h1>
+<% provide(:title, tf('entities.clients.all_clients')) %>
+<h1 class="col-sm-12"><%= tf('entities.clients.all_clients') %></h1>
 <div>
   <%= search_form_for @q,
                       url: clients_path do |f|
   %>
     <div class="form-group col-sm-4">
       <%= f.label :code_name_cont,
-                  'Search',
+                  tf('common.forms.search'),
                   class: 'sr-only'
       %>
       <%= f.search_field :code_name_cont,
                          {
-                            placeholder: 'Enter codename here...',
+                            placeholder: tf('entities.clients.search_prompt'),
                             class: 'form-control'
                          }
       %>
     </div>
-    <%= f.submit 'Search', class: 'btn btn-primary col-sm-1' %>
+    <%= f.submit tf('common.forms.search'), class: 'btn btn-primary col-sm-1' %>
   <% end %>
 </div>
 <div class="col-sm-12">
 	<table class="table table-hover">
     <thead>
     <tr>
-      <td><%= sort_link @q, :'clients.code_name', 'Codename' %></td>
-      <td><%= sort_link @q, :organisation, 'Organisation' %></td>
-      <td><%= sort_link @q, :admin_name, 'Administrator' %></td>
-      <td><%= sort_link @q, :mentor_name, 'Mentor' %></td>
-      <td>Profile</td>
-      <td>Edit</td>
-      <td>Hide</td>
+      <td><%= sort_link @q, :'clients.code_name', tf('entities.clients.fields.code_name') %></td>
+      <td><%= sort_link @q, :organisation, tf('entities.employees.fields.organisation') %></td>
+      <td><%= sort_link @q, :admin_name, tf('entities.local_administrators.administrator') %></td>
+      <td><%= sort_link @q, :mentor_name, tf('entities.mentors.mentor') %></td>
+      <td><%= tf('common.menu.profile') %></td>
+      <td><%= tf('common.forms.edit') %></td>
+      <td><%= tf('common.forms.hide') %></td>
       <% if @is_super_adm %>
-        <td>Delete</td>
+        <td><%= tf('common.forms.delete') %></td>
       <% end %>
     </tr>
     </thead>
@@ -39,25 +39,34 @@
 			<tr>
 				<td><h4><%= client[:code_name] %></h4></td>
 				<td><h4><small>
-          <%= client[:organisation] %></small></h4></td>
+          <%= client[:organisation] %>
+        </small></h4></td>
         <td><h4><small>
           <%= link_to("#{client[:admin_name].titleize} #{client[:admin_last_name].titleize}",
-              administrator_path(client[:admin_user_id])) %></small></h4></td>
+              administrator_path(client[:admin_user_id]))
+          %>
+        </small></h4></td>
 				<td><h4><small>
           <%= link_to("#{client[:mentor_name].titleize } #{client[:mentor_last_name].titleize }",
-                      mentor_path(client[:mentor_user_id])) %>
+                      mentor_path(client[:mentor_user_id]))
+          %>
         </small></h4></td>
-        <td><%= link_to('Profile', client_path(client[:id]), class: 'btn btn-default') %></td>
-        <td><%= link_to('Edit', edit_client_path(client[:id]), class: 'btn btn-warning') %></td>
+        <td><%= link_to(tf('common.menu.profile'), client_path(client[:id]), class: 'btn btn-default') %></td>
+        <td><%= link_to(tf('common.forms.edit'), edit_client_path(client[:id]), class: 'btn btn-warning') %></td>
         <% if client[:is_active] %>
-          <td><%= link_to('Hide', client_path(client[:id], paranoic: true), method: :delete, class: 'btn btn-warning') %></td>
+          <td><%= link_to(tf('common.forms.hide'), client_path(client[:id], paranoic: true), method: :delete, class: 'btn btn-warning') %></td>
         <% else %>
-          <td><%= link_to('Recover', client_path(client[:id], paranoic: true), method: :delete, class: 'btn btn-primary') %></td>
+          <td><%= link_to(tf('common.forms.recover'), client_path(client[:id], paranoic: true), method: :delete, class: 'btn btn-primary') %></td>
         <% end %>
         <% if @is_super_adm %>
-          <td><%= link_to('Delete', client_path(client[:id], paranoic: false),
-                        method: :delete, data: { confirm: "Deleting will also delete all results.\n Are you sure?" },
-                          class: 'btn btn-danger') %></td>
+          <td>
+            <%= link_to(tf('common.forms.delete'),
+                        client_path(client[:id], paranoic: false),
+                        method: :delete,
+                        data: { confirm: tf('common.forms.delete_confirm') },
+                        class: 'btn btn-danger')
+            %>
+          </td>
         <% end %>
       </tr>
 		<% end %>

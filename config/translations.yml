@@ -1,0 +1,258 @@
+common:
+  flash:
+    account_created: Account created! Confirmation of account was sent to email.
+    client_created: Client created!
+    update_complete: Update complete
+    administrator_deleted: Administrator was deleted!
+    administrator_cant_be_deleted: You can't delete this administrator!
+    no_access: You have no access to this page
+    client_hided_or_recovered: Client was hided/recovered.
+    cant_hide_client: Can't hide/recover client
+    client_deleted: Client was deleted.
+    client_cant_be_deleted: You can't delete this client
+    client_was_deactivated: 'Client was deactivated in: %{time}'
+    unconfirmed_mail: You haven't confirmed your mail! Please, confirm your mail.
+    does_not_exist: 'This %{class_name} does not exist.'
+    interest_created: Interest added!
+    interest_updated: Interest updated!
+    interest_deleted: Interest deleted!
+    mentor_deleted: Mentor was deleted!
+    picture_created: Picture created!
+    picture_updated: Picture updated!
+    picture_deleted: Picture deleted!
+    test_unfinished: Test is not finished
+    test_result_outdated: The test was edited. Points for interests are outdated!
+    test_result_deleted: Result deleted!
+    cant_find_client: Can't find client
+    cant_find_test: Can't find test
+    empty_test: Test is empty!
+    test_created: Test created!
+    test_updated: Test updated!
+    test_deleted: Test deleted!
+    test_cant_be_deleted: This test has associated results, please, delete them first.
+    language_created: Language created!
+    translation_updated: Translation updated!
+  gender:
+    man: Man
+    woman: Woman
+    unknown: Unknown
+  boolean:
+    true: 'Yes'
+    false: 'No'
+  forms:
+    search: Search
+    confirm: Confirm
+    add: Add
+    delete: Delete
+    edit: Edit
+    hide: Hide
+    recover: Recover
+    delete_confirm: Are you sure?
+  menu:
+    home: Home
+    settings: Settings
+    my_profile: My Profile
+    log_out: Log out
+    all: All
+    profile: Profile
+    create: Create
+    edit_profile: Edit profile
+  devise:
+    resend_confirmations: Resend confirmation instructions
+    confirm_instructions: You can confirm your account email through the link below
+    reset_instructions: Send me reset password instructions
+    password_reset: Someone has requested a link to change your password. You can do this through the link below.
+    ignore_reset_request: If you didn't request this, please ignore this email.
+    password_stays_unchanged: Your password won't change until you access the link above and create a new one.
+    confirm_account: Confirm my account
+    forgot_password: Forgot your password?
+    change_password: Change my password
+    new_password: New password
+    confirm_new_password: Confirm new password
+    change_your_password: Change your password
+    regards: With regards, AitScore.
+    greetings: Greetings
+    log_in: Log in
+    remember_me: Remember me
+    didnt_received_confirm: Didn't receive confirmation instructions?
+  kaminari:
+    next: Next
+    previous: Prev
+    first: First
+    last: Last
+  unions:
+    and: and
+
+entities:
+  interests:
+    index: Interests
+    interest: Interest
+    create_interest: Create interest
+    all_interests: All interests
+    search_prompt: Enter interest name
+    delete_confirm: Deleting will affect on results. Are you sure?
+    fields:
+      name: Name
+  pictures:
+    index: Pictures
+    update: Edit picture
+    create: Create picture
+    all_pictures: All pictures
+    search_prompt: Enter picture description
+    related_interests: Related Interests
+    delete_confirm: Deleting will affect on results. Are you sure?
+    add_interest: Add interest
+    remove_interest: Remove interest
+    fields:
+      image: Picture
+      description: Description
+      weight: Weight
+  tests:
+    index: Tests
+    all_tests: All tests
+    update: Edit test
+    create: Create test
+    choosing_test: Choosing test
+    back_to_profile: Back to profile
+    count_of_questions: Count of questions
+    delete_confirm: Deleting will destroy all results of this test. Are you sure?
+    start: Start
+    progress: Progress
+    continue: Continue
+    started_tests: Started tests
+    choose_test: Choose test
+    no_started_tests: There are no started tests
+    add_picture: Add question with picture
+    add_youtube_video: Add question with Youtube video
+    remove_question: Remove question
+    fields:
+      name: Test name
+      version: version
+      description: Description
+      youtube_link: Youtube link
+      youtube_video: Youtube video
+  users:
+    password_prompt: Leave empty for saving old
+    confirmation_prompt: Confirm your password
+    fields:
+      email: Email
+      password: Password
+      password_confirmation: Password Confirmation
+  clients:
+    index: Clients
+    create: Create client
+    choose_admin: Choose local administrator
+    choose_mentor: Choose Mentor
+    search_prompt: Enter codename
+    all_clients: All Clients
+    delete_confirm: Deleting client will also delete all his results. Are you sure?
+    latest_results: Latest testing results
+    fields:
+      code_name: Codename
+      gender: Gender
+      mentor: Mentor
+      is_current_in_school: Is current in school?
+  mentors:
+    index: Mentors
+    mentor: Mentor
+    all_mentors: All mentors
+    search_prompt: Enter name or last name here
+    create: Create mentor
+    delete: Delete mentor
+    update: Update mentor
+    choose_admin: Choose local administrator
+    choose_mentor: 'Choose Mentor for %{for}'
+    delegate_prompt: For deletion you must choose new Mentor for associated clients
+  local_administrators:
+    administrator: Administrator
+    index: Local administrators
+    all_administrators: All administrators
+    search_prompt: Enter name or last name here
+    create: Create local administrator
+    update: Update administrator
+    delete: Delete administrator
+    delegate_prompt: For deletion you must choose new Administrator for associated mentors.
+    choose_admin: 'Choose Administrator for %{for}'
+  employees:
+    phone_prompt: Leave blank if you don't have phone
+    fields:
+      name: Name
+      last_name: Last name
+      phone: Phone
+      organisation: Organisation
+      organisation_address: Address of organisation
+  result_of_tests:
+    update: Update result
+    index: Results of test
+    all_results_of: All results of
+    results_of: Results of
+    result: Result
+    result_outdated: This result is outdated
+    interest_points: Interests points
+    average_answer: Average answer time to interest field
+    timeline: Timeline
+    average_answer_short: Avg time of answer(sec)
+    attending_at_the_moment: Attending at the moment of testing
+    time_of_answer: Time of answer
+    time_of_answer_short: Time of answer(sec)
+    heatmap: Show heatmap
+    download_as: Download as
+    question_deleted: This question was deleted from test
+    earned_points: Earned interests points
+    summary: Summary
+    edit_request: If you want to edit the results, ask your mentor.
+    maximum_interest_point: Maximum points in test
+    was_checked:
+      thumbs_up: Thumbs up
+      thumbs_down: Thumbs down
+      question_mark: Question mark
+    fields:
+      test_name: Test name
+      start_date: Start date
+      end_date: End date
+      ended: Ended
+      question_number: Question number
+      time: Time
+      answer: Answer
+      was_rewrited: Was rewrited
+  questions:
+    index: Questions
+  translations:
+    index: Translations
+    all_translations: All translations
+  languages:
+    create: Create language
+    language: Language
+    fields:
+      name: Abbreviation
+  picture_interests:
+    fields:
+      picture: Link
+
+static:
+  home:
+    first_line: The Labor Interest Test (AIT) was developed by MPI Oosterlo, Thomas More Kempen and Volgograd State Technical University. A good match between person and job, where the job matches the interests and possibilities, greatly increases the job satisfaction of people with intellectual disabilities. The AIT has been developed to show interest in certain areas of work without regard to competences.
+    second_line: The AIT was developed as a visual test that can be taken online. The AIT paints a picture of the work areas in which the test subject wants to work or not and provides information that is complementary to other methodologies that gauge labor interest. The user is shown one photo at a time and can then indicate their preference by selecting the red (negative) or green (positive) button. If the user has no opinion about a photo, he / she can skip this photo.
+    third_line: 'The photos are divided into different work areas (for example: food preparation work, customer-oriented work, administrative work, etc.). After finishing the test, the results show which work areas are preferred by the user.'
+    fourth_line: The aim of the AIT is to regularly screen our target group's interests for work
+    fives_line: The AIT is available for organizations that work with people with intellectual disabilities.
+    six_line: Are you interested in trying the test for free? Please send an email to
+    seven_line: Do you already have an account?
+
+errors:
+  field: Field
+  taken: already exist
+  too_short: too short
+  too_long: too long
+  blank: is blank
+  not_a_number: not a number
+  less_than: is too small
+  invalid: is invalid
+  confirmation: is not matches with password
+  not_found: record with such value was not found
+  attachment_invalid: Attachment must be image or gif
+  attachment_too_big: Attachment is too big
+  link_error: You need specify either picture or youtube link
+  no_questions: Test is empty
+  testing_ended: Testing is ended
+  link_pattern: Wrong youtube link. It should be https://youtu.be/<ID>, https://m.youtube.com/watch?v=<ID> or https://www.youtube.com/watch?v=<ID>

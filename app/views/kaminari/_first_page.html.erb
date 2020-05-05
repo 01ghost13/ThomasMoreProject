@@ -1,3 +1,7 @@
 <li>
-  <%= link_to_unless current_page.first?, raw(t 'views.pagination.first'), url, :remote => remote %>
+  <%= link_to_unless current_page.first?,
+                     "« #{tf('common.kaminari.first')}",
+                     url,
+                     remote: remote
+  %>
 </li>

@@ -57,4 +57,17 @@ module ApplicationHelper
         root_path
     end
   end
+
+  def translate_hash(user_hash, root_key: nil)
+    user_hash.reduce({}) do |memo, (key, val)|
+      if val.is_a?(Hash)
+        memo.merge!(translate_hash(val, root_key: key))
+      else
+        translated_field = tf("entities.#{root_key}.fields.#{key}")
+        memo[translated_field] = val
+      end
+
+      memo
+    end
+  end
 end

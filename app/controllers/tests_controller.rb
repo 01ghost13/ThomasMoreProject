@@ -1,4 +1,21 @@
 class TestsController < AdminController
+  translations_for_preload %i[
+    common.flash.empty_test
+    common.flash.test_created
+    common.flash.empty_test
+    common.flash.test_deleted
+    common.flash.test_cant_be_deleted
+    entities.tests.fields.name
+    entities.tests.fields.version
+    entities.tests.fields.description
+    entities.tests.add_picture
+    entities.tests.add_youtube_video
+    entities.tests.remove_question
+    entities.tests.fields.youtube_link
+    entities.tests.fields.youtube_video
+    entities.pictures.fields.image
+    common.forms.confirm
+  ]
 
   def new
     authorize!
@@ -24,10 +41,10 @@ class TestsController < AdminController
       @picture << Picture.find(q.picture_id)
     end
     unless params[:test][:questions_attributes]
-      @test.errors.add(:questions, :invalid, message: "Test can't be empty")
+      @test.errors.add(:questions, :invalid, message: tf('common.flash.empty_test'))
     end
     if params[:test][:questions_attributes] && @test.save
-      flash[:success] = 'Test created!'
+      flash[:success] = tf('common.flash.test_created')
       render json: {}, status: :created
     else
       @user = @test
@@ -38,7 +55,7 @@ class TestsController < AdminController
           response: {
               type: :error,
               fields: @test.errors.messages,
-              full_messages: @test.errors.full_messages
+              full_messages: translate_errors(@test.errors, @test)
           }
       }, status: :unprocessable_entity
     end
@@ -63,11 +80,11 @@ class TestsController < AdminController
 
     empty_list = all_questions_destroy?(test_params[:questions_attributes].to_hash)
     if !params[:test].nil? && !empty_list && @test.update(test_params)
-      flash[:success] = 'Test updated!'
+      flash[:success] = tf('common.flash.test_created')
       render json: {}, status: :ok
     else
       if params[:test].nil? || empty_list
-        @test.errors.add(:questions, :invalid, message: "Test can't be empty")
+        @test.errors.add(:questions, :invalid, message: tf('common.flash.empty_test'))
       end
       @picture = []
       #Loading questions
@@ -83,20 +100,20 @@ class TestsController < AdminController
           response: {
               type: :error,
               fields: @test.errors.messages,
-              full_messages: @test.errors.full_messages
+              full_messages: translate_errors(@test.errors, @test)
           }
       }, status: :unprocessable_entity
     end
   end
 
   def destroy
-    test = Test.find_by(params[:id])
+    test = Test.find_by(id: params[:id])
     authorize!(test)
 
     if test.destroy
-      flash[:success] = 'Test deleted!'
+      flash[:success] = tf('common.flash.test_deleted')
     else
-      flash[:danger] = 'This test has associated results, please, delete them first.'
+      flash[:danger] = tf('common.flash.test_cant_be_deleted')
     end
     redirect_to tests_path
   end
@@ -105,7 +122,7 @@ class TestsController < AdminController
     #Only super admin has access to aitscore\tests
     authorize!
 
-    @tests = Test.all.map(&:show_short)
+    @tests = wrap_language(Test.all).map(&:show_short)
     @tests = Kaminari.paginate_array(@tests).page(params[:page]).per(10)
   end
 
