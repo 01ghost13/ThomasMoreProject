@@ -51,6 +51,8 @@ class User < ActiveRecord::Base
 
   belongs_to :language
 
+  has_many :test_availabilities, dependent: :destroy
+
   accepts_nested_attributes_for :administrator
   accepts_nested_attributes_for :mentor
   accepts_nested_attributes_for :client
