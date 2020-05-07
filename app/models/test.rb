@@ -45,8 +45,8 @@ class Test < ActiveRecord::Base
   def fill_test_availability
     users = User.all_local_admins.ids
 
-    users.each do |user|
-      fill_test_availability.create(user_id: user.id, available: false)
+    users.each do |user_id|
+      test_availabilities.create(user_id: user_id, available: false)
     end
   end
 

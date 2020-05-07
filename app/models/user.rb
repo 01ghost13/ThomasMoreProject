@@ -188,10 +188,11 @@ class User < ActiveRecord::Base
   end
 
   def fill_test_availability
+    return unless role == 'local_admin'
     tests = Test.all.ids
 
-    tests.each do |test|
-      fill_test_availability.create(test_id: test.id, available: true)
+    tests.each do |test_id|
+      test_availabilities.create(test_id: test_id, available: true)
     end
   end
 
