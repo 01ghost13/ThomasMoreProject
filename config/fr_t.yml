@@ -32,6 +32,7 @@ common:
     test_cant_be_deleted: "Ce test a des résultats associés, veuillez les supprimer d'abord."
     language_created: "Langue créée!"
     translation_updated: "Traduction mise à jour!"
+    role_updated: "Rôle mis à jour!"
   gender:
     man: "Homme"
     woman: "Femme"
@@ -228,6 +229,8 @@ entities:
   picture_interests:
     fields:
       picture: "Lien"
+  test_availabilities:
+    index: "Tester la disponibilité"
 
 static:
   home:
