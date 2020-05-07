@@ -32,6 +32,7 @@ common:
     test_cant_be_deleted: Этот тест имеет связанные результаты, пожалуйста, сначала удалите их.
     language_created: Язык создан!
     translation_updated: Перевод обновлен!
+    role_updated: Роль обновлена!
   gender:
     man: мужчина
     woman: Женщина
@@ -228,6 +229,8 @@ entities:
   picture_interests:
     fields:
       picture: Link
+  test_availabilities:
+    index: Доступность тестов
 
 static:
   home:

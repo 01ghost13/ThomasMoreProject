@@ -32,6 +32,7 @@ common:
     test_cant_be_deleted: Deze test heeft bijbehorende resultaten, verwijder ze eerst.
     language_created: Taal gemaakt!
     translation_updated: Vertaling bijgewerkt!
+    role_updated: Rol bijgewerkt!
   gender:
     man: Mens
     woman: Vrouw
@@ -228,6 +229,8 @@ entities:
   picture_interests:
     fields:
       picture: Koppeling
+  test_availabilities:
+    index: Test beschikbaarheid
 
 static:
   home:
