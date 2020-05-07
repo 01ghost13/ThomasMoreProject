@@ -16,10 +16,16 @@ class Test < ActiveRecord::Base
 
   define_translatable_columns %i[name description]
 
+  scope :filter_by_availability, ->(user_id) { joins(:test_availabilities).where('test_availabilities.user_id': user_id, 'test_availabilities.available': true) }
+
   after_save :set_outdated
+
+  after_create :fill_test_availability
 
   has_many :questions, inverse_of: :test, dependent: :destroy
   has_many :result_of_tests, dependent: :destroy
+  has_many :test_availabilities, dependent: :destroy
+
   accepts_nested_attributes_for :questions, reject_if: :all_blank, allow_destroy: true
 
   validates :name,:description,:version, presence: true
@@ -35,6 +41,15 @@ class Test < ActiveRecord::Base
     test_info[:description] = self.description
     test_info
   end
+
+  def fill_test_availability
+    users = User.all_local_admins.ids
+
+    users.each do |user_id|
+      test_availabilities.create(user_id: user_id, available: false)
+    end
+  end
+
   private
   #Sets results outdated if Test was changed
   def set_outdated

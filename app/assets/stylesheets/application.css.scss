@@ -73,3 +73,11 @@ p.big {
 .margin-top-20 {
   margin-top: 20px;
 }
+
+input.big-checkbox[type="checkbox"] {
+  height: 30px !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

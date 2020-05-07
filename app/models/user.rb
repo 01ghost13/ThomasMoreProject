@@ -51,10 +51,14 @@ class User < ActiveRecord::Base
 
   belongs_to :language
 
+  has_many :test_availabilities, dependent: :destroy
+
   accepts_nested_attributes_for :administrator
   accepts_nested_attributes_for :mentor
   accepts_nested_attributes_for :client
   accepts_nested_attributes_for :employee
+
+  after_create :fill_test_availability
 
   class << self
     # TODO FIX n+1 query
@@ -166,6 +170,29 @@ class User < ActiveRecord::Base
       MentorPolicy
     elsif client?
       ClientPolicy
+    end
+  end
+
+  def head_user
+    if local_admin?
+      self
+    elsif mentor?
+      # mentor(model), local_admin
+      employee&.employee&.user
+    elsif client?
+      # client, mentor, local_admin
+      client.employee&.employee&.user
+    else
+      self
+    end
+  end
+
+  def fill_test_availability
+    return unless role == 'local_admin'
+    tests = Test.all.ids
+
+    tests.each do |test_id|
+      test_availabilities.create(test_id: test_id, available: true)
     end
   end
 

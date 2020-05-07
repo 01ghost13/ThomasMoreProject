@@ -33,7 +33,7 @@ module Translatable
 
   class << self
     def wrap_language(array, language_id)
-      return if array.blank?
+      return array if array.blank?
 
       if array.is_a? Enumerable
         array.each do |el|

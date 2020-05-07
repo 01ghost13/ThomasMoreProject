@@ -91,8 +91,8 @@ class TestingProcessController < AdminController
 
   def index
     authorize!(@user, with: TestProccessPolicy)
-
-    @tests = wrap_language(Test.all).map(&:show_short)
+    tests = Test.filter_by_availability(@user.head_user.id)
+    @tests = wrap_language(tests).map(&:show_short)
     @tests = Kaminari.paginate_array(@tests).page(params[:page]).per(10)
 
     @not_finished_tests = ResultOfTest

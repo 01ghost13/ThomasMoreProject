@@ -82,4 +82,11 @@ Rails.application.routes.draw do
       post :create_language, to: 'translations#create_language'
     end
   end
+
+  # Test availability
+  resources :test_availabilities, only: %i[index] do
+    collection do
+      patch :batch_update, to: 'test_availabilities#batch_update'
+    end
+  end
 end

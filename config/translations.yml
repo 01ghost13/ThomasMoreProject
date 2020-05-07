@@ -32,6 +32,7 @@ common:
     test_cant_be_deleted: This test has associated results, please, delete them first.
     language_created: Language created!
     translation_updated: Translation updated!
+    role_updated: Role updated!
   gender:
     man: Man
     woman: Woman
@@ -228,6 +229,8 @@ entities:
   picture_interests:
     fields:
       picture: Link
+  test_availabilities:
+    index: Test availability
 
 static:
   home:

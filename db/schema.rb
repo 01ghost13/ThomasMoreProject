@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_04_082752) do
+ActiveRecord::Schema.define(version: 2020_05_05_075637) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,6 +184,17 @@ ActiveRecord::Schema.define(version: 2020_05_04_082752) do
     t.boolean "gaze_trace", default: false
   end
 
+  create_table "test_availabilities", force: :cascade do |t|
+    t.bigint "test_id"
+    t.bigint "user_id"
+    t.boolean "available", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["test_id", "user_id"], name: "unique_test_roles", unique: true
+    t.index ["test_id"], name: "index_test_availabilities_on_test_id"
+    t.index ["user_id"], name: "index_test_availabilities_on_user_id"
+  end
+
   create_table "tests", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -253,4 +264,6 @@ ActiveRecord::Schema.define(version: 2020_05_04_082752) do
   add_foreign_key "question_results", "result_of_tests"
   add_foreign_key "questions", "pictures"
   add_foreign_key "questions", "tests"
+  add_foreign_key "test_availabilities", "tests"
+  add_foreign_key "test_availabilities", "users"
 end
