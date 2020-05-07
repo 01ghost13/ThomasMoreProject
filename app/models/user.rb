@@ -58,6 +58,8 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :client
   accepts_nested_attributes_for :employee
 
+  after_create :fill_test_availability
+
   class << self
     # TODO FIX n+1 query
     def admins_list
@@ -168,6 +170,28 @@ class User < ActiveRecord::Base
       MentorPolicy
     elsif client?
       ClientPolicy
+    end
+  end
+
+  def head_user
+    if local_admin?
+      self
+    elsif mentor?
+      # mentor(model), local_admin
+      employee&.employee&.user
+    elsif client?
+      # client, mentor, local_admin
+      client.employee&.employee&.user
+    else
+      self
+    end
+  end
+
+  def fill_test_availability
+    tests = Test.all.ids
+
+    tests.each do |test|
+      fill_test_availability.create(test_id: test.id, available: true)
     end
   end
 
