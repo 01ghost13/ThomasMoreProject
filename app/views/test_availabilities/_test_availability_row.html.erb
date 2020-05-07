@@ -1,0 +1,21 @@
+<%
+  grouped = test_availabilities.group_by(&:test_id)
+%>
+<% tests.each do |test| %>
+  <%
+    test_availability = grouped[test.id]&.first
+  %>
+  <td style="text-align: center;">
+    <% if test_availability.present? %>
+      <%= check_box_tag "role_#{test_availability.id}",
+                        test_availability.available,
+                        test_availability.available,
+                        class: "role-checkbox big-checkbox user_#{test_availability.user_id} test_#{test_availability.test_id}",
+                        data: {
+                          role_id: test_availability.id
+                        }
+      %>
+      <small class="text-success msg msg_<%= test_availability.id %>"></small>
+    <% end %>
+  </td>
+<% end %>

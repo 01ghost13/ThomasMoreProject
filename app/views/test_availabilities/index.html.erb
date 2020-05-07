@@ -1,0 +1,46 @@
+<% provide :title, tf('entities.test_availabilities.index') %>
+
+<%= javascript_include_tag 'test_availabilities' %>
+
+<h1><%= tf('entities.test_availabilities.index') %></h1>
+
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <td>Local admin</td>
+    <% @tests.each do |test| %>
+      <td style="text-align: center"
+      >
+        <a class="table-header cursor-pointer"
+           data-test-id="<%= test.id %>"
+        >
+          <%= test.name %>&nbsp;
+          <span class="glyphicon glyphicon-check"
+                aria-hidden="true"
+          ></span>
+        </a>
+      </td>
+    <% end %>
+  </tr>
+  </thead>
+  <% @users.each do |user| %>
+    <tr>
+      <td>
+        <a class="table-row cursor-pointer"
+           data-user-id="<%= user.id %>"
+        >
+          <%= user.employee.full_name %>&nbsp;
+          <span class="glyphicon glyphicon-check"
+                aria-hidden="true"
+          ></span>
+        </a>
+      </td>
+      <%= render partial: 'test_availabilities/test_availability_row',
+                 locals: {
+                   tests: @tests,
+                   test_availabilities: user.test_availabilities
+                 }
+      %>
+    </tr>
+  <% end %>
+</table>
