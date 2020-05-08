@@ -1,0 +1,55 @@
+<% provide(:title, "Test #{@test.name} summary") %>
+
+<%= javascript_include_tag 'summary_results.js' %>
+
+<div class="row">
+  <div class="col-sm-12"
+       style="display: inline-block"
+  >
+    <h1 style="display: inline"><%= "Test #{@test.name} summary" %></h1>
+    <div style="display: inline; float: right;">
+      <%= render partial: 'result_of_tests/summary_results/buttons_template',
+                 locals: {
+                     show_details_link: '',
+                     download_as_xlsx_link: '#'
+                 }
+      %>
+      <%= select_tag :test_select,
+                     options_from_collection_for_select(@tests, :id, :name, @test.id),
+                     class: 'form-control',
+                     style: 'margin-top: 20px'
+      %>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel-group"
+         id="accordion"
+         role="tablist"
+         aria-multiselectable="true"
+    >
+      <% @results_tree.each do |branch, children| %>
+        <% if branch.is_a?(Client) %>
+          <%= render partial: 'result_of_tests/summary_results/accordeon_client',
+                     locals: {
+                       client: branch,
+                       results: children,
+                       data_parent: 'accordion'
+                     }
+          %>
+        <% elsif branch.is_a?(Employee) %>
+          <%= render partial: 'result_of_tests/summary_results/accordeon_mentor',
+                     locals: {
+                       mentor: branch,
+                       clients: children,
+                       data_parent: 'accordion'
+                     }
+          %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
+

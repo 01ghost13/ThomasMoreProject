@@ -89,4 +89,6 @@ Rails.application.routes.draw do
       patch :batch_update, to: 'test_availabilities#batch_update'
     end
   end
+
+  get 'summary_results', to: 'result_of_tests#summary_results'
 end

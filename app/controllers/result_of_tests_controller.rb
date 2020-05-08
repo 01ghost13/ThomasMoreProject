@@ -175,6 +175,14 @@ class ResultOfTestsController < AdminController
     @heatmap = question_result.gaze_trace_result
   end
 
+  def summary_results
+    authorize!
+    @tests = Test.all.select(:name, :id)
+    @test = @tests.find { |t| t.id.to_s == params[:test_id] } || @tests.first
+    test_id = @test&.id
+    @results_tree = UsersTreeLoader.new(current_user, test_id.to_i).call
+  end
+
   private
     def result_params
       params
