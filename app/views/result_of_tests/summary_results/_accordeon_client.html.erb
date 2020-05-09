@@ -25,8 +25,8 @@
 
           <%= render partial: 'result_of_tests/summary_results/buttons_template',
                      locals: {
-                       show_details_link: '',
-                       download_as_xlsx_link: '#',
+                       show_details_link: summary_result_test_path(@test.id, user_id: client.user.id),
+                       download_as_xlsx_link: summary_result_test_path(@test.id, user_id: client.user.id, format: :xlsx),
                        show_details_classes: 'btn-xs'
                      }
           %>
@@ -44,7 +44,9 @@
       <ul class="list-group">
         <% results.each do |result| %>
           <li class="list-group-item">
-            Result for <%= result.created_at %>
+            <div style="display: inline">
+              Result for <div style="display: inline-block"><%= date_to_local(result.created_at) %></div>
+            </div>
             <div style="float: right">
               <%= render partial: 'result_of_tests/summary_results/buttons_template',
                          locals: {

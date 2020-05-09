@@ -183,6 +183,33 @@ class ResultOfTestsController < AdminController
     @results_tree = UsersTreeLoader.new(current_user, test_id.to_i).call
   end
 
+  def summary_result
+    authorize!
+
+    @test = Test.find(params[:id])
+    @summary_target =
+      if params[:user_id].present?
+        # FIX TO user
+        User.find(params[:user_id])
+      else
+        current_user
+      end
+
+    @name = @summary_target.email
+
+    user_tree = UsersTreeLoader.new(@summary_target, @test.id)
+    user_tree.call
+    @calc = SummaryResultCalculator.new(user_tree.results)
+
+
+    respond_to do |format|
+      format.html
+      format.xlsx {
+        response.headers['Content-Disposition'] = "attachment; filename=\"Test #{@test.name} summary result.xlsx\""
+      }
+    end
+  end
+
   private
     def result_params
       params

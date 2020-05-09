@@ -33,6 +33,10 @@ class ResultOfTestPolicy < ApplicationPolicy
     super?
   end
 
+  def summary_result?
+    super?
+  end
+
   private
     def result_of_my_client?
       my_client?

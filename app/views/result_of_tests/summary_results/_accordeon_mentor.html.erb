@@ -22,10 +22,9 @@
                       target: '_blank',
                       class: "btn-xs btn btn-default"
           %>
-
           <%= render partial: 'result_of_tests/summary_results/buttons_template',
                      locals: {
-                         show_details_link: '',
+                         show_details_link: summary_result_test_path(@test.id, user_id: mentor.user.id),
                          download_as_xlsx_link: '#',
                          show_details_classes: 'btn-xs'
                      }

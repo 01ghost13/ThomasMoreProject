@@ -1,4 +1,4 @@
-<% provide(:title, "Test #{@test.name} summary") %>
+<% provide(:title, "Test #{@test.name} results") %>
 
 <%= javascript_include_tag 'summary_results.js' %>
 
@@ -6,12 +6,12 @@
   <div class="col-sm-12"
        style="display: inline-block"
   >
-    <h1 style="display: inline"><%= "Test #{@test.name} summary" %></h1>
+    <h1 style="display: inline"><%= "Test #{@test.name} results" %></h1>
     <div style="display: inline; float: right;">
       <%= render partial: 'result_of_tests/summary_results/buttons_template',
                  locals: {
-                     show_details_link: '',
-                     download_as_xlsx_link: '#'
+                   show_details_link: summary_result_test_path(@test.id),
+                   download_as_xlsx_link: summary_result_test_path(@test.id, format: :xlsx)
                  }
       %>
       <%= select_tag :test_select,
