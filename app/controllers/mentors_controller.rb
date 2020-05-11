@@ -180,7 +180,7 @@ class MentorsController < AdminController
     #Saving info if we are SA
     @is_super_admin = is_super?
     #Array of admins for SA
-    @admins = User.admins_list if @is_super_admin
+    @admins = User.admins_list(with_mentors: false) if @is_super_admin
   end
 
   #Callback for checking existence of record

@@ -1,0 +1,34 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: tf('entities.result_of_tests.summary_test_result')) do |sheet|
+  # Time of answers
+  sheet.add_row [tf('entities.questions.index')]
+  sheet.add_row [
+    '#',
+    tf('entities.result_of_tests.average_answer_short'),
+    tf('entities.pictures.related_interests')
+  ]
+
+  @calc.table_answer_time.each do |element|
+    row = [
+      element.number,
+      element.pretty_avg,
+      element.interests.map(&:name).join(', ')
+    ]
+    sheet.add_row row
+  end
+
+  # Earned points
+  sheet.add_row [tf('entities.result_of_tests.earned_points')]
+  sheet.add_row [
+    tf('entities.interests.interest'),
+    tf('entities.result_of_tests.summary')
+  ]
+  @calc.table_interest_points.each do |interest|
+    row = [
+      interest.this.name,
+      "#{interest.total_weight}/#{interest.max_weight}"
+    ]
+    sheet.add_row row
+  end
+end

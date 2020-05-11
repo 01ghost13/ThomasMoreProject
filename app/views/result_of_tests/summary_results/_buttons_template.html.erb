@@ -1,0 +1,17 @@
+<%
+  show_details_classes ||= ''
+%>
+
+<%= link_to "#{tf('entities.result_of_tests.show_detailed_result')}",
+            show_details_link,
+            target: '_blank',
+            class: "#{show_details_classes} btn btn-default"
+%>
+<%= link_to download_as_xlsx_link,
+            data: { turbolinks: false },
+            target: '_blank',
+            class: "#{show_details_classes} btn btn-success" do
+%>
+  <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>&#8194;
+  <%= tf('entities.result_of_tests.download_as') %> xlsx
+<% end %>

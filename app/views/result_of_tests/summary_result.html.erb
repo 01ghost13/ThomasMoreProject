@@ -1,0 +1,61 @@
+<% provide(:title, "Test #{@test.name} summary result") %>
+<%= javascript_include_tag 'https://www.gstatic.com/charts/loader.js' %>
+
+<div class= "row">
+  <h2>
+    <% if @summary_target.client? %>
+      <%= tf('entities.result_of_tests.results_of') %>
+    <% else %>
+      <%= tf('entities.result_of_tests.group_summary') %>
+    <% end %>
+    <%= link_to @name, show_path_resolver(@summary_target) %>
+  </h2>
+</div>
+
+<!-- Add designed btn -->
+<div class="row">
+  <%= link_to summary_result_test_path(@test.id, user_id: @summary_target.id, format: :xlsx),
+              data: { turbolinks: false },
+              class: 'btn btn-success' do
+  %>
+    <span class="glyphicon glyphicon-download-alt"
+          aria-hidden="true"
+    ></span>
+    &#8194;
+    <%= tf('entities.result_of_tests.download_as') %> xlsx
+  <% end %>
+
+</div>
+
+<div class="row">
+  <!-- Table Questions -->
+  <div class="col-sm-6 row">
+    <%= render partial: 'result_of_tests/summary_result/table_answer_time',
+               locals: {
+                 answer_timestamps: @calc.table_answer_time
+               }
+    %>
+  </div>
+
+  <!-- Interests points -->
+  <div class="col-sm-offset-1 col-sm-5">
+    <%= render partial: 'result_of_tests/summary_result/table_interest_points',
+               locals: {
+                 interest_points: @calc.table_interest_points
+               }
+    %>
+  </div>
+</div>
+
+<!-- Graphs -->
+<div class="row">
+  <div class="col-sm-12">
+    <%= render partial: 'result_of_tests/summary_result/graphs',
+               locals: {
+                 answer_time: @calc.to_graph_data(@calc.table_answer_time, :number, :answer_time),
+                 avg_interests: @calc.to_graph_data(@calc.avg_answer_time_by_interest, :name, :avg_time),
+                 interests_points: @calc.to_graph_data(@calc.table_interest_points, :name, :total_weight)
+               }
+    %>
+  </div>
+</div>
