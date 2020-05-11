@@ -17,7 +17,7 @@
         <%= mentor.full_name %>
 
         <div style="float: right">
-          <%= link_to 'User profile',
+          <%= link_to tf('common.menu.profile'),
                       show_path_resolver(mentor.user),
                       target: '_blank',
                       class: "btn-xs btn btn-default"
@@ -25,7 +25,7 @@
           <%= render partial: 'result_of_tests/summary_results/buttons_template',
                      locals: {
                          show_details_link: summary_result_test_path(@test.id, user_id: mentor.user.id),
-                         download_as_xlsx_link: '#',
+                         download_as_xlsx_link: summary_result_test_path(@test.id, user_id: mentor.user.id, format: :xlsx),
                          show_details_classes: 'btn-xs'
                      }
           %>
@@ -49,17 +49,17 @@
           <% if branch.is_a?(Client) %>
             <%= render partial: 'result_of_tests/summary_results/accordeon_client',
                        locals: {
-                           client: branch,
-                           results: children,
-                           data_parent: "accordion_client_#{row_id}"
+                         client: branch,
+                         results: children,
+                         data_parent: "accordion_client_#{row_id}"
                        }
             %>
           <% elsif branch.is_a?(Employee) %>
             <%= render partial: 'result_of_tests/summary_results/accordeon_mentor',
                        locals: {
-                           mentor: branch,
-                           clients: children,
-                           data_parent: "accordion_mentor_#{row_id}"
+                         mentor: branch,
+                         clients: children,
+                         data_parent: "accordion_mentor_#{row_id}"
                        }
             %>
           <% end %>

@@ -203,6 +203,8 @@ entities:
     summary: Summary
     edit_request: If you want to edit the results, ask your mentor.
     maximum_interest_point: Maximum points in test
+    summary_test_result: Summary results of test
+    show_detailed_result: Show detailed summary result
     was_checked:
       thumbs_up: Thumbs up
       thumbs_down: Thumbs down

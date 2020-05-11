@@ -1,6 +1,6 @@
 class SummaryResultCalculator
 
-  def initialize(results)
+  def initialize(results, language_id)
     ids = results.map(&:id)
 
     results = ResultOfTest
@@ -16,7 +16,7 @@ class SummaryResultCalculator
 
     @wrapped = results.map do |result|
       OpenStruct.new this: result,
-                     question_results: QuestionResultPresenter.wrap(result.question_results)
+                     question_results: QuestionResultPresenter.wrap(result.question_results, language_id)
     end
   end
 

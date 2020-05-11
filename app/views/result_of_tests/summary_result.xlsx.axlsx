@@ -1,12 +1,12 @@
 wb = xlsx_package.workbook
 
-wb.add_worksheet(name: "Test summary result") do |sheet|
+wb.add_worksheet(name: tf('entities.result_of_tests.summary_test_result')) do |sheet|
   # Time of answers
   sheet.add_row [tf('entities.questions.index')]
   sheet.add_row [
     '#',
-    'Average time',
-    'Related interests'
+    tf('entities.result_of_tests.average_answer_short'),
+    tf('entities.pictures.related_interests')
   ]
 
   @calc.table_answer_time.each do |element|

@@ -1,4 +1,4 @@
-<% provide(:title, "Test #{@test.name} results") %>
+<% provide(:title, "#{tf('entities.result_of_tests.summary_test_result')} #{@test.name}") %>
 
 <%= javascript_include_tag 'summary_results.js' %>
 
@@ -6,7 +6,7 @@
   <div class="col-sm-12"
        style="display: inline-block"
   >
-    <h1 style="display: inline"><%= "Test #{@test.name} results" %></h1>
+    <h1 style="display: inline"><%= "#{tf('entities.result_of_tests.summary_test_result')} #{@test.name}" %></h1>
     <div style="display: inline; float: right;">
       <%= render partial: 'result_of_tests/summary_results/buttons_template',
                  locals: {

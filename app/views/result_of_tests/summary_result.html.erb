@@ -6,8 +6,6 @@
     <% if @name.present? %>
       <%= tf('entities.result_of_tests.results_of') %>
       <%= link_to @name, show_path_resolver(@summary_target) %>
-    <% else %>
-      <%= "Total summary for test #{@test.name}" %>
     <% end %>
   </h2>
 </div>

@@ -17,7 +17,7 @@
         <%= client.code_name %>
 
         <div style="float: right">
-          <%= link_to 'Client profile',
+          <%= link_to tf('common.menu.profile'),
                       client_path(client.user.id),
                       target: '_blank',
                       class: "btn-xs btn btn-default"
@@ -45,7 +45,7 @@
         <% results.each do |result| %>
           <li class="list-group-item">
             <div style="display: inline">
-              Result for <div style="display: inline-block"><%= date_to_local(result.created_at) %></div>
+              <%= tf('entities.result_of_tests.result') %> <div style="display: inline-block"><%= date_to_local(result.created_at) %></div>
             </div>
             <div style="float: right">
               <%= render partial: 'result_of_tests/summary_results/buttons_template',

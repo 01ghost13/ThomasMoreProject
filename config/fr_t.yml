@@ -203,6 +203,8 @@ entities:
     summary: "Sommaire"
     edit_request: "Si vous souhaitez modifier les résultats, demandez à votre mentor."
     maximum_interest_point: "Maximum de points dans le test"
+    summary_test_result: "Résumé des résultats du test"
+    show_detailed_result: "Afficher le résultat résumé détaillé"
     was_checked:
       thumbs_up: "Pouces vers le haut"
       thumbs_down: "Pouces vers le bas"

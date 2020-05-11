@@ -194,11 +194,16 @@ class ResultOfTestsController < AdminController
         current_user
       end
 
-    @name = @summary_target.email
+    @name =
+      if @summary_target.client?
+        @summary_target.client.code_name
+      else
+        @summary_target.employee.full_name
+      end
 
     user_tree = UsersTreeLoader.new(@summary_target, @test.id)
     user_tree.call
-    @calc = SummaryResultCalculator.new(user_tree.results)
+    @calc = SummaryResultCalculator.new(user_tree.results, current_user.language_id)
 
 
     respond_to do |format|
