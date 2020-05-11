@@ -1,0 +1,48 @@
+<ul class="nav nav-tabs">
+  <li class="active">
+    <a href="#answer_time" data-toggle="tab">
+      <%= tf('entities.result_of_tests.time_of_answer') %>
+    </a>
+  </li>
+  <li>
+    <a href="#interests_points" data-toggle="tab">
+      <%= tf('entities.result_of_tests.interest_points') %>
+    </a>
+  </li>
+  <li>
+    <a href="#avg_interests" data-toggle="tab">
+      <%= tf('entities.result_of_tests.average_answer') %>
+    </a>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane fade in active" id="answer_time">
+    <%= column_chart answer_time,
+                     xtitle: tf('entities.result_of_tests.fields.question_number'),
+                     ytitle: tf('entities.result_of_tests.time_of_answer_short'),
+                     download: true
+    %>
+  </div>
+  <div class="tab-pane fade" id="avg_interests">
+    <%= column_chart avg_interests,
+                     id: 'avg_interests_chart',
+                     xtitle: tf('entities.interests.interest'),
+                     ytitle: tf('entities.result_of_tests.average_answer_short'),
+                     download: true,
+                     discrete: true
+    %>
+  </div>
+  <div class="tab-pane fade" id="interests_points">
+    <%= pie_chart interests_points,
+                  download: true
+    %>
+  </div>
+</div>
+<!--Fix of bug with not showing titles of OX-->
+<script>
+  $('a[href="#avg_interests"]').on('shown.bs.tab', function() {
+    var chart = Chartkick.charts['avg_interests_chart'];
+    chart.redraw();
+  });
+</script>

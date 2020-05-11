@@ -62,11 +62,11 @@ class User < ActiveRecord::Base
 
   class << self
     # TODO FIX n+1 query
-    def admins_list
+    def admins_list(with_mentors: true)
       all_local_admins
         .joins(:employee)
         .order('employees.organisation')
-        .select { |u| u.employee.employees.count.positive? }
+        .select { |u| !with_mentors || u.employee.employees.count.positive? }
         .map do |t|
           employee = t.employee
           org = '%{org}: %{lname} %{name}' % { org: employee.organisation, lname: employee.last_name, name: employee.name }

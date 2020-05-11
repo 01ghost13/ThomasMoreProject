@@ -67,6 +67,7 @@ Rails.application.routes.draw do
   resources :tests do
     get 'update_image' => 'tests#update_image', on: :new
     member do
+      get 'summary_result', to: 'result_of_tests#summary_result'
       get 'edit/update_image' => 'tests#update_image'
     end
   end
@@ -89,4 +90,6 @@ Rails.application.routes.draw do
       patch :batch_update, to: 'test_availabilities#batch_update'
     end
   end
+
+  get 'summary_results', to: 'result_of_tests#summary_results'
 end

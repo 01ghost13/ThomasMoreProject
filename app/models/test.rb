@@ -16,7 +16,14 @@ class Test < ActiveRecord::Base
 
   define_translatable_columns %i[name description]
 
-  scope :filter_by_availability, ->(user_id) { joins(:test_availabilities).where('test_availabilities.user_id': user_id, 'test_availabilities.available': true) }
+  scope :filter_by_availability, ->(user) do
+    if user.super_admin?
+      all
+    else
+      user_id = user.id
+      joins(:test_availabilities).where('test_availabilities.user_id': user_id, 'test_availabilities.available': true)
+    end
+  end
 
   after_save :set_outdated
 

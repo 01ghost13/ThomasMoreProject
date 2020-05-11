@@ -29,6 +29,14 @@ class ResultOfTestPolicy < ApplicationPolicy
     super? || mentor? && result_of_my_client? || local_admin? && result_of_my_mentors_client?
   end
 
+  def summary_results?
+    super? || mentor? || local_admin?
+  end
+
+  def summary_result?
+    super? || me? || local_admin? && (my_mentor? || result_of_my_mentors_client?) || mentor? && result_of_my_client?
+  end
+
   private
     def result_of_my_client?
       my_client?

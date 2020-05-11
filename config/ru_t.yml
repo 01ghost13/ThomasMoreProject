@@ -203,6 +203,9 @@ entities:
     summary: Резюме
     edit_request: Если вы хотите редактировать результаты, спросите своего наставника.
     maximum_interest_point: Максимальное количество баллов в тесте
+    summary_test_result: Сводные результаты теста
+    show_detailed_result: Показать подробный итоговый результат
+    group_summary: Суммарный результат всех студентов
     was_checked:
       thumbs_up: Понравилось
       thumbs_down: Не понравилось

@@ -203,6 +203,9 @@ entities:
     summary: Overzicht
     edit_request: Vraag uw mentor als u de resultaten wilt bewerken.
     maximum_interest_point: Maximale punten in test
+    summary_test_result: Samenvatting resultaten van de test
+    show_detailed_result: Toon gedetailleerd overzichtsresultaat
+    group_summary: Samenvattend resultaat van alle leerlingen van
     was_checked:
       thumbs_up: Duimen omhoog
       thumbs_down: Duimen omlaag
