@@ -3,16 +3,18 @@
 
 <div class= "row">
   <h2>
-    <% if @name.present? %>
+    <% if @summary_target.client? %>
       <%= tf('entities.result_of_tests.results_of') %>
-      <%= link_to @name, show_path_resolver(@summary_target) %>
+    <% else %>
+      <%= tf('entities.result_of_tests.group_summary') %>
     <% end %>
+    <%= link_to @name, show_path_resolver(@summary_target) %>
   </h2>
 </div>
 
 <!-- Add designed btn -->
 <div class="row">
-  <%= link_to summary_result_test_path(@test.id, format: :xlsx),
+  <%= link_to summary_result_test_path(@test.id, user_id: @summary_target.id, format: :xlsx),
               data: { turbolinks: false },
               class: 'btn btn-success' do
   %>

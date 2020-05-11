@@ -205,6 +205,7 @@ entities:
     maximum_interest_point: "Maximum de points dans le test"
     summary_test_result: "Résumé des résultats du test"
     show_detailed_result: "Afficher le résultat résumé détaillé"
+    group_summary: "Résultat sommaire de tous les étudiants de"
     was_checked:
       thumbs_up: "Pouces vers le haut"
       thumbs_down: "Pouces vers le bas"

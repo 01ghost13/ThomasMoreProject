@@ -30,11 +30,11 @@ class ResultOfTestPolicy < ApplicationPolicy
   end
 
   def summary_results?
-    super?
+    super? || mentor? || local_admin?
   end
 
   def summary_result?
-    super?
+    super? || me? || local_admin? && (my_mentor? || result_of_my_mentors_client?) || mentor? && result_of_my_client?
   end
 
   private

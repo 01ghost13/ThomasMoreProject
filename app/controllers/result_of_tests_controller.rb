@@ -177,22 +177,26 @@ class ResultOfTestsController < AdminController
 
   def summary_results
     authorize!
-    @tests = Test.all.select(:name, :id)
+
+    tests = Test.filter_by_availability(current_user.head_user).select(:name, :id)
+    @tests = wrap_language(tests)
+
     @test = @tests.find { |t| t.id.to_s == params[:test_id] } || @tests.first
     test_id = @test&.id
     @results_tree = UsersTreeLoader.new(current_user, test_id.to_i).call
   end
 
   def summary_result
-    authorize!
-
     @test = Test.find(params[:id])
+
     @summary_target =
       if params[:user_id].present?
         User.find(params[:user_id])
       else
         current_user
       end
+
+    authorize!(@summary_target, with: ResultOfTestPolicy)
 
     @name =
       if @summary_target.client?
