@@ -64,6 +64,8 @@ class SummaryResultCalculator
   end
 
   def table_interest_points
+    # Fix to absolute weights
+
     @table_interest_points ||=
       @wrapped
         .reduce([]) { |memo, result| memo += result.question_results }

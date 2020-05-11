@@ -189,7 +189,6 @@ class ResultOfTestsController < AdminController
     @test = Test.find(params[:id])
     @summary_target =
       if params[:user_id].present?
-        # FIX TO user
         User.find(params[:user_id])
       else
         current_user
