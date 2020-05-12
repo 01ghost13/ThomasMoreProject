@@ -235,6 +235,12 @@ entities:
   test_availabilities:
     index: "Tester la disponibilité"
 
+testing_process:
+  finish_page: "Page de fin"
+  congrats: "Félicitations, le test est terminé!"
+  more_details: "plus de détails"
+  most_rated: "Votre intérêt le plus apprécié est"
+
 static:
   home:
     first_line: "Le test d'intérêt du travail (AIT) a été développé par MPI Oosterlo, Thomas More Kempen et l'Université technique d'État de Volgograd. Une bonne adéquation entre la personne et le travail, où le travail correspond aux intérêts et aux possibilités, augmente considérablement la satisfaction au travail des personnes handicapées mentales. L'ACI a été développé pour montrer de l'intérêt pour certains domaines de travail sans égard aux compétences."

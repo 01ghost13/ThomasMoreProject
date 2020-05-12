@@ -61,6 +61,7 @@ Rails.application.routes.draw do
     get ':result_of_test_id/testing' => 'testing_process#testing', as: 'testing'
     post ':result_of_test_id/answer' => 'testing_process#answer', as: 'testing_answer'
     post 'clients/:id/tests/:test_id/start' => 'testing_process#begin', as: 'testing_begin'
+    get ':result_of_test_id/finish' => 'testing_process#finish', as: 'finish_page'
   end
 
   #Tests pages
