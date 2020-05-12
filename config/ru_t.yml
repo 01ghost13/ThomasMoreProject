@@ -104,6 +104,7 @@ entities:
     delete_confirm: Удаление повлияет на результаты. Вы уверены?
     add_interest: Добавить интерес
     remove_interest: Удалить интерес
+    has_audio_description: Есть аудио описание
     fields:
       image: Картинка
       description: Описание

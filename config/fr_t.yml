@@ -104,6 +104,7 @@ entities:
     delete_confirm: "La suppression affectera les résultats. Êtes-vous sûr?"
     add_interest: "Ajouter un intérêt"
     remove_interest: "Supprimer l'intérêt"
+    has_audio_description: "Dispose d'une description audio"
     fields:
       image: "Image"
       description: "La description"

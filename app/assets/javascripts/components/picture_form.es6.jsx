@@ -15,7 +15,7 @@ class PictureForm extends React.Component {
     this.sendForm = this.sendForm.bind(this);
     this.addInterest = this.addInterest.bind(this);
     this.imageChanged = this.imageChanged.bind(this);
-
+    this.audioChanged = this.audioChanged.bind(this);
   }
 
   defaultInterest() {
@@ -31,13 +31,17 @@ class PictureForm extends React.Component {
   }
 
   imageChanged(event) {
-    let reader = new FileReader();
-    const files = Array.from(event.target.files);
+    this.setState({
+      ...this.state,
+      image: event.target.files[0]
+    });
+  }
 
-    reader.readAsDataURL(files[0]);
-    reader.onload = () => {
-      this.setState({...this.state, image: reader.result, image_name: files[0].name});
-    };
+  audioChanged(event) {
+    this.setState({
+      ...this.state,
+      audio: event.target.files[0]
+    });
   }
 
   selectChanged(event, index) {
@@ -60,18 +64,47 @@ class PictureForm extends React.Component {
     return { url: url, method: 'patch' };
   }
 
+  formData() {
+    let fd = new FormData();
+    let form_keys = {
+      id: '',
+      description: '',
+      image: null,
+      audio: null
+    };
+
+    for(let [key, value] of Object.entries(form_keys)) {
+      if(this.state[key] !== '' && this.state[key] !== undefined) {
+        fd.append('picture[' + key + ']', this.state[key]);
+      }
+    }
+
+    let i = 0;
+
+    for(let attributes of this.state['picture_interests_attributes']) {
+      if(attributes.id !== undefined) {
+        fd.append('picture[picture_interests_attributes][' + i + '][id]', attributes.id);
+      }
+      if(attributes._destroy !== undefined) {
+        fd.append('picture[picture_interests_attributes][' + i + '][_destroy]', attributes._destroy);
+      }
+      fd.append('picture[picture_interests_attributes][' + i + '][interest_id]', attributes.interest_id);
+      fd.append('picture[picture_interests_attributes][' + i + '][earned_points]', attributes.earned_points);
+      i += 1
+    }
+
+    return fd;
+  }
+
   sendForm(event, index) {
     let req = this.request();
 
     $.ajax({
       url: req.url,
       method: req.method,
-      dataType: "json",
-      data: {
-        picture: {
-          ...this.state
-        }
-      },
+      processData: false,
+      contentType: false,
+      data: this.formData(),
       success: function (response, status, jqxhr) {
         window.location.replace("/pictures");
       },
@@ -143,6 +176,36 @@ class PictureForm extends React.Component {
     } else {
       return '';
     }
+  }
+
+  renderAudio() {
+    return(
+      <div>
+        <div className="row col-sm-offset-2 form-group">
+          <label className="col-sm-2 control-label">{'Audio description'}</label>
+          <div className="col-sm-4">
+            <input type="file"
+                   className="form-control"
+                   accept="audio/*"
+                   id="audio_upload"
+                   onChange={this.audioChanged}
+            />
+          </div>
+        </div>
+        {this.renderAudioPreview()}
+      </div>
+    );
+  }
+
+  renderAudioPreview() {
+    if(this.props.audio_preview === '') { return ''; }
+    return(
+      <div className="row col-sm-offset-4 form-group">
+        <audio controls="controls"
+               src={this.props.audio_preview}
+        ></audio>
+      </div>
+    );
   }
 
   renderInterests() {
@@ -223,6 +286,8 @@ class PictureForm extends React.Component {
 
         {this.renderPicture()}
 
+        {this.renderAudio()}
+
         {this.renderInterests()}
 
         <div className="row col-sm-offset-2 form-group">
@@ -246,6 +311,7 @@ PictureForm.propTypes = {
   }),
   interests_list: React.PropTypes.array,
   picture_preview: React.PropTypes.string,
+  audio_preview: React.PropTypes.string,
   form_type: React.PropTypes.string
 };
 
@@ -254,9 +320,11 @@ PictureForm.defaultProps = {
     id: '',
     description: '',
     image: '',
-    picture_interests_attributes: []
+    picture_interests_attributes: [],
+    audio: ''
   },
   interests_list: [],
   picture_preview: '',
+  audio_preview: '',
   form_type: 'create'
 };
