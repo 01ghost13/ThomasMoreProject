@@ -235,6 +235,12 @@ entities:
   test_availabilities:
     index: Test beschikbaarheid
 
+testing_process:
+  finish_page: Pagina voltooien
+  congrats: Gefeliciteerd, Test is klaar!
+  more_details: meer details
+  most_rated: Uw meest gewaardeerde interesse is
+
 static:
   home:
     first_line: De ArbeidsInteresse Test (AIT) is ontwikkeld door MPI Oosterlo, Thomas More Kempen en Volgograd State Technical University. Een goede match tussen persoon en job, waarbij de functie aansluit bij de interesses en mogelijkheden, verhoogt de arbeidssatisfactie van mensen met een verstandelijke beperking aanzienlijk. De AIT is ontwikkeld om de interesse in bepaalde werkgebieden te tonen zonder rekening te houden met de competenties
