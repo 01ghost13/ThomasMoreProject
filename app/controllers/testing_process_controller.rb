@@ -4,7 +4,6 @@ class TestingProcessController < AdminController
 
   before_action :preload_entity
 
-  #Updates picture in /testing process
   def answer
     result_of_test = ResultOfTest.find_by(id: params[:result_of_test_id])
 
@@ -31,7 +30,8 @@ class TestingProcessController < AdminController
     if @question.blank?
       res = manager.result_of_test
       render json: {
-        result_url: client_result_of_test_path(res.client.user.id, res.id)
+        # result_url: client_result_of_test_path(res.client.user.id, res.id)
+        result_url: finish_page_path(res.id)
       }
       return
     end
@@ -101,6 +101,48 @@ class TestingProcessController < AdminController
                               .order(created_at: :desc)
 
     render 'tests/index'
+  end
+
+  def finish
+    @result_of_test = ResultOfTest
+      .includes(
+        question_results: {
+          question: {
+            picture: { picture_interests: :interest },
+            youtube_link: { picture_interests: :interest },
+          }
+        }
+      )
+      .find_by(id: params[:result_of_test_id])
+
+    authorize!(@result_of_test, with: TestProccessPolicy)
+
+    q_res = @result_of_test.question_results
+    language_id = current_user.language_id
+
+    wrapped = QuestionResultPresenter.wrap(q_res, language_id)
+    rated_interests = SummaryResultCalculator
+      .table_interest_points(wrapped)
+      .first(1)
+      .map(&:this)
+
+    @interest = rated_interests.map(&:name).join(', ')
+
+    @top_rated_pics = Picture.select('pictures.*, picture_interests.earned_points')
+      .joins(
+        questions: {
+          picture: { picture_interests: :interest },
+        }
+      )
+      .where(
+        'questions.test_id': @result_of_test.test_id,
+        'interests.id': rated_interests.map(&:id)
+      )
+      .order('picture_interests.earned_points DESC')
+      .limit(4)
+      .distinct
+
+    render layout: 'testing_layout'
   end
 
   private

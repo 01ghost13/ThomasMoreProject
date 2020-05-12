@@ -84,6 +84,12 @@ common:
   unions:
     and: and
 
+testing_process:
+  finish_page: Finish page
+  congrats: Congratulations, Test is finished!
+  more_details: more details
+  most_rated: Your most rated interest is
+
 entities:
   interests:
     index: Interests

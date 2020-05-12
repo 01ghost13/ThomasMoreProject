@@ -34,6 +34,8 @@ class ResultOfTestsController < AdminController
 
   def show
     result = ResultOfTest.result_page.find_by(id: params[:result_id])
+    @result = result
+    @test = Test.select(:name).find(result.test_id)
     result.language_id = current_user.language_id
 
     authorize!(result)
@@ -83,6 +85,7 @@ class ResultOfTestsController < AdminController
       avg_time_per_interest[k] /= interests.count
     end
     client = Client.find(result.client_id)
+    @client_user = client.user
     #Sorting
     @list_interests = interests.to_a.sort{ |x,y| y[1] - x[1]}
     @list_timestamps = timestamps

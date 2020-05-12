@@ -1,5 +1,36 @@
 class SummaryResultCalculator
 
+  class << self
+    def table_interest_points(wrapped_question_results)
+      # Fix to absolute weights
+
+      wrapped_question_results
+        .reduce([]) { |memo, qr| memo += qr.interests }
+        .group_by { |interest_presenter| interest_presenter.interest }
+        .map do |interest, interest_presenters|
+          container = OpenStruct.new(
+            max_weight: 0,
+            total_weight: 0,
+            this: interest,
+            name: interest.name
+          )
+
+          interest_presenters.reduce(container) do |memo, interest_presenter|
+            memo.max_weight += interest_presenter.weight
+
+            if interest_presenter.counted
+              memo.total_weight += interest_presenter.weight
+            end
+
+            memo
+          end
+
+          container
+        end
+        .sort { |a, b| b.total_weight <=> a.total_weight }
+    end
+  end
+
   def initialize(results, language_id)
     ids = results.map(&:id)
 

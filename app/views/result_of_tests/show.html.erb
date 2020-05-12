@@ -1,7 +1,9 @@
 <% provide(:title, tf('entities.result_of_tests.result')) %>
 <%= javascript_include_tag 'https://www.gstatic.com/charts/loader.js' %>
 <div class= "row">
-	<h2><%= tf('entities.result_of_tests.results_of') %> <%= link_to @client, client_path(params[:client_id]) %></h2>
+	<h2>
+    <%= tf('entities.result_of_tests.results_of') %> <%= link_to @client, client_path(@client_user) %>, <%= @test.name %>
+  </h2>
 </div>
 
 <div class= "row">
@@ -16,6 +18,13 @@
   %>
     <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>&#8194;<%= tf('entities.result_of_tests.download_as') %> xlsx
   <% end %>
+  <% if !@result.is_outdated? && @result.is_ended? %>
+    <%= link_to finish_page_path(params[:result_id]),
+                class: 'btn btn-default' do
+    %>
+      <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&#8194;<%= tf('testing_process.finish_page') %>
+    <% end %>
+<% end %>
 
   <% if @has_heatmap %>
     <%= link_to tf('entities.result_of_tests.heatmap'),
