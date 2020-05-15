@@ -1,5 +1,6 @@
 class TestingProcessController < AdminController
   translations_for_preload %i[
+    testing_process.test_loading
   ]
 
   before_action :preload_entity
@@ -7,8 +8,11 @@ class TestingProcessController < AdminController
   def answer
     result_of_test = ResultOfTest.find_by(id: params[:result_of_test_id])
 
+    @start_number = params[:last_available_question].to_i
+
     authorize!(result_of_test, with: TestProccessPolicy)
     manager = TestingManager.new(params[:result_of_test_id])
+    @test = manager.result_of_test.test
 
     unless manager.valid?
       flash[:danger] = tf("errors.#{manager.errors.last}")

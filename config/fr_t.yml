@@ -104,6 +104,7 @@ entities:
     delete_confirm: "La suppression affectera les résultats. Êtes-vous sûr?"
     add_interest: "Ajouter un intérêt"
     remove_interest: "Supprimer l'intérêt"
+    has_audio_description: "Dispose d'une description audio"
     fields:
       image: "Image"
       description: "La description"
@@ -240,6 +241,7 @@ testing_process:
   congrats: "Félicitations, le test est terminé!"
   more_details: "plus de détails"
   most_rated: "Votre intérêt le plus apprécié est"
+  test_loading: "Le test est en cours de chargement, veuillez patienter"
 
 static:
   home:

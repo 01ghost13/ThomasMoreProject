@@ -52,11 +52,11 @@ class ResultOfTest < ActiveRecord::Base
     QuestionResult.includes(:question).where(result_of_test_id: self.id, number: number).first
   end
 
-  #Returns question before current
+  #Returns last answered question
   def previous_question
-    questions = QuestionResult.order(:number).where(result_of_test_id: self.id)
-    previous_number = (questions.count <= 1) ? 1 : questions.count - 1
-    Question.where(test_id: self.test_id, number: previous_number).first
+    QuestionResult.order(:number).where(result_of_test_id: self.id).last&.question
+    # previous_number = (questions.count <= 1) ? 1 : questions.count - 1
+    # Question.where(test_id: self.test_id, number: previous_number).first
   end
 
   def show_short

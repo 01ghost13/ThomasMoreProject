@@ -40,6 +40,12 @@
           <td class="col-sm-3">
             <h4>
               <%= picture.description %>
+              <% if picture.audio.attachment.present? %>
+                <span class="glyphicon glyphicon-volume-up"
+                      aria-hidden="true"
+                      title="<%= tf('entities.pictures.has_audio_description') %>"
+                ></span>
+              <% end %>
             </h4>
           </td>
           <td class="col-sm-3">

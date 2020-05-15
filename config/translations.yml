@@ -89,6 +89,7 @@ testing_process:
   congrats: Congratulations, Test is finished!
   more_details: more details
   most_rated: Your most rated interest is
+  test_loading: Test is loading please wait
 
 entities:
   interests:
@@ -110,6 +111,7 @@ entities:
     delete_confirm: Deleting will affect on results. Are you sure?
     add_interest: Add interest
     remove_interest: Remove interest
+    has_audio_description: Has audio description
     fields:
       image: Picture
       description: Description
