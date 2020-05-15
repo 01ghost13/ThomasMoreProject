@@ -241,6 +241,7 @@ testing_process:
   congrats: Gefeliciteerd, Test is klaar!
   more_details: meer details
   most_rated: Uw meest gewaardeerde interesse is
+  test_loading: Test wordt geladen, even geduld
 
 static:
   home:

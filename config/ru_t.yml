@@ -241,6 +241,7 @@ testing_process:
   congrats: Поздравляем, тест закончен!
   more_details: больше деталей
   most_rated: Ваш самый рейтинговый интерес
+  test_loading: Тест загружается, пожалуйста, подождите
 
 static:
   home:
