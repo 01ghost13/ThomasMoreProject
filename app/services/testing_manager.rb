@@ -25,6 +25,8 @@ class TestingManager
   end
 
   def next(current_question, rewrite, start_time, answer, gaze_trace_attrs, emotion_state_attrs)
+    end_time = DateTime.current
+
     if rewrite == 'true'
       #Updating cur question result
       q_to_upd = QuestionResult.find_by(
@@ -34,7 +36,7 @@ class TestingManager
 
       q_to_upd.update(
         start: start_time,
-        end: DateTime.current,
+        end: end_time,
         was_checked: answer,
         was_rewrited: true
       )
@@ -46,7 +48,7 @@ class TestingManager
       question_result_params = {
           number: current_question,
           start: start_time,
-          end: DateTime.current,
+          end: end_time,
           was_checked: answer,
           question_id: cur_q.id
       }

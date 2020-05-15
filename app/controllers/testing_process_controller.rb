@@ -22,10 +22,16 @@ class TestingProcessController < AdminController
       return
     end
 
+    start_time = DateTime.parse(params[:start_time])
+    loading_time = params[:loading_time]
+    if loading_time.present?
+      start_time += loading_time.to_f.seconds
+    end
+
     @question = manager.next(
       params[:question][:number].to_i,
       params[:rewrite],
-      params[:start_time],
+      start_time,
       params[:answer],
       params[:gaze_trace_result_attributes],
       params[:emotion_state_result_attributes]
