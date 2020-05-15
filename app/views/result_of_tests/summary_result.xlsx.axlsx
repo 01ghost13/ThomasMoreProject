@@ -1,6 +1,7 @@
 wb = xlsx_package.workbook
 
-wb.add_worksheet(name: tf('entities.result_of_tests.summary_test_result')) do |sheet|
+sheet_name = truncate(tf('entities.result_of_tests.summary_test_result'), length: 25, omission: '...')
+wb.add_worksheet(name: sheet_name) do |sheet|
   # Time of answers
   sheet.add_row [tf('entities.questions.index')]
   sheet.add_row [

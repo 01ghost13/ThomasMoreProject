@@ -1,5 +1,6 @@
 wb = xlsx_package.workbook
 
+sheet_name = truncate(tf('entities.questions.index'), length: 25, omission: '...')
 wb.add_worksheet(name: tf('entities.questions.index')) do |sheet|
   sheet.add_row [
     '#',
@@ -28,6 +29,7 @@ wb.add_worksheet(name: tf('entities.questions.index')) do |sheet|
   end
 end
 
+sheet_name = truncate(tf('entities.interests.index'), length: 25, omission: '...')
 wb.add_worksheet(name: tf('entities.interests.index')) do |sheet|
   sheet.add_row [
     tf('entities.interests.interest'),
