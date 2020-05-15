@@ -17,7 +17,14 @@ class TestingComponent extends React.Component {
       start_time: props.start_time,
       lock_buttons: false,
       gazeTrace: [],
-      emotionStates: []
+      emotionStates: [],
+      questionsState: 'loading',
+      preloadProgress: 0,
+      preloadProgressMax: 0,
+      questionsPreloadQueue: [],
+      lastNumberPreloaded: this.lastEl(props.testing.questions).number,
+      imgCache: [],
+      currentAudio: ''
     };
 
     //Binds
@@ -38,6 +45,50 @@ class TestingComponent extends React.Component {
 
   }
 
+  componentDidMount() {
+    this.preloadQuestions(this.props.testing.questions, true)
+  }
+
+  lastEl(array) {
+    return array[array.length - 1]
+  }
+
+  findAudio(question) {
+    for(let cachedTag of this.state.imgCache) {
+      let id = 'question_' + question.id;
+
+      if(id === cachedTag.id) {
+        return cachedTag;
+      }
+    }
+  }
+
+  stopAudio() {
+    let audioTag = this.state.currentAudio;
+
+    if(audioTag === undefined || audioTag.tagName !== 'AUDIO') { return; }
+
+    audioTag.pause();
+    audioTag.currentTime = 0;
+
+    this.setState({
+      currentAudio: undefined
+    });
+  }
+
+  playAudio(question) {
+    const audioTag = this.findAudio(question);
+
+    if(audioTag === undefined || audioTag.tagName !== 'AUDIO') { return; }
+
+    audioTag.play();
+
+    this.setState({
+      currentAudio: audioTag
+    });
+
+  }
+  
   client_url() {
     return this.props.client_url.replace(':id', this.props.user_id);
   }
@@ -49,6 +100,108 @@ class TestingComponent extends React.Component {
 
   isYoutube() {
     return !_.isEmpty(this.state.current_question.youtube_link)
+  }
+
+  isQuestionsLoading() {
+    return this.state.questionsState === 'loading';
+  }
+
+  promiseImgLoad(question) {
+    return new Promise(resolve => {
+      const img = new Image();
+
+      img.addEventListener('load', () => {
+        // TODO: Fix later https://react-legacy.netlify.app/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous
+        this.setState({
+          preloadProgress: this.state.preloadProgress += 1
+        });
+        resolve(img);
+      });
+
+      img.src = question.image_url;
+      img.className = 'img-responsive';
+      img.id = 'cur_image';
+    });
+  }
+
+  promiseAudioLoad(question) {
+    return new Promise(resolve => {
+      const audio = new Audio();
+
+      // Doesnt wait for full loading
+      // https://stackoverflow.com/a/2763101/6147257
+      audio.addEventListener('canplaythrough', () => {
+        // TODO: Fix later https://react-legacy.netlify.app/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous
+        this.setState({
+          preloadProgress: this.state.preloadProgress += 1
+        });
+        resolve(audio);
+      });
+
+      audio.src = question.audio_url;
+      audio.id = 'question_' + question.id
+    });
+  }
+
+  preloadQuestions(questions, first_load) {
+    if(questions.length === 0) { return; }
+
+    let promises = [];
+
+    if(this.state.questionsState === 'background-loading') {
+      this.setState({
+        questionsPreloadQueue: this.state.questionsPreloadQueue.concat(questions),
+      });
+      return;
+    }
+
+    for (let i = 0; i < questions.length; ++i) {
+      let question = questions[i];
+
+      if(question.image_url !== undefined) {
+        promises.push(this.promiseImgLoad(question));
+      }
+
+      if(question.audio_url !== undefined) {
+        promises.push(this.promiseAudioLoad(question));
+      }
+    }
+
+    this.setState({
+      preloadProgress: 0,
+      preloadProgressMax: promises.length
+    });
+
+    Promise
+      .all(promises)
+      .then(values => {
+
+        if(this.state.questionsPreloadQueue.length !== 0) {
+          this.preloadQuestions(this.state.questionsPreloadQueue);
+
+          this.setState({
+            questionsState: 'background-loading',
+            questions: this.state.questions.concat(questions),
+            questionsPreloadQueue: [],
+            imgCache: this.state.imgCache.concat(values),
+          });
+        } else {
+
+          this.setState({
+            questionsState: 'finished',
+            questions: this.state.questions.concat(questions),
+            imgCache: this.state.imgCache.concat(values),
+          });
+        }
+        // On first load activate audio after preloading all resources
+        // Will not work if current page has audio and page is reloaded https://developers.google.com/web/updates/2017/09/autoplay-policy-changes
+        if(first_load) {
+          this.playAudio(this.state.current_question);
+          this.setState({
+            start_time: new Date().toISOString()
+          });
+        }
+      });
   }
 
   //Callbacks
@@ -177,15 +330,59 @@ class TestingComponent extends React.Component {
     if(this.state.lock_buttons || this.props.mode === 'heatmap') {
       return;
     }
+    this.stopAudio();
 
     let new_state = {
-      ...this.state,
       current_question: { ...this.state.previous_question },
       previous_question: undefined,
       rewrite: true,
       gazeTrace: []
     };
 
+    this.playAudio(new_state.current_question);
+    this.setState(new_state);
+  }
+
+  loadQuestion(array, number) {
+    for(let el of array) {
+      if(el.number === number) { return el }
+    }
+    return undefined;
+  }
+
+  answerSent(data, textStatus, jqXHR) {
+    // redirect to result if it was last question
+    if(data.result_url) {
+      this.exitTesting(data.result_url);
+      return;
+    }
+
+    let questions = this.state.questions.concat(data.questions);
+
+    // no increment bc number starts from 1
+    // TODO make more convenient
+    let number = this.state.current_question.number;
+
+    let next_question = this.loadQuestion(this.state.questions, number + 1);
+    let wait_for_preload = 'finished';
+
+    if(next_question === undefined) {
+      wait_for_preload = 'loading';
+      next_question = this.loadQuestion(questions, number + 1);
+    }
+
+    this.preloadQuestions(data.questions);
+
+    let new_state = {
+      rewrite: false,
+      current_question: next_question,
+      previous_question: {...this.state.current_question},
+      start_time: data.start_time,
+      questions: questions,
+      questionState: wait_for_preload,
+      lastNumberPreloaded: this.lastEl(questions).number
+    };
+    this.playAudio(new_state.current_question);
     this.setState(new_state);
   }
 
@@ -194,13 +391,16 @@ class TestingComponent extends React.Component {
       return;
     }
 
+    this.stopAudio();
+
     let data = {
       answer: TestingComponent.answerValue[answer],
       question: this.state.current_question,
       client_id: this.props.client_id,
       test_id: this.props.test_id,
       rewrite: this.state.rewrite,
-      start_time: this.state.start_time
+      start_time: this.state.start_time,
+      last_available_question: this.state.lastNumberPreloaded
     };
 
     if(this.props.webgazer) {
@@ -229,50 +429,36 @@ class TestingComponent extends React.Component {
       }
     }
 
-    $.ajax(
-      this.props.links.answer, {
-        type: 'POST',
-        dataType: 'json',
-        data: {
-          ...data
-        },
-        beforeSend: () => {
-          // lock buttons
-          this.setState({lock_buttons: true});
-          // [role='navigation_button']
-        },
-        error: (jqXHR, textStatus, errorThrown) => {
-          console.log("AJAX Error: " + textStatus);
-          window.alert('Some error occurred, please exit testing and try again later.');
-          //Show decent message
-        },
-        success: (data, textStatus, jqXHR) => {
-          // unlock buttons
-          // redirect to result if it was last question
-          if(data.result_url) {
-            this.exitTesting(data.result_url);
-            return;
-          }
-
-          let new_state = {
-            ...this.state,
-            rewrite: false,
-            current_question: data.next_question,
-            previous_question: this.state.current_question,
-            start_time: data.start_time
-          };
-
-          this.setState(new_state);
-        },
-        complete: () => {
-          this.setState({lock_buttons: false, gazeTrace: [], emotionStates: []})
-        }
+    $.ajax(this.props.links.answer, {
+      type: 'POST',
+      dataType: 'json',
+      data: data,
+      beforeSend: () => { this.setState({lock_buttons: true}); },
+      error: (jqXHR, textStatus, errorThrown) => {
+        console.log("AJAX Error: " + textStatus);
+        window.alert('Some error occurred, please exit testing and try again later.');
+        //Show decent message
+      },
+      success: (data, textStatus, jqXHR) => {
+        this.answerSent(data, textStatus, jqXHR);
+      },
+      complete: () => {
+        this.setState({
+          lock_buttons: false,
+          gazeTrace: [],
+          emotionStates: []
+        })
+      }
     });
   }
 
   //Renders
 
   render () {
+    if(this.isQuestionsLoading()) {
+      return this.renderLoadingScreen();
+    }
+
     return (
       <div id="testing_component">
         {this.renderGazeIndicator()}
@@ -482,24 +668,43 @@ class TestingComponent extends React.Component {
       </div>
     );
   }
+
+  renderLoadingScreen() {
+    let progress_bar_value = this.state.preloadProgress / this.state.preloadProgressMax * 100.0;
+
+    return(
+      <div className='text-align-center loader-block'>
+        <h2>{tf('testing_process.test_loading')}</h2>
+        <span className='loader glyphicon glyphicon-refresh' aria-hidden="true"></span>
+        <div className="progress">
+          <div id ="bar_id"
+               className="progress-bar progress-bar-primary progress-bar-striped active"
+               role="progressbar"
+               aria-valuenow={progress_bar_value}
+               aria-valuemin="0"
+               aria-valuemax="100"
+               style={{width: progress_bar_value + '%'}}
+          />
+        </div>
+      </div>
+    );
+  }
 }
+
+Question = {
+  image_url: React.PropTypes.string,
+  audio_url: React.PropTypes.string,
+  youtube_link: React.PropTypes.string,
+  description: React.PropTypes.string,
+  number: React.PropTypes.number,
+  id: React.PropTypes.number
+};
 
 TestingComponent.propTypes = {
   testing: React.PropTypes.shape({
-    current_question: React.PropTypes.shape({
-      image_url: React.PropTypes.string,
-      youtube_link: React.PropTypes.string,
-      description: React.PropTypes.string,
-      number: React.PropTypes.number,
-      id: React.PropTypes.number
-    }),
-    previous_question: React.PropTypes.shape({
-      image_url: React.PropTypes.string,
-      youtube_link: React.PropTypes.string,
-      description: React.PropTypes.string,
-      number: React.PropTypes.number,
-      id: React.PropTypes.number
-    })
+    current_question: React.PropTypes.shape(Question),
+    previous_question: React.PropTypes.shape(Question),
+    questions: React.PropTypes.arrayOf(Question)
   }),
   static_pics: React.PropTypes.shape({
     btn_back: React.PropTypes.string,
@@ -549,5 +754,5 @@ TestingComponent.defaultProps = {
   client_url: '/clients/:id',
   webgazer: false,
   emotion_tracking: false,
-  mode: ''
+  mode: '',
 };

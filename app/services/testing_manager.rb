@@ -4,7 +4,17 @@ class TestingManager
 
   def initialize(result_of_test_id)
     @result_of_test = ResultOfTest
-      .includes(:test, :client, client: :user)
+      .includes(
+        :test,
+        :client,
+        client: :user,
+        test: {
+          questions: {
+            picture: { image_attachment: :blob, audio_attachment: :blob },
+            youtube_link: {}
+          }
+        }
+      )
       .find_by(id: result_of_test_id)
 
     @client = @result_of_test.client
@@ -18,20 +28,20 @@ class TestingManager
     if rewrite == 'true'
       #Updating cur question result
       q_to_upd = QuestionResult.find_by(
-          result_of_test_id: @result_of_test.id,
-          number: current_question
+        result_of_test_id: @result_of_test.id,
+        number: current_question
       )
 
       q_to_upd.update(
-          start: start_time,
-          end: DateTime.current,
-          was_checked: answer,
-          was_rewrited: true
+        start: start_time,
+        end: DateTime.current,
+        was_checked: answer,
+        was_rewrited: true
       )
     else
       cur_q = Question.find_by(
-          test_id: @result_of_test.test_id,
-          number: current_question
+        test_id: @result_of_test.test_id,
+        number: current_question
       )
       question_result_params = {
           number: current_question,
