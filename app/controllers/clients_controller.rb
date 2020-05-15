@@ -86,6 +86,9 @@ class ClientsController < AdminController
       else
         flash[:danger] = tf('common.flash.client_cant_be_deleted')
       end
+
+      redirect_to show_path_resolver(current_user)
+      return
     end
 
     redirect_back fallback_location: show_path_resolver(current_user)
