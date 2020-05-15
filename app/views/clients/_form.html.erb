@@ -2,7 +2,8 @@
 
 <%= form_for @user,
              url: @user.new_record? ? clients_path : client_path(@user),
-             class: 'form-horizontal' do |client_form|
+             class: 'form-horizontal',
+             autocomplete: 'off' do |client_form|
 %>
   <%= client_form.fields_for :client do |ff| %>
 
@@ -43,7 +44,7 @@
     <div class="row col-sm-offset-2 form-group">
       <div class="col-sm-2">
         <%= ff.label :is_current_in_school,
-                     tf('entities.clients.fields.gender')
+                     tf('entities.clients.fields.is_current_in_school')
         %>
       </div>
       <div class="col-sm-2">
@@ -66,7 +67,7 @@
                            options_for_select(@admins, @admins_cur),
                            {
                                id: 'administrator_selection',
-                               class: 'form-control'
+                               class: 'form-control select2-init'
                            }
             %>
           </div>
@@ -85,7 +86,7 @@
                         {},
                         {
                           id: 'mentor_selection',
-                          class: 'form-control'
+                          class: 'form-control select2-init'
                         }
           %>
         </div>

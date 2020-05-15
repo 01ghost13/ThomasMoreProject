@@ -145,6 +145,7 @@ class TestingComponent extends React.Component {
 
   preloadQuestions(questions, first_load) {
     if(questions.length === 0) { return; }
+    let preloadStarts = new Date();
 
     let promises = [];
 
@@ -197,8 +198,9 @@ class TestingComponent extends React.Component {
         // Will not work if current page has audio and page is reloaded https://developers.google.com/web/updates/2017/09/autoplay-policy-changes
         if(first_load) {
           this.playAudio(this.state.current_question);
+          let preloadFinishes = new Date();
           this.setState({
-            start_time: new Date().toISOString()
+            loading_time: (preloadFinishes - preloadStarts) / 1000 // In sec
           });
         }
       });
@@ -382,6 +384,10 @@ class TestingComponent extends React.Component {
       questionState: wait_for_preload,
       lastNumberPreloaded: this.lastEl(questions).number
     };
+
+    // Removing timer after first load
+    if(this.state.loading_time !== undefined) { new_state['loading_time'] = undefined }
+
     this.playAudio(new_state.current_question);
     this.setState(new_state);
   }
@@ -400,8 +406,11 @@ class TestingComponent extends React.Component {
       test_id: this.props.test_id,
       rewrite: this.state.rewrite,
       start_time: this.state.start_time,
-      last_available_question: this.state.lastNumberPreloaded
+      last_available_question: this.state.lastNumberPreloaded,
     };
+
+    // sending time diff
+    if(this.state.loading_time !== undefined) { data['loading_time'] = this.state.loading_time }
 
     if(this.props.webgazer) {
       let cur_image = $('#cur_image');
