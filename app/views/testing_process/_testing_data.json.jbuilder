@@ -1,27 +1,25 @@
 json.testing do
-  json.current_question do
-    json.extract! question, *%i[id number]
+  start_q = previous_question || question
+  start_number = start_q.number - 1
 
-    json.description description
-    if question.youtube?
-      json.youtube_link question.youtube_link.embed
-    else
-      json.image_url url_for(image)
-    end
+  questions = test.questions.sort_by(&:number).slice(start_number, 10)
+
+  json.questions do
+    json.partial! partial: 'testing_process/question.json',
+                  collection: questions,
+                  as: :question
+  end
+
+  json.current_question do
+    json.partial! partial: 'testing_process/question.json', locals: { question: question }
   end
 
   if previous_question.present?
     json.previous_question do
-      json.extract! previous_question, *%i[id number]
-
-      json.description previous_question.attachment_description
-      if previous_question.youtube?
-        json.youtube_link previous_question.youtube_link.embed
-      else
-        json.image_url url_for(previous_question.picture.middle_variant)
-      end
+      json.partial! partial: 'testing_process/question.json', locals: { question: previous_question }
     end
   end
+
 end
 
 json.static_pics do

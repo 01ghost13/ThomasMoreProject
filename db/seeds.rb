@@ -31,6 +31,10 @@ langs.each do |lang, path|
   translation_hash = create_hash_translations(translations)
 
   translation_hash.each do |field_name, translation|
-    Translation.find_or_create_by!(field: field_name, value: translation, language_id: cur_lang.id)
+    tr = Translation.find_or_initialize_by(field: field_name, language_id: cur_lang.id)
+    if tr.id.blank?
+      tr.value = translation
+      tr.save!
+    end
   end
 end

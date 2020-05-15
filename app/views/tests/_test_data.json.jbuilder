@@ -2,7 +2,7 @@ json.test do
   json.extract! test, *Test.attribute_names
   json.questions_attributes do
     # json.array! test.questions, *Question.attribute_names
-    json.array! test.questions do |q|
+    json.array! test.questions.order(number: :asc) do |q|
       json.extract! q, *Question.attribute_names
 
       if q.youtube_link.present?

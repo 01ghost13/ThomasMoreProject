@@ -104,6 +104,7 @@ entities:
     delete_confirm: Het verwijderen heeft invloed op de resultaten. Weet je het zeker?
     add_interest: Interesse toevoegen
     remove_interest: Interesse verwijderen
+    has_audio_description: Heeft audiobeschrijving
     fields:
       image: Afbeelding
       description: Omschrijving
@@ -240,6 +241,7 @@ testing_process:
   congrats: Gefeliciteerd, Test is klaar!
   more_details: meer details
   most_rated: Uw meest gewaardeerde interesse is
+  test_loading: Test wordt geladen, even geduld
 
 static:
   home:

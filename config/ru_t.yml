@@ -104,6 +104,7 @@ entities:
     delete_confirm: Удаление повлияет на результаты. Вы уверены?
     add_interest: Добавить интерес
     remove_interest: Удалить интерес
+    has_audio_description: Есть аудио описание
     fields:
       image: Картинка
       description: Описание
@@ -240,6 +241,7 @@ testing_process:
   congrats: Поздравляем, тест закончен!
   more_details: больше деталей
   most_rated: Ваш самый рейтинговый интерес
+  test_loading: Тест загружается, пожалуйста, подождите
 
 static:
   home:
