@@ -141,6 +141,7 @@ entities:
       password: Wachtwoord
       password_confirmation: Wachtwoordbevestiging
   clients:
+    client: Klant
     index: Klanten
     create: Klant aanmaken
     choose_admin: Kies een lokale beheerder
@@ -222,6 +223,7 @@ entities:
       was_rewrited: Is herschreven
   questions:
     index: Vragen
+    question: Vraag
   translations:
     index: Vertalingen
     all_translations: Alle vertalingen
@@ -241,6 +243,7 @@ testing_process:
   congrats: Gefeliciteerd, Test is klaar!
   more_details: meer details
   most_rated: Uw meest gewaardeerde interesse is
+  most_second_rated: Uw op één na meest gekozen interesse is
   test_loading: Test wordt geladen, even geduld
 
 static:

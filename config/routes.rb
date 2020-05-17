@@ -93,4 +93,5 @@ Rails.application.routes.draw do
   end
 
   get 'summary_results', to: 'result_of_tests#summary_results'
+  get 'summary_result_table', to: 'result_of_tests#summary_result_table'
 end

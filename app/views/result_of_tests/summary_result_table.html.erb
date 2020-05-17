@@ -1,0 +1,75 @@
+<% provide(:title, "Tests summary result") %>
+<%= javascript_include_tag 'https://www.gstatic.com/charts/loader.js' %>
+
+<div class= "row">
+  <h2>
+    <% if @summary_target.client? %>
+      <%= tf('entities.result_of_tests.results_of') %>
+    <% else %>
+      <%= tf('entities.result_of_tests.group_summary') %>
+    <% end %>
+    <%= link_to @name, show_path_resolver(@summary_target) %>
+  </h2>
+</div>
+
+<!-- Add designed btn -->
+<div class="row">
+  <%= link_to summary_result_table_path(user_id: @summary_target.id, format: :xlsx),
+              data: { turbolinks: false },
+              class: 'btn btn-success' do
+  %>
+    <span class="glyphicon glyphicon-download-alt"
+          aria-hidden="true"
+    ></span>
+    &#8194;
+    <%= tf('entities.result_of_tests.download_as') %> xlsx
+  <% end %>
+
+</div>
+
+<div class="row">
+  <!-- Table Questions -->
+  <div class="col-sm-12 row"
+       style="overflow: scroll; height: 500px"
+  >
+    <table class="table table-condensed table-bordered">
+      <% @calc.summary_table %>
+      <%
+        title = [
+            tf('entities.clients.client'),
+            tf('entities.mentors.mentor'),
+            tf('entities.employees.fields.organisation'),
+            tf('entities.local_administrators.administrator'),
+            tf('entities.result_of_tests.fields.start_date'),
+            "#{tf('entities.result_of_tests.fields.start_date')} (1/0)",
+            tf('entities.result_of_tests.fields.end_date'),
+            tf('entities.tests.fields.name'),
+        ]
+        @calc.max_questions.times do |i|
+          title.concat([
+            "#{tf('entities.questions.question')} #{i + 1}",
+            tf('entities.pictures.related_interests'),
+            tf('entities.result_of_tests.time_of_answer')
+          ])
+        end
+      %>
+      <thead>
+      <tr>
+        <% title.each do |t| %>
+          <td><%= t %></td>
+        <% end %>
+      </tr>
+      </thead>
+      <tbody class="table-hover">
+      <% @calc.summary_table.each do |row| %>
+        <tr>
+          <% row.each do |t| %>
+            <td><%= t %></td>
+          <% end %>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+

@@ -2,28 +2,25 @@
 
 <h1 style="text-align: center"><%= tf('testing_process.congrats') %></h1>
 
-<h2 style="text-align: center">
-  <%= tf('testing_process.most_rated') %>&nbsp;<strong class="text-success"><%= @interest %></strong>,
-  <%= link_to("#{tf('testing_process.more_details')} &rarr;".html_safe, client_result_of_test_path(@result_of_test.client_id, @result_of_test.id)) %>
-</h2>
+<% if @interest.first.present? %>
+  <%= render partial: 'testing_process/finish/top_rated_interests',
+             locals: {
+                 h2_title: tf('testing_process.most_rated'),
+                 top_rated_interest_name: @interest.first,
+                 more_details_link: true,
+                 top_rated_pics: @top_rated_pics
+             }
+  %>
 
-<div class="row">
-  <div class="col-sm-offset-2 col-sm-8">
-    <% @top_rated_pics.each_slice(2) do |(pic_a, pic_b)| %>
-      <div class="row">
-        <div class="col-sm-6">
-          <div class="thumbnail">
-            <%= image_tag url_for(pic_a.middle_variant) %>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <% if pic_b.present? %>
-            <div class="thumbnail">
-              <%= image_tag url_for(pic_b.middle_variant) %>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-</div>
+<% end %>
+
+<% if @interest.second.present? %>
+  <%= render partial: 'testing_process/finish/top_rated_interests',
+             locals: {
+                 h2_title: tf('testing_process.most_second_rated'),
+                 top_rated_interest_name: @interest.second,
+                 more_details_link: false,
+                 top_rated_pics: @second_rated_pics
+             }
+  %>
+<% end %>

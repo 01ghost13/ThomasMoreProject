@@ -89,6 +89,7 @@ testing_process:
   congrats: Congratulations, Test is finished!
   more_details: more details
   most_rated: Your most rated interest is
+  most_second_rated: Your second most rated interest is
   test_loading: Test is loading please wait
 
 entities:
@@ -148,6 +149,7 @@ entities:
       password: Password
       password_confirmation: Password Confirmation
   clients:
+    client: Client
     index: Clients
     create: Create client
     choose_admin: Choose local administrator
@@ -229,6 +231,7 @@ entities:
       was_rewrited: Was rewrited
   questions:
     index: Questions
+    question: Question
   translations:
     index: Translations
     all_translations: All translations

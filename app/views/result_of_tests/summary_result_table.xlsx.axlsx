@@ -1,0 +1,33 @@
+wb = xlsx_package.workbook
+
+sheet_name = truncate(tf('entities.result_of_tests.summary_test_result'), length: 25, omission: '...')
+
+wb.add_worksheet(name: sheet_name) do |sheet|
+  # question titles
+  @calc.summary_table
+  title = [
+    tf('entities.clients.client'),
+    tf('entities.mentors.mentor'),
+    tf('entities.employees.fields.organisation'),
+    tf('entities.local_administrators.administrator'),
+    tf('entities.result_of_tests.fields.start_date'),
+    "#{tf('entities.result_of_tests.fields.start_date')} (1/0)",
+    tf('entities.result_of_tests.fields.end_date'),
+    tf('entities.tests.fields.name'),
+  ]
+  @calc.max_questions.times do |i|
+    title.concat([
+      "#{tf('entities.questions.question')} #{i + 1}",
+      tf('entities.pictures.related_interests'),
+      tf('entities.result_of_tests.time_of_answer')
+    ])
+  end
+
+
+  # title
+  sheet.add_row title
+
+  @calc.summary_table.each do |row|
+    sheet.add_row row
+  end
+end
