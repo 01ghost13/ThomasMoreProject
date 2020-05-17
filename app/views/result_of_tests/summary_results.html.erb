@@ -1,4 +1,4 @@
-<% provide(:title, "#{tf('entities.result_of_tests.summary_test_result')} #{@test.name}") %>
+<% provide(:title, "#{tf('entities.result_of_tests.summary_test_result')}") %>
 
 <%= javascript_include_tag 'summary_results.js' %>
 
@@ -6,15 +6,17 @@
   <div class="col-sm-12"
        style="display: inline-block"
   >
-    <h1 style="display: inline"><%= "#{tf('entities.result_of_tests.summary_test_result')} #{@test.name}" %></h1>
+    <h1 style="display: inline"><%= "#{tf('entities.result_of_tests.summary_test_result')}" %></h1>
     <div style="display: inline; float: right;">
       <%= render partial: 'result_of_tests/summary_results/buttons_template',
                  locals: {
-                   show_details_link: summary_result_test_path(@test.id),
-                   download_as_xlsx_link: summary_result_test_path(@test.id, format: :xlsx)
+                   # show_details_link: summary_result_test_path(@test.id),
+                   show_details_link: summary_result_table_path,
+                   # download_as_xlsx_link: summary_result_test_path(@test.id, format: :xlsx)
+                   download_as_xlsx_link: summary_result_table_path(format: :xlsx)
                  }
       %>
-      <%= select_tag :test_select,
+      <%#= select_tag :test_select,
                      options_from_collection_for_select(@tests, :id, :name, @test.id),
                      class: 'form-control',
                      style: 'margin-top: 20px'

@@ -141,6 +141,7 @@ entities:
       password: пароль
       password_confirmation: Подтверждение пароля
   clients:
+    client: Клиент
     index: Клиенты
     create: Создать клиента
     choose_admin: Выберите локального администратора
@@ -222,6 +223,7 @@ entities:
       was_rewrited: Был переписан
   questions:
     index: Вопросы
+    question: Вопрос
   translations:
     index: Переводы
     all_translations: Все переводы
@@ -241,6 +243,7 @@ testing_process:
   congrats: Поздравляем, тест закончен!
   more_details: больше деталей
   most_rated: Ваш самый рейтинговый интерес
+  most_second_rated: Ваш второй самый рейтинговый интерес
   test_loading: Тест загружается, пожалуйста, подождите
 
 static:

@@ -85,6 +85,7 @@ class UsersTreeLoader
     end
 
     def filter_results(results, test_id:)
+      return results if test_id.blank?
       results.select { |result| result.test_id == test_id && result.is_ended }
     end
 

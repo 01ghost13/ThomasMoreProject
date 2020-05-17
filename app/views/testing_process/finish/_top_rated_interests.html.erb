@@ -1,0 +1,31 @@
+<h2 style="text-align: center">
+  <%= h2_title %>&nbsp;<strong class="text-success"><%= top_rated_interest_name %></strong>
+
+  <% if more_details_link %>
+    ,
+    <%= link_to("#{tf('testing_process.more_details')} &rarr;".html_safe,
+                client_result_of_test_path(@result_of_test.client_id, @result_of_test.id))
+    %>
+  <% end %>
+</h2>
+
+<div class="row">
+  <div class="col-sm-offset-4 col-sm-6">
+    <% top_rated_pics.each_slice(2) do |(pic_a, pic_b)| %>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="thumbnail">
+            <%= image_tag url_for(pic_a.middle_variant) %>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <% if pic_b.present? %>
+            <div class="thumbnail">
+              <%= image_tag url_for(pic_b.middle_variant) %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
