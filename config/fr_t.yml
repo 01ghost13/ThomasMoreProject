@@ -243,6 +243,7 @@ testing_process:
   congrats: "Félicitations, le test est terminé!"
   more_details: "plus de détails"
   most_rated: "Votre intérêt le plus apprécié est"
+  most_second_rated: "Votre deuxième intérêt le plus choisi est"
   test_loading: "Le test est en cours de chargement, veuillez patienter"
 
 static:

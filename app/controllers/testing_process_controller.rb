@@ -133,29 +133,34 @@ class TestingProcessController < AdminController
     wrapped = QuestionResultPresenter.wrap(q_res, language_id)
     rated_interests = SummaryResultCalculator
       .table_interest_points(wrapped)
-      .first(1)
+      .first(2)
       .map(&:this)
 
-    @interest = rated_interests.map(&:name).join(', ')
+    @interest = rated_interests.map(&:name)
 
-    @top_rated_pics = Picture.select('pictures.*, picture_interests.earned_points')
-      .joins(
-        questions: {
-          picture: { picture_interests: :interest },
-        }
-      )
-      .where(
-        'questions.test_id': @result_of_test.test_id,
-        'interests.id': rated_interests.map(&:id)
-      )
-      .order('picture_interests.earned_points DESC')
-      .limit(4)
-      .distinct
+    @top_rated_pics = top_rated_pics(@result_of_test.test_id, rated_interests.first.id)
+    @second_rated_pics = top_rated_pics(@result_of_test.test_id, rated_interests.second.id)
 
     render layout: 'testing_layout'
   end
 
   private
+
+    def top_rated_pics(test_id, interest_id)
+      Picture.select('pictures.*, picture_interests.earned_points')
+        .joins(
+          questions: {
+            picture: { picture_interests: :interest },
+          }
+        )
+        .where(
+          'questions.test_id': test_id,
+          'interests.id': interest_id
+        )
+        .order('picture_interests.earned_points DESC')
+        .limit(4)
+        .distinct
+    end
 
     def preload_entity
       @user = User.find_by(id: params[:id])
