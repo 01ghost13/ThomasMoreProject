@@ -141,6 +141,7 @@ entities:
       password: "Mot de passe"
       password_confirmation: "Confirmation mot de passe"
   clients:
+    client: "Client"
     index: "Clients"
     create: "Créer un client"
     choose_admin: "Choisissez l'administrateur local"
@@ -222,6 +223,7 @@ entities:
       was_rewrited: "A été réécrit"
   questions:
     index: "Des questions"
+    question: "Question"
   translations:
     index: "Traductions"
     all_translations: "Toutes les traductions"

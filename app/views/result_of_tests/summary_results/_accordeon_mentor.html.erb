@@ -24,8 +24,9 @@
           %>
           <%= render partial: 'result_of_tests/summary_results/buttons_template',
                      locals: {
-                         show_details_link: summary_result_test_path(@test.id, user_id: mentor.user.id),
-                         download_as_xlsx_link: summary_result_test_path(@test.id, user_id: mentor.user.id, format: :xlsx),
+                         # show_details_link: summary_result_test_path(@test.id, user_id: mentor.user.id),
+                         show_details_link: summary_result_table_path(user_id: mentor.user.id),
+                         download_as_xlsx_link: summary_result_table_path(user_id: mentor.user.id, format: :xlsx),
                          show_details_classes: 'btn-xs'
                      }
           %>

@@ -181,12 +181,12 @@ class ResultOfTestsController < AdminController
   def summary_results
     authorize!
 
-    tests = Test.filter_by_availability(current_user.head_user).select(:name, :id)
-    @tests = wrap_language(tests)
-
-    @test = @tests.find { |t| t.id.to_s == params[:test_id] } || @tests.first
-    test_id = @test&.id
-    @results_tree = UsersTreeLoader.new(current_user, test_id.to_i).call
+    # tests = Test.filter_by_availability(current_user.head_user).select(:name, :id)
+    # @tests = wrap_language(tests)
+    #
+    # @test = @tests.find { |t| t.id.to_s == params[:test_id] } || @tests.first
+    # test_id = @test&.id
+    @results_tree = UsersTreeLoader.new(current_user, nil).call
   end
 
   def summary_result
@@ -217,6 +217,37 @@ class ResultOfTestsController < AdminController
       format.html
       format.xlsx {
         response.headers['Content-Disposition'] = "attachment; filename=\"Test #{@test.name} summary result.xlsx\""
+      }
+    end
+  end
+
+  def summary_result_table
+
+    @summary_target =
+      if params[:user_id].present?
+        User.find(params[:user_id])
+      else
+        current_user
+      end
+
+    authorize!(@summary_target, with: ResultOfTestPolicy)
+
+    @name =
+      if @summary_target.client?
+        @summary_target.client.code_name
+      else
+        @summary_target.employee.full_name
+      end
+
+    user_tree = UsersTreeLoader.new(@summary_target, nil)
+    user_tree.call
+    @calc = SummaryTableCalculator.new(user_tree.results, current_user.language_id)
+
+
+    respond_to do |format|
+      format.html
+      format.xlsx {
+        response.headers['Content-Disposition'] = "attachment; filename=\"Tests summary table result.xlsx\""
       }
     end
   end

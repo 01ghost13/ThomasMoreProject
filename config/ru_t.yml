@@ -141,6 +141,7 @@ entities:
       password: пароль
       password_confirmation: Подтверждение пароля
   clients:
+    client: Клиент
     index: Клиенты
     create: Создать клиента
     choose_admin: Выберите локального администратора
@@ -222,6 +223,7 @@ entities:
       was_rewrited: Был переписан
   questions:
     index: Вопросы
+    question: Вопрос
   translations:
     index: Переводы
     all_translations: Все переводы

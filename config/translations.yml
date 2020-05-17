@@ -148,6 +148,7 @@ entities:
       password: Password
       password_confirmation: Password Confirmation
   clients:
+    client: Client
     index: Clients
     create: Create client
     choose_admin: Choose local administrator
@@ -229,6 +230,7 @@ entities:
       was_rewrited: Was rewrited
   questions:
     index: Questions
+    question: Question
   translations:
     index: Translations
     all_translations: All translations
