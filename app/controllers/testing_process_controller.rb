@@ -138,8 +138,13 @@ class TestingProcessController < AdminController
 
     @interest = rated_interests.map(&:name)
 
-    @top_rated_pics = top_rated_pics(@result_of_test.test_id, rated_interests.first.id)
-    @second_rated_pics = top_rated_pics(@result_of_test.test_id, rated_interests.second.id)
+    if rated_interests.first.present?
+      @top_rated_pics = top_rated_pics(@result_of_test.test_id, rated_interests.first.id)
+    end
+
+    if rated_interests.second.present?
+      @second_rated_pics = top_rated_pics(@result_of_test.test_id, rated_interests.second.id)
+    end
 
     render layout: 'testing_layout'
   end
