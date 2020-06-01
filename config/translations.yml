@@ -90,6 +90,7 @@ testing_process:
   more_details: more details
   most_rated: Your most rated interest is
   most_second_rated: Your second most rated interest is
+  least_rated: Your least rated interest is
   test_loading: Test is loading please wait
 
 entities:
