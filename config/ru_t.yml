@@ -244,6 +244,7 @@ testing_process:
   more_details: больше деталей
   most_rated: Ваш самый рейтинговый интерес
   most_second_rated: Ваш второй самый рейтинговый интерес
+  least_rated: Ваш самый малооцененный интерес
   test_loading: Тест загружается, пожалуйста, подождите
 
 static:

@@ -2,25 +2,34 @@
 
 <h1 style="text-align: center"><%= tf('testing_process.congrats') %></h1>
 
-<% if @interest.first.present? %>
-  <%= render partial: 'testing_process/finish/top_rated_interests',
-             locals: {
-                 h2_title: tf('testing_process.most_rated'),
-                 top_rated_interest_name: @interest.first,
-                 more_details_link: true,
-                 top_rated_pics: @top_rated_pics
-             }
-  %>
-
+<% if @top_rated_interests.blank? %>
+  <h2 style="text-align: center">
+    <%= link_to("#{tf('testing_process.more_details')} &rarr;".html_safe,
+                client_result_of_test_path(@result_of_test.client_id, @result_of_test.id))
+    %>
+  </h2>
 <% end %>
 
-<% if @interest.second.present? %>
+<% @top_rated_interests.each.with_index do |interest_w, i| %>
   <%= render partial: 'testing_process/finish/top_rated_interests',
              locals: {
-                 h2_title: tf('testing_process.most_second_rated'),
-                 top_rated_interest_name: @interest.second,
+                 h2_interest_class: 'text-success',
+                 h2_title: interest_w.title,
+                 top_rated_interest_name: interest_w.name,
+                 more_details_link: i.zero?,
+                 top_rated_pics: interest_w.pictures
+             }
+  %>
+<% end %>
+
+<% @least_rated_interests.each do |interest_w| %>
+  <%= render partial: 'testing_process/finish/top_rated_interests',
+             locals: {
+                 h2_interest_class: 'text-danger',
+                 h2_title: interest_w.title,
+                 top_rated_interest_name: interest_w.name,
                  more_details_link: false,
-                 top_rated_pics: @second_rated_pics
+                 top_rated_pics: interest_w.pictures
              }
   %>
 <% end %>

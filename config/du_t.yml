@@ -244,6 +244,7 @@ testing_process:
   more_details: meer details
   most_rated: Uw meest gewaardeerde interesse is
   most_second_rated: Uw op één na meest gekozen interesse is
+  least_rated: Uw minst gewaardeerde rente is
   test_loading: Test wordt geladen, even geduld
 
 static:
