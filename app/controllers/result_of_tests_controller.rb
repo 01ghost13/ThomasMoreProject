@@ -35,7 +35,7 @@ class ResultOfTestsController < AdminController
   def show
     result = ResultOfTest.result_page.find_by(id: params[:result_id])
     @result = result
-    @test = Test.select(:name).find(result.test_id)
+    @test = Test.select(:id, :name).find(result.test_id)
     result.language_id = current_user.language_id
 
     authorize!(result)

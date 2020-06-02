@@ -131,19 +131,38 @@ class TestingProcessController < AdminController
     language_id = current_user.language_id
 
     wrapped = QuestionResultPresenter.wrap(q_res, language_id)
-    rated_interests = SummaryResultCalculator
-      .table_interest_points(wrapped)
+    interest_rating = SummaryResultCalculator.table_interest_points(wrapped)
+    top_rated_interests = interest_rating
       .first(2)
       .map(&:this)
 
-    @interest = rated_interests.map(&:name)
+    least_rated_interests = interest_rating
+      .last(1)
+      .map(&:this)
 
-    if rated_interests.first.present?
-      @top_rated_pics = top_rated_pics(@result_of_test.test_id, rated_interests.first.id)
+    @top_rated_interests = top_rated_interests.map.with_index do |interest, i|
+      title =
+        if i.zero?
+          tf('testing_process.most_rated')
+        elsif i == 1
+          tf('testing_process.most_second_rated')
+        end
+
+      OpenStruct.new(
+        this: interest,
+        name: interest.name,
+        pictures: top_rated_pics(@result_of_test.test_id, interest.id),
+        title: title
+      )
     end
 
-    if rated_interests.second.present?
-      @second_rated_pics = top_rated_pics(@result_of_test.test_id, rated_interests.second.id)
+    @least_rated_interests = least_rated_interests.map do |interest|
+      OpenStruct.new(
+        this: interest,
+        name: interest.name,
+        pictures: top_rated_pics(@result_of_test.test_id, interest.id),
+        title: tf('testing_process.least_rated')
+      )
     end
 
     render layout: 'testing_layout'

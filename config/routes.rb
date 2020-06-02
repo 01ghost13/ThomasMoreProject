@@ -67,6 +67,7 @@ Rails.application.routes.draw do
   #Tests pages
   resources :tests do
     get 'update_image' => 'tests#update_image', on: :new
+    get 'questions/:question_number/get_image' => 'pictures#show'
     member do
       get 'summary_result', to: 'result_of_tests#summary_result'
       get 'edit/update_image' => 'tests#update_image'
