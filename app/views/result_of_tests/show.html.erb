@@ -1,5 +1,7 @@
 <% provide(:title, tf('entities.result_of_tests.result')) %>
+<%= javascript_include_tag 'charts_events' %>
 <%= javascript_include_tag 'https://www.gstatic.com/charts/loader.js' %>
+
 <div class= "row">
 	<h2>
     <%= tf('entities.result_of_tests.results_of') %> <%= link_to @client, client_path(@client_user) %>, <%= @test.name %>
@@ -51,7 +53,7 @@
         </tr>
       </thead>
 			<% @list_timestamps.each_with_index do |element, i|%>
-          <% if element[:question_id] == nil %>
+          <% if element[:question_id].blank? %>
               <tr class="danger" title="<%= tf('entities.result_of_tests.question_deleted') %>">
           <% else %>
               <tr>
@@ -168,6 +170,7 @@
     <div class="tab-content">
       <div class="tab-pane fade in active" id="answer_time">
         <%= column_chart @res[1],
+                         id: 'answer_time_chart',
                          xtitle: tf('entities.result_of_tests.fields.question_number'),
                          ytitle: tf('entities.result_of_tests.time_of_answer_short'),
                          download: true
@@ -217,6 +220,13 @@
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+<div id="modal-info"
+     data-test_id="<%= @test.id %>"
+></div>
+<%= render partial: 'result_of_tests/show/modal_picture' %>
+
 <!--Fix of bug with not showing titles of OX-->
 <script>
     $('a[href="#avg_interests"]').on('shown.bs.tab', function() {

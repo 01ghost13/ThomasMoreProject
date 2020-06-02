@@ -22,4 +22,8 @@ class PicturePolicy < ApplicationPolicy
   def destroy?
     super?
   end
+
+  def show?
+    user.present?
+  end
 end
