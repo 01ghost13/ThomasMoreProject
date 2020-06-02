@@ -20,6 +20,11 @@ Rails.application.config.assets.precompile += %w(
   test_availabilities.js
   summary_results.js
   charts_events.js
+  picture_index.js
 )
 
-Rails.application.config.assets.precompile += %w[webgazer/webgazer.js heatmap.js/heatmap.min.js]
+Rails.application.config.assets.precompile += %w[
+  webgazer/webgazer.js
+  heatmap.js/heatmap.min.js
+  infinite-scroll/infinite-scroll.pkgd.min.js
+]

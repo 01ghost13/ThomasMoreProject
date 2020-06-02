@@ -26,6 +26,7 @@
 //= require shared/translator
 //= require select2
 //= require custom_select2
+//= require infinite-scroll/infinite-scroll.pkgd.min.js
 
 //Converts all text in class "date_to_local" to local time
 $(document).on('turbolinks:load', function () {
