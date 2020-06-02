@@ -95,6 +95,35 @@ class PicturesController < AdminController
     render :index
   end
 
+  def show
+    question = Question.find_by(number: params[:question_number], test_id: params[:test_id])
+    authorize!
+
+    if question.blank?
+      render json: {}, status: :not_found
+      return
+    end
+
+    attachment = question.attachment
+    if question.youtube?
+      link = attachment.embed
+      type = 'youtube'
+    else
+      link = url_for(attachment.middle_variant)
+      type = 'picture'
+    end
+
+    respond_to do |types|
+      types.json do
+        render json: {
+          title: '',
+          link: link,
+          type: type
+        }
+      end
+    end
+  end
+
   private
 
     def picture_params

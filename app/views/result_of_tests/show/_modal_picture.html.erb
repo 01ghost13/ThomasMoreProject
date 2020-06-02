@@ -1,0 +1,17 @@
+<% content_for :modal_title do %>
+<% end %>
+
+<% content_for :modal_body do %>
+  <div id="modal-body">
+    <div class="thumbnail"
+         id="thumbnail-modal"
+    >
+    </div>
+  </div>
+<% end %>
+
+<%= render template: 'layouts/modal',
+           locals: {
+             modal_id: 'modal-picture'
+           }
+%>
