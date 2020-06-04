@@ -192,15 +192,14 @@ class ClientsController < AdminController
         :password,
         :password_confirmation,
         :language_id,
+        :email,
         client_attributes: %i[id code_name employee_id gender is_current_in_school],
       )
       .tap do |p|
-        # HACK FOR DEVISE TO WORK
-        # TODO FIX THIS LATER
 
         p.delete(:password) if p[:password].blank?
         p.delete(:password_confirmation) if p[:password_confirmation].blank?
-        p[:email] = "#{p.dig(:client_attributes, :code_name).gsub(' ','')}@mail.com"
+        # p[:email] = "#{p.dig(:client_attributes, :code_name).gsub(' ','')}@mail.com"
 
         if current_user.mentor?
           p[:client_attributes][:employee_id] = current_user.role_model.id
