@@ -3,11 +3,21 @@
 <%= javascript_include_tag 'test_availabilities' %>
 
 <h1><%= tf('entities.test_availabilities.index') %></h1>
-
+<div class="row">
+  <%= render partial: 'shared/search_form',
+             locals: {
+               search_field: :employee_organisation_cont,
+               place_holder: tf('entities.employees.fields.organisation'),
+               query: @query,
+               url: test_availabilities_path
+             }
+  %>
+</div>
 <table class="table table-hover">
   <thead>
   <tr>
     <td>Local admin</td>
+    <td><%= sort_link @query, :employee_organisation, tf('entities.employees.fields.organisation') %></td>
     <% @tests.each do |test| %>
       <td style="text-align: center"
       >
@@ -29,11 +39,14 @@
         <a class="table-row cursor-pointer"
            data-user-id="<%= user.id %>"
         >
-          <%= "#{user.employee.full_name}, \"#{user.employee.organisation.titleize}\"" %>&nbsp;
+          <%= user.employee.full_name %>&nbsp;
           <span class="glyphicon glyphicon-check"
                 aria-hidden="true"
           ></span>
         </a>
+      </td>
+      <td>
+        <%= user.employee.organisation %>
       </td>
       <%= render partial: 'test_availabilities/test_availability_row',
                  locals: {

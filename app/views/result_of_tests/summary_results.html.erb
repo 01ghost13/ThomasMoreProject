@@ -2,6 +2,19 @@
 
 <%= javascript_include_tag 'summary_results.js' %>
 
+<% if current_user.role == 'super_admin' %>
+  <div class="row">
+    <%= render partial: 'shared/search_form',
+               locals: {
+                   search_field: :employee_organisation_cont,
+                   place_holder: tf('entities.employees.fields.organisation'),
+                   query: @tree.query,
+                   url: summary_results_path
+               }
+    %>
+  </div>
+<% end %>
+
 <div class="row">
   <div class="col-sm-12"
        style="display: inline-block"

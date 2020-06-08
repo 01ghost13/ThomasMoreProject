@@ -2,7 +2,13 @@ class TestAvailabilitiesController < ApplicationController
   def index
     authorize!
     @tests = wrap_language(Test.all.select(:name, :id))
-    @users = User.all_local_admins.includes(:test_availabilities)
+    @query = User
+      .all_local_admins
+      .joins(:employee)
+      .select('users.*, employees.organisation')
+      .includes(:test_availabilities)
+      .ransack(params[:q])
+    @users = @query.result
 
   end
 
