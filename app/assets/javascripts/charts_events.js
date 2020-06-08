@@ -6,7 +6,7 @@ function showPicture(evt) {
     let pictureNumber = element._index + 1;
     $('#modal-picture').modal('show');
     let test_id = $('#modal-info').data('test_id');
-    console.log(chart.chart.getDatasetMeta(0))
+
     // Make api call
     $.ajax({
       url: '/tests/' + test_id + '/questions/' + pictureNumber + '/get_image',
@@ -15,8 +15,10 @@ function showPicture(evt) {
     .done(function (data) {
       if(data.type === 'picture') {
         renderPicture(data.link);
+        renderBtnEdit(data.edit_link);
       } else if (data.type === 'youtube') {
         renderYoutube(data.link);
+        $('#link-edit').hide();
       }
     })
     .fail(function () {
@@ -37,8 +39,16 @@ function renderYoutube(link) {
   $('#thumbnail-modal').html(ytHtml);
 }
 
+function renderBtnEdit(edit_link) {
+  let $link_edit = $('#link-edit');
+
+  $link_edit.show();
+  $link_edit.attr('href', edit_link);
+}
+
 function renderEmpty() {
   $('#thumbnail-modal').html('');
+  $('#link-edit').hide();
 }
 
 $('turbolinks:load', function () {
