@@ -10,6 +10,17 @@
   </div>
 <% end %>
 
+<% content_for :modal_footer do %>
+  <% if  allowed_to?(:edit?, Picture) %>
+    <%= link_to 'Edit',
+                '#',
+                class: 'btn btn-warning',
+                id: 'link-edit',
+                target: '_blank'
+    %>
+  <% end %>
+<% end %>
+
 <%= render template: 'layouts/modal',
            locals: {
              modal_id: 'modal-picture'
