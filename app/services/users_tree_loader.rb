@@ -1,13 +1,14 @@
 class UsersTreeLoader
-  attr_reader :user_root, :tree, :results
+  attr_reader :user_root, :tree, :results, :query
 
   def initialize(user_root, test_id)
     @user_root = user_root
     @test_id = test_id
     @results = []
+    @query = Employee.none
   end
 
-  def call
+  def call(params: nil)
     @tree ||=
       if user_root.mentor?
         employee = @user_root.employee
@@ -30,7 +31,10 @@ class UsersTreeLoader
           .joins(:employee)
           .includes(employee: { employees: { clients: %i[result_of_tests user], user: {} }, user: {} })
 
-        load_local_admins(local_admins)
+        local_admins = local_admins.ransack(params)
+        @query = local_admins
+
+        load_local_admins(local_admins.result)
       elsif user_root.client?
         clients = Client
           .where(id: user_root.userable_id)

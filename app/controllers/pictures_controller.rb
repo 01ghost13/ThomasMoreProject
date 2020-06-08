@@ -108,9 +108,11 @@ class PicturesController < AdminController
     if question.youtube?
       link = attachment.embed
       type = 'youtube'
+      edit_link = ''
     else
       link = url_for(attachment.middle_variant)
       type = 'picture'
+      edit_link = edit_picture_path(attachment.id)
     end
 
     respond_to do |types|
@@ -118,7 +120,8 @@ class PicturesController < AdminController
         render json: {
           title: '',
           link: link,
-          type: type
+          type: type,
+          edit_link: edit_link
         }
       end
     end

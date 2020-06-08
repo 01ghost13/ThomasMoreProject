@@ -1,0 +1,11 @@
+<%= search_form_for query, url: url do |f| %>
+  <div class="form-group col-sm-4">
+    <%= f.label search_field, tf('common.forms.search'), class: 'sr-only' %>
+    <%= f.search_field search_field, {
+        placeholder: place_holder,
+        class: 'form-control'
+    }
+    %>
+  </div>
+  <%= f.submit tf('common.forms.search'), class: 'btn btn-primary col-sm-1' %>
+<% end %>
