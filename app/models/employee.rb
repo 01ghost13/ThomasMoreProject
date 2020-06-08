@@ -70,6 +70,11 @@ class Employee < ActiveRecord::Base
   end
 
   def full_name
-    "#{name} #{last_name}"
+    f = "#{name} #{last_name}"
+    if organisation.present?
+      f.concat(", '#{organisation}'")
+    end
+
+    f
   end
 end

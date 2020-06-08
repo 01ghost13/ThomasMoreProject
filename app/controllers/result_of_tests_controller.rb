@@ -181,12 +181,8 @@ class ResultOfTestsController < AdminController
   def summary_results
     authorize!
 
-    # tests = Test.filter_by_availability(current_user.head_user).select(:name, :id)
-    # @tests = wrap_language(tests)
-    #
-    # @test = @tests.find { |t| t.id.to_s == params[:test_id] } || @tests.first
-    # test_id = @test&.id
-    @results_tree = UsersTreeLoader.new(current_user, nil).call
+    @tree = UsersTreeLoader.new(current_user, nil)
+    @results_tree = @tree.call(params: params[:q])
   end
 
   def summary_result
