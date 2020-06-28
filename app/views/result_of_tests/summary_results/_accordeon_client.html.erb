@@ -56,6 +56,12 @@
                            show_details_classes: 'btn-xs'
                          }
               %>
+              <%= link_to tf('common.forms.delete'),
+                          client_result_of_test_path(client.id, result.id),
+                          method: :delete,
+                          data: { confirm: tf('common.forms.delete_confirm') },
+                          class: 'btn btn-xs btn-danger'
+              %>
             </div>
           </li>
         <% end %>
