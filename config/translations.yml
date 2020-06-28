@@ -217,6 +217,8 @@ entities:
     summary_test_result: Summary results of test
     show_detailed_result: Show detailed summary result
     group_summary: Summary result of all students of
+    errors:
+      delete: Failed to delete result of test
     was_checked:
       thumbs_up: Thumbs up
       thumbs_down: Thumbs down
