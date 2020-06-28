@@ -1,0 +1,7 @@
+<div>
+  <%= select_tag :test_select,
+                 options_from_collection_for_select(tests, :id, :name, test&.id),
+                 class: 'form-control',
+                 style: 'margin-top: 20px'
+  %>
+</div>

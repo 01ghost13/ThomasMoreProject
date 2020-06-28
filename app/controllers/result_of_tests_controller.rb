@@ -142,11 +142,11 @@ class ResultOfTestsController < AdminController
 
     if result.destroy
       flash[:success] = tf('common.flash.test_result_deleted')
-      redirect_to client_result_of_tests_path(params[:client_id])
     else
-      @user = result
-      render :index
+      flash[:error] = tf('entities.result_of_tests.errors.delete')
     end
+
+    redirect_back fallback_location: client_path(params[:client_id])
   end
 
   def show_heatmap

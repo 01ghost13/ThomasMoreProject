@@ -208,6 +208,8 @@ entities:
     summary_test_result: Samenvatting resultaten van de test
     show_detailed_result: Toon gedetailleerd overzichtsresultaat
     group_summary: Samenvattend resultaat van alle leerlingen van
+    errors:
+      delete: Kan resultaat van test niet verwijderen
     was_checked:
       thumbs_up: Duimen omhoog
       thumbs_down: Duimen omlaag

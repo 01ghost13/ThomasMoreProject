@@ -208,6 +208,8 @@ entities:
     summary_test_result: Сводные результаты теста
     show_detailed_result: Показать подробный итоговый результат
     group_summary: Суммарный результат всех студентов
+    errors:
+      delete: Ошибка при попытке удалить результат
     was_checked:
       thumbs_up: Понравилось
       thumbs_down: Не понравилось
