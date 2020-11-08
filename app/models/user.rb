@@ -24,13 +24,15 @@
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  ROLES = { client: 0, local_admin: 1, mentor: 2, super_admin: 3 }
+
   devise :database_authenticatable,
          :recoverable,
          :rememberable,
          :validatable,
          :confirmable
 
-  enum role: { client: 0, local_admin: 1, mentor: 2, super_admin: 3 }
+  enum role: ROLES
 
   scope :all_local_admins, ->{ where(role: :local_admin) }
   scope :all_clients, ->{ where(role: :client) }
@@ -61,6 +63,13 @@ class User < ActiveRecord::Base
   after_create :fill_test_availability
 
   class << self
+
+    ROLES.each do |name, id|
+      define_method "#{name}?" do |param_id|
+        id == param_id
+      end
+    end
+
     # TODO FIX n+1 query
     def admins_list(with_mentors: true)
       all_local_admins
@@ -74,11 +83,15 @@ class User < ActiveRecord::Base
         end
     end
 
-    def mentors_list(employee_id)
+    def mentors_list(employee_id, additional_users: nil)
       all_mentors
         .joins(:employee)
         .where('employees.employee_id': employee_id)
         .order(:id)
+        .to_a
+        .tap do |list|
+          list.concat(additional_users) if additional_users.present?
+        end
         .map do |t|
           employee = t.employee
           view_s = '%{email}: %{lname} %{name}'%{email: t.email, lname: employee.last_name, name: employee.name}
@@ -87,7 +100,7 @@ class User < ActiveRecord::Base
     end
 
     def clients_of_admin(admin_id)
-      all_clients_ransack.where('admin_id = ?', admin_id)
+      all_clients_ransack.where('admin_id = :admin_id OR clients.employee_id = :admin_id', admin_id: admin_id)
     end
 
     def clients_of_mentor(mentor_id)
@@ -96,10 +109,11 @@ class User < ActiveRecord::Base
 
     def all_clients_ransack
       mentors = User
-        .all_mentors
+        .all_mentors.or(User.all_local_admins)
         .select(
           'employees.name as mentor_name, employees.last_name as mentor_last_name,
-           employees.id as m_id, employees.employee_id as admin_id, users.id as mentor_user_id'
+           employees.id as m_id, employees.employee_id as admin_id, users.id as mentor_user_id,
+           users.role as mentor_role'
         )
         .joins(:employee)
         .to_sql
@@ -118,11 +132,11 @@ class User < ActiveRecord::Base
           'users.id as id, clients.code_name as code_name, t.mentor_name as mentor_name, t.m_id as mentor_id,
           t.mentor_last_name as mentor_last_name, a.admin_name as admin_name, a.admin_last_name as admin_last_name,
           a.organisation as organisation, t.admin_id as administrator_id, clients.employee_id, users.is_active,
-          admin_user_id, mentor_user_id'
+          admin_user_id, mentor_user_id, mentor_role'
         )
         .joins(:client)
         .joins("JOIN (#{mentors}) as t on clients.employee_id = t.m_id")
-        .joins("JOIN (#{administrators}) as a on t.admin_id = a.a_id")
+        .joins("JOIN (#{administrators}) as a on t.admin_id = a.a_id OR t.m_id = a.a_id")
     end
   end
 

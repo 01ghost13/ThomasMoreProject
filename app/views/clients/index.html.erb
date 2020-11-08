@@ -47,9 +47,16 @@
           %>
         </small></h4></td>
 				<td><h4><small>
-          <%= link_to("#{client[:mentor_name].titleize } #{client[:mentor_last_name].titleize }",
-                      mentor_path(client[:mentor_user_id]))
-          %>
+          <% if User.mentor?(client[:mentor_role]) %>
+            <%= link_to("#{client[:mentor_name].titleize } #{client[:mentor_last_name].titleize }",
+                        mentor_path(client[:mentor_user_id]))
+            %>
+          <% else %>
+            <%= link_to("#{client[:admin_name].titleize} #{client[:admin_last_name].titleize}",
+                        administrator_path(client[:admin_user_id]))
+            %>
+            (as mentor)
+          <% end %>
         </small></h4></td>
         <td><%= link_to(tf('common.menu.profile'), client_path(client[:id]), class: 'btn btn-default') %></td>
         <td><%= link_to(tf('common.forms.edit'), edit_client_path(client[:id]), class: 'btn btn-warning') %></td>
