@@ -23,6 +23,7 @@ class UsersTreeLoader
           .where(employee_id: employee.id)
           .includes(clients: %i[result_of_tests user])
 
+        mentors << employee # Because local admin could be mentor
         load_mentors(mentors)
 
       elsif user_root.role == 'super_admin'
@@ -55,6 +56,7 @@ class UsersTreeLoader
       local_admins.reduce({}) do |memo, local_admin|
         emp = local_admin.employee
         emps = emp.employees
+        emps << emp # Because local admin could be mentor
         next memo if emps.blank?
         emps = load_mentors(emps)
         next memo if emps.blank?
