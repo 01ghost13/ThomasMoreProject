@@ -224,12 +224,12 @@ class ClientsController < AdminController
 
       @mentors =
         if @admins.empty?
-          []
+          [@admins]
         else
-          User.mentors_list(@admins.first[1])
+          User.mentors_list(@admins.first[1], additional_users: User.all_local_admins)
         end
     elsif current_user.local_admin?
-      @mentors = User.mentors_list(current_user.role_model.id)
+      @mentors = User.mentors_list(current_user.role_model.id, additional_users: [current_user])
     end
   end
 
@@ -242,7 +242,7 @@ class ClientsController < AdminController
       @admins = User.admins_list
 
       if @admins.empty?
-        @mentors = []
+        @mentors = [@admins]
       else
         employee = @user.client.employee
         if employee.present?
@@ -252,10 +252,10 @@ class ClientsController < AdminController
           @admins_cur = params[:administrator_id]
           @mentors_cur = 0
         end
-        @mentors = User.mentors_list(@admins_cur)
+        @mentors = User.mentors_list(@admins_cur, additional_users: User.all_local_admins)
       end
     elsif current_user.local_admin?
-      @mentors = User.mentors_list(current_user.role_model.id)
+      @mentors = User.mentors_list(current_user.role_model.id, additional_users: [current_user])
       @mentors_cur = @user.client.employee_id
     end
   end
