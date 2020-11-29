@@ -22,6 +22,7 @@ class UsersTreeLoader
         mentors = Employee
           .where(employee_id: employee.id)
           .includes(clients: %i[result_of_tests user])
+          .to_a
 
         mentors << employee # Because local admin could be mentor
         load_mentors(mentors)
