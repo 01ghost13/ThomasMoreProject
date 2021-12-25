@@ -33,3 +33,11 @@ This application requires:
 JS Libs
 https://github.com/brownhci/WebGazer
 https://github.com/pa7/heatmap.js
+
+== How to deploy
+1. Add pem key to ssh
+2. Give permissions `sudo chmod 600 /path/to/my/key.pem`
+3. Add alias `ssh -i ~/.ssh/prod.pem <user>@<serverip>`
+4. `bundle exec cap production deploy`
+
+List all tasks: `bundle exec cap -T`
