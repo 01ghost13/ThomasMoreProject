@@ -12,6 +12,8 @@ class Picture < ActiveRecord::Base
   include TranslatableModels
   include Translatable
 
+  MAX_ATTACHMENT_SIZE = 1.megabyte.freeze
+
   define_translatable_columns %i[description]
 
   has_many :picture_interests, inverse_of: :picture, dependent: :destroy
@@ -75,17 +77,17 @@ class Picture < ActiveRecord::Base
 
   private
     def image_validation
-      if image.attached?
-        unless image.blob.content_type.starts_with?('image/')
-          image.purge
-          errors.add(:image, :attachment_invalid)
-        end
-        max_size = 1
+      return unless image.attached?
 
-        if image.blob.byte_size > max_size.megabytes
-          image.purge
-          errors.add(:image, :attachment_too_big)
-        end
+      unless image.blob.content_type.starts_with?('image/')
+        image.purge
+        errors.add(:image, :attachment_invalid)
+        return
+      end
+
+      if image.blob.byte_size > MAX_ATTACHMENT_SIZE
+        image.purge
+        errors.add(:image, :attachment_too_big)
       end
     end
 end
