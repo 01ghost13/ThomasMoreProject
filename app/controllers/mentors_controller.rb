@@ -20,6 +20,7 @@ class MentorsController < AdminController
     @user = User.new(mentor_params)
     @user.role = :mentor
     @user.userable = @user.build_employee(mentor_params[:employee_attributes])
+    @user.skip_confirmation! # FIXME: Mocked because email service is not working
     
     if @user.save
       flash[:success] = tf('common.flash.account_created')

@@ -50,6 +50,7 @@ class AdministratorsController < AdminController
     @user = User.new(administrator_params)
     @user.role = :local_admin
     @user.userable = @user.build_employee(administrator_params[:employee_attributes])
+    @user.skip_confirmation! # FIXME: Mocked because email service is not working
 
     if @user.save
       flash[:success] = tf('common.flash.account_created')

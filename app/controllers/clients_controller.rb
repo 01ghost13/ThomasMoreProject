@@ -60,6 +60,7 @@ class ClientsController < AdminController
     @user.language_id = current_user.language_id
     @user.role = :client
     @user.userable = @user.build_client(client_params[:client_attributes])
+    @user.skip_confirmation! # FIXME: Mocked because email service is not working
 
     if @user.save
       flash[:success] = tf('common.flash.client_created')
