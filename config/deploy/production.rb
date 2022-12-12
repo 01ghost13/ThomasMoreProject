@@ -9,7 +9,7 @@ server '77.241.80.19',
        ssh_options: {
            user: 'ubuntu',
            keys: %w[~/.ssh/prod.pem],
-           forward_agent: true,
+           forward_agent: false,
            auth_methods: %w[publickey]
        }
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
