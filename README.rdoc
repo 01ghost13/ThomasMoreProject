@@ -41,3 +41,4 @@ https://github.com/pa7/heatmap.js
 4. `bundle exec cap production deploy`
 
 List all tasks: `bundle exec cap -T`
+To remove old ssh records: `ssh-keygen -R <ipaddress>`
